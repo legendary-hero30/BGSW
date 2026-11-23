@@ -1,0 +1,145 @@
+{
+  "generated_at": "2026-11-23T13:22:21+00:00",
+  "target": {
+    "name": "cr0hn__vulnerable-node-20261123T132127Z",
+    "repo": "https://github.com/cr0hn/vulnerable-node",
+    "commit": "d68f2a3c9277ece2c2feb9976052033bdecd7fbe",
+    "license": "unknown",
+    "path": "targets/dynamic/cr0hn__vulnerable-node-20261123T132127Z"
+  },
+  "tools": {
+    "syft": "syft 1.57.2",
+    "grype": "grype 0.121.3",
+    "trivy": "Version: 0.76.2",
+    "osv-scanner": "osv-scanner version: 2.7.1",
+    "hadolint": "Haskell Dockerfile Linter 2.15.1",
+    "zizmor": "zizmor 1.32.0"
+  },
+  "databases": {
+    "grype_db": {
+      "schema": "v6.1.10",
+      "built": "2026-11-23T06:28:32Z"
+    },
+    "trivy_db": {
+      "version": 2,
+      "updated_at": "2026-11-23T07:04:04.632673631Z"
+    },
+    "osv_npm_db": {
+      "file": "cache/osv/osv-scalibr/npm/all.zip",
+      "downloaded_at": "2026-11-23T08:54:31+00:00"
+    },
+    "feeds": {
+      "epss": {
+        "url": "https://epss.empiricalsecurity.com/epss_scores-current.csv.gz",
+        "file": "cache/feeds/epss_scores-current.csv.gz",
+        "sha256": "cd8fb93ef86b3feecd46ea79ceee9c9073353c841115bf294a30e7ed68d9a1db",
+        "fetched_at": "2026-11-23T08:55:02Z"
+      },
+      "kev": {
+        "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+        "file": "cache/feeds/known_exploited_vulnerabilities.json",
+        "sha256": "12c9ca4c5350ecacdf22bdce91b4ffcf06b8c8dc9c69b8bfb4c1a21be7a5fe50",
+        "fetched_at": "2026-11-23T08:55:03Z"
+      }
+    }
+  },
+  "outputs": {
+    "grype": "runs/cr0hn__vulnerable-node-20261123T132127Z/grype.json",
+    "trivy": "runs/cr0hn__vulnerable-node-20261123T132127Z/trivy.json",
+    "osv-scanner": "runs/cr0hn__vulnerable-node-20261123T132127Z/osv.json",
+    "hadolint": "runs/cr0hn__vulnerable-node-20261123T132127Z/hadolint.json",
+    "trivy-config": "runs/cr0hn__vulnerable-node-20261123T132127Z/trivy-config.json",
+    "zizmor": "runs/cr0hn__vulnerable-node-20261123T132127Z/zizmor.json"
+  },
+  "raw_matches": {
+    "grype": 7,
+    "trivy": 7,
+    "osv-scanner": 7
+  },
+  "groups": 7,
+  "groups_by_tool_count": {
+    "3_tools": 7
+  },
+  "findings": 26,
+  "evidence_records": 67,
+  "unmapped": [],
+  "by_type": {
+    "misconfiguration": 6,
+    "untrusted_image": 1,
+    "vulnerable_direct": 1,
+    "vulnerable_transitive": 6,
+    "unpinned_ci": 12
+  },
+  "by_severity": {
+    "high": 9,
+    "low": 4,
+    "medium": 12,
+    "critical": 1
+  },
+  "dependency_findings": 7,
+  "runtime_findings": 7,
+  "dev_only_findings": 0,
+  "kev_findings": 0,
+  "with_fix": 7,
+  "vulnerable_packages": 5,
+  "image": null,
+  "posture_hits": {
+    "guardian-rules:GR-IMG-001": 1,
+    "guardian-rules:GR-CI-001": 2,
+    "hadolint:DL3066": 1,
+    "trivy:DS-0026": 3,
+    "trivy:DS-0002": 2,
+    "zizmor:artipacked": 7,
+    "zizmor:excessive-permissions": 1,
+    "zizmor:template-injection": 3,
+    "zizmor:unpinned-uses": 2
+  },
+  "anomaly_hits": {},
+  "base_target": null,
+  "synthetic": false,
+  "by_risk_level": {
+    "Medium": 9,
+    "Low": 17
+  },
+  "by_reachability": {
+    "unknown": 19,
+    "imported": 1,
+    "present_only": 6
+  },
+  "by_exposure": {
+    "runtime_internal": 13,
+    "runtime_network": 1,
+    "build_or_dev": 12
+  },
+  "app_context": {
+    "runtime_imports": [
+      "cookie-parser",
+      "ejs",
+      "express",
+      "express-session",
+      "jsonwebtoken",
+      "mongodb",
+      "morgan",
+      "node-serialize",
+      "pg"
+    ],
+    "dev_imports": [],
+    "network_facts": [
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T132127Z/mocks/imds/server.js:34",
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T132127Z/mocks/vault/server.js:24",
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T132127Z/sast/seeds/clean-escaped.js:26",
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T132127Z/sast/seeds/deserialization.js:26",
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T132127Z/sast/seeds/eval-code.js:20",
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T132127Z/sast/seeds/open-redirect.js:15",
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T132127Z/sast/seeds/ssrf-fetch.js:20",
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T132127Z/sast/seeds/xss-raw-echo.js:20",
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T132127Z/server.js:98",
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T132127Z/Dockerfile:23"
+    ],
+    "dynamic_requires": 0
+  },
+  "store": {
+    "db": "runs/guardian.db",
+    "run_id": "runs/cr0hn__vulnerable-node-20261123T132127Z"
+  }
+}

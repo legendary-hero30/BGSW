@@ -1,0 +1,1350 @@
+[
+  {
+    "ident": "artipacked",
+    "desc": "credential persistence through GitHub Actions artifacts",
+    "url": "https://docs.zizmor.sh/audits/#artipacked",
+    "determinations": {
+      "confidence": "Low",
+      "severity": "Low",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/benchmark.yml"
+            }
+          },
+          "annotation": "does not set persist-credentials: false",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 24,
+              "column": 8
+            },
+            "end_point": {
+              "row": 25,
+              "column": 33
+            },
+            "offset_span": {
+              "start": 460,
+              "end": 519
+            }
+          },
+          "feature": "name: Checkout Repository\n        uses: actions/checkout@v6",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": [
+      {
+        "title": "set persist-credentials: false",
+        "key": {
+          "Local": {
+            "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/benchmark.yml"
+          }
+        },
+        "disposition": "unsafe"
+      }
+    ]
+  },
+  {
+    "ident": "excessive-permissions",
+    "desc": "overly broad permissions",
+    "url": "https://docs.zizmor.sh/audits/#excessive-permissions",
+    "determinations": {
+      "confidence": "Medium",
+      "severity": "Medium",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/benchmark.yml"
+            }
+          },
+          "annotation": "this job",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Related"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 5,
+              "column": 2
+            },
+            "end_point": {
+              "row": 37,
+              "column": 0
+            },
+            "offset_span": {
+              "start": 52,
+              "end": 796
+            }
+          },
+          "feature": "  build:\n    strategy:\n      matrix:\n        node-version: [22.x, 24.x, 25.x]\n        platform:\n          - os: ubuntu-latest\n            shell: bash\n          - os: macos-latest\n            shell: bash\n          - os: windows-latest\n            shell: bash\n      fail-fast: false\n\n    runs-on: ${{ matrix.platform.os }}\n    defaults:\n      run:\n        shell: ${{ matrix.platform.shell }}\n\n    steps:\n      - name: Checkout Repository\n        uses: actions/checkout@v6\n\n      - name: Use Nodejs ${{ matrix.node-version }}\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ matrix.node-version }}\n\n      - name: Install dependencies\n        run: npm install\n\n      - name: Run Benchmarks\n        run: npm run benchmark\n",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/benchmark.yml"
+            }
+          },
+          "annotation": "default permissions used due to no permissions: block",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 5,
+              "column": 2
+            },
+            "end_point": {
+              "row": 37,
+              "column": 0
+            },
+            "offset_span": {
+              "start": 52,
+              "end": 796
+            }
+          },
+          "feature": "  build:\n    strategy:\n      matrix:\n        node-version: [22.x, 24.x, 25.x]\n        platform:\n          - os: ubuntu-latest\n            shell: bash\n          - os: macos-latest\n            shell: bash\n          - os: windows-latest\n            shell: bash\n      fail-fast: false\n\n    runs-on: ${{ matrix.platform.os }}\n    defaults:\n      run:\n        shell: ${{ matrix.platform.shell }}\n\n    steps:\n      - name: Checkout Repository\n        uses: actions/checkout@v6\n\n      - name: Use Nodejs ${{ matrix.node-version }}\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ matrix.node-version }}\n\n      - name: Install dependencies\n        run: npm install\n\n      - name: Run Benchmarks\n        run: npm run benchmark\n",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/benchmark.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 24,
+              "column": 8
+            },
+            "end_point": {
+              "row": 25,
+              "column": 33
+            },
+            "offset_span": {
+              "start": 460,
+              "end": 519
+            }
+          },
+          "feature": "name: Checkout Repository\n        uses: actions/checkout@v6",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/benchmark.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/checkout@v6"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 25,
+              "column": 14
+            },
+            "end_point": {
+              "row": 25,
+              "column": 33
+            },
+            "offset_span": {
+              "start": 500,
+              "end": 519
+            }
+          },
+          "feature": "actions/checkout@v6",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/benchmark.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 1
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 27,
+              "column": 8
+            },
+            "end_point": {
+              "row": 30,
+              "column": 50
+            },
+            "offset_span": {
+              "start": 529,
+              "end": 673
+            }
+          },
+          "feature": "name: Use Nodejs ${{ matrix.node-version }}\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ matrix.node-version }}",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/benchmark.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 1
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/setup-node@v6"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 28,
+              "column": 14
+            },
+            "end_point": {
+              "row": 28,
+              "column": 35
+            },
+            "offset_span": {
+              "start": 587,
+              "end": 608
+            }
+          },
+          "feature": "actions/setup-node@v6",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "artipacked",
+    "desc": "credential persistence through GitHub Actions artifacts",
+    "url": "https://docs.zizmor.sh/audits/#artipacked",
+    "determinations": {
+      "confidence": "Low",
+      "severity": "Low",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/ci.yml"
+            }
+          },
+          "annotation": "does not set persist-credentials: false",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 43,
+              "column": 8
+            },
+            "end_point": {
+              "row": 44,
+              "column": 33
+            },
+            "offset_span": {
+              "start": 758,
+              "end": 817
+            }
+          },
+          "feature": "name: Checkout Repository\n        uses: actions/checkout@v6",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": [
+      {
+        "title": "set persist-credentials: false",
+        "key": {
+          "Local": {
+            "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/ci.yml"
+          }
+        },
+        "disposition": "unsafe"
+      }
+    ]
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/ci.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 43,
+              "column": 8
+            },
+            "end_point": {
+              "row": 44,
+              "column": 33
+            },
+            "offset_span": {
+              "start": 758,
+              "end": 817
+            }
+          },
+          "feature": "name: Checkout Repository\n        uses: actions/checkout@v6",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/ci.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/checkout@v6"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 44,
+              "column": 14
+            },
+            "end_point": {
+              "row": 44,
+              "column": 33
+            },
+            "offset_span": {
+              "start": 798,
+              "end": 817
+            }
+          },
+          "feature": "actions/checkout@v6",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/ci.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 1
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 46,
+              "column": 8
+            },
+            "end_point": {
+              "row": 49,
+              "column": 50
+            },
+            "offset_span": {
+              "start": 827,
+              "end": 971
+            }
+          },
+          "feature": "name: Use Nodejs ${{ matrix.node-version }}\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ matrix.node-version }}",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/ci.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 1
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/setup-node@v6"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 47,
+              "column": 14
+            },
+            "end_point": {
+              "row": 47,
+              "column": 35
+            },
+            "offset_span": {
+              "start": 885,
+              "end": 906
+            }
+          },
+          "feature": "actions/setup-node@v6",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "artipacked",
+    "desc": "credential persistence through GitHub Actions artifacts",
+    "url": "https://docs.zizmor.sh/audits/#artipacked",
+    "determinations": {
+      "confidence": "Low",
+      "severity": "Low",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/typedoc.yml"
+            }
+          },
+          "annotation": "does not set persist-credentials: false",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "deploy"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 23,
+              "column": 8
+            },
+            "end_point": {
+              "row": 24,
+              "column": 33
+            },
+            "offset_span": {
+              "start": 350,
+              "end": 398
+            }
+          },
+          "feature": "name: Checkout\n        uses: actions/checkout@v6",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": [
+      {
+        "title": "set persist-credentials: false",
+        "key": {
+          "Local": {
+            "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/typedoc.yml"
+          }
+        },
+        "disposition": "unsafe"
+      }
+    ]
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/typedoc.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "deploy"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 23,
+              "column": 8
+            },
+            "end_point": {
+              "row": 24,
+              "column": 33
+            },
+            "offset_span": {
+              "start": 350,
+              "end": 398
+            }
+          },
+          "feature": "name: Checkout\n        uses: actions/checkout@v6",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/typedoc.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "deploy"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/checkout@v6"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 24,
+              "column": 14
+            },
+            "end_point": {
+              "row": 24,
+              "column": 33
+            },
+            "offset_span": {
+              "start": 379,
+              "end": 398
+            }
+          },
+          "feature": "actions/checkout@v6",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/typedoc.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "deploy"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 1
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 25,
+              "column": 8
+            },
+            "end_point": {
+              "row": 28,
+              "column": 28
+            },
+            "offset_span": {
+              "start": 407,
+              "end": 529
+            }
+          },
+          "feature": "name: Use Nodejs ${{ matrix.node-version }}\n        uses: actions/setup-node@v6\n        with:\n          node-version: 20.x",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/typedoc.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "deploy"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 1
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/setup-node@v6"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 26,
+              "column": 14
+            },
+            "end_point": {
+              "row": 26,
+              "column": 35
+            },
+            "offset_span": {
+              "start": 465,
+              "end": 486
+            }
+          },
+          "feature": "actions/setup-node@v6",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/typedoc.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "deploy"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 4
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 34,
+              "column": 8
+            },
+            "end_point": {
+              "row": 35,
+              "column": 40
+            },
+            "offset_span": {
+              "start": 660,
+              "end": 718
+            }
+          },
+          "feature": "name: Setup Pages\n        uses: actions/configure-pages@v5",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/typedoc.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "deploy"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 4
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/configure-pages@v5"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 35,
+              "column": 14
+            },
+            "end_point": {
+              "row": 35,
+              "column": 40
+            },
+            "offset_span": {
+              "start": 692,
+              "end": 718
+            }
+          },
+          "feature": "actions/configure-pages@v5",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/typedoc.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "deploy"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 5
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 36,
+              "column": 8
+            },
+            "end_point": {
+              "row": 39,
+              "column": 24
+            },
+            "offset_span": {
+              "start": 727,
+              "end": 835
+            }
+          },
+          "feature": "name: Upload artifact\n        uses: actions/upload-pages-artifact@v4 \n        with:\n          path: './docs'",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/typedoc.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "deploy"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 5
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/upload-pages-artifact@v4"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 37,
+              "column": 14
+            },
+            "end_point": {
+              "row": 37,
+              "column": 46
+            },
+            "offset_span": {
+              "start": 763,
+              "end": 795
+            }
+          },
+          "feature": "actions/upload-pages-artifact@v4",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/typedoc.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "deploy"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 6
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 40,
+              "column": 8
+            },
+            "end_point": {
+              "row": 43,
+              "column": 0
+            },
+            "offset_span": {
+              "start": 844,
+              "end": 934
+            }
+          },
+          "feature": "name: Deploy to GitHub Pages\n        id: deployment\n        uses: actions/deploy-pages@v4\n",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/isaacs__node-lru-cache-20261123T130219Z/.github/workflows/typedoc.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "deploy"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 6
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/deploy-pages@v4"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 42,
+              "column": 14
+            },
+            "end_point": {
+              "row": 42,
+              "column": 37
+            },
+            "offset_span": {
+              "start": 910,
+              "end": 933
+            }
+          },
+          "feature": "actions/deploy-pages@v4",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  }
+]

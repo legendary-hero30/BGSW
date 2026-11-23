@@ -1,0 +1,3614 @@
+{
+ "evidence": [
+  {
+   "id": "E-0001",
+   "kind": "scanner_result",
+   "tool": "grype",
+   "tool_version": "grype 0.121.3",
+   "ref": "GHSA-27r3-jxmh-p828",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 95,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/grype.json#/matches/2 :: body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0002",
+   "kind": "scanner_result",
+   "tool": "osv-scanner",
+   "tool_version": "osv-scanner version: 2.7.1",
+   "ref": "GHSA-27r3-jxmh-p828",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 95,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/osv.json#/results/0/packages/0/vulnerabilities/0 :: body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0003",
+   "kind": "scanner_result",
+   "tool": "trivy",
+   "tool_version": "Version: 0.76.2",
+   "ref": "CVE-2026-111181",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 95,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/trivy.json#/Results/0/Vulnerabilities/0 :: body-parser: body-parser: Denial of Service via unhandled decompression stream error",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0004",
+   "kind": "graph_node",
+   "tool": "dependency-graph",
+   "tool_version": null,
+   "ref": null,
+   "file": null,
+   "line": null,
+   "graph_node": "node_modules/body-parser",
+   "excerpt": "vulnerable-nodejs@2.1.0 > express@4.22.2 > body-parser@1.20.6 | install paths: 1",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0005",
+   "kind": "advisory",
+   "tool": "epss",
+   "tool_version": "v2026.06.15",
+   "ref": "CVE-2026-111181",
+   "file": null,
+   "line": null,
+   "graph_node": null,
+   "excerpt": "epss=0.00388 percentile=0.33649 score_date=2026-11-22T12:03:04Z",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0006",
+   "kind": "scanner_result",
+   "tool": "grype",
+   "tool_version": "grype 0.121.3",
+   "ref": "GHSA-6j4f-fj2g-mc7p",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 119,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/grype.json#/matches/0 :: brace-expansion: DoS via uncontrolled recursion in parseCommaParts causing stack exhaustion",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0007",
+   "kind": "scanner_result",
+   "tool": "osv-scanner",
+   "tool_version": "osv-scanner version: 2.7.1",
+   "ref": "GHSA-6j4f-fj2g-mc7p",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 119,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/osv.json#/results/0/packages/1/vulnerabilities/0 :: brace-expansion: DoS via uncontrolled recursion in parseCommaParts causing stack exhaustion",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0008",
+   "kind": "scanner_result",
+   "tool": "trivy",
+   "tool_version": "Version: 0.76.2",
+   "ref": "CVE-2026-102276",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 119,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/trivy.json#/Results/0/Vulnerabilities/1 :: brace-expansion: brace-expansion: Denial of Service via stack exhaustion from crafted brace patterns",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0009",
+   "kind": "graph_node",
+   "tool": "dependency-graph",
+   "tool_version": null,
+   "ref": null,
+   "file": null,
+   "line": null,
+   "graph_node": "node_modules/brace-expansion",
+   "excerpt": "vulnerable-nodejs@2.1.0 > ejs@3.1.10 > jake@10.9.4 > filelist@1.0.6 > minimatch@5.1.9 > brace-expansion@2.1.4 | install paths: 1",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0010",
+   "kind": "advisory",
+   "tool": "epss",
+   "tool_version": "v2026.06.15",
+   "ref": "CVE-2026-102276",
+   "file": null,
+   "line": null,
+   "graph_node": null,
+   "excerpt": "epss=0.00491 percentile=0.43058 score_date=2026-11-22T12:03:04Z",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0011",
+   "kind": "scanner_result",
+   "tool": "grype",
+   "tool_version": "grype 0.121.3",
+   "ref": "GHSA-q2hr-2g5m-vwhr",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 119,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/grype.json#/matches/4 :: brace-expansion: Quadratic-time expansion of the `{a},b}` rewrite causes CPU denial of service",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0012",
+   "kind": "scanner_result",
+   "tool": "osv-scanner",
+   "tool_version": "osv-scanner version: 2.7.1",
+   "ref": "GHSA-q2hr-2g5m-vwhr",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 119,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/osv.json#/results/0/packages/1/vulnerabilities/1 :: brace-expansion: Quadratic-time expansion of the `{a},b}` rewrite causes CPU denial of service",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0013",
+   "kind": "scanner_result",
+   "tool": "trivy",
+   "tool_version": "Version: 0.76.2",
+   "ref": "CVE-2026-102277",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 119,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/trivy.json#/Results/0/Vulnerabilities/3 :: brace-expansion: brace-expansion: Denial of Service via crafted brace patterns",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0014",
+   "kind": "advisory",
+   "tool": "epss",
+   "tool_version": "v2026.06.15",
+   "ref": "CVE-2026-102277",
+   "file": null,
+   "line": null,
+   "graph_node": null,
+   "excerpt": "epss=0.00428 percentile=0.37872 score_date=2026-11-22T12:03:04Z",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0015",
+   "kind": "scanner_result",
+   "tool": "grype",
+   "tool_version": "grype 0.121.3",
+   "ref": "GHSA-qhr7-859c-m2p7",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 119,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/grype.json#/matches/1 :: brace-expansion: DoS via uncontrolled recursion on nested brace groups causing stack exhaustion",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0016",
+   "kind": "scanner_result",
+   "tool": "osv-scanner",
+   "tool_version": "osv-scanner version: 2.7.1",
+   "ref": "GHSA-qhr7-859c-m2p7",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 119,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/osv.json#/results/0/packages/1/vulnerabilities/2 :: brace-expansion: DoS via uncontrolled recursion on nested brace groups causing stack exhaustion",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0017",
+   "kind": "scanner_result",
+   "tool": "trivy",
+   "tool_version": "Version: 0.76.2",
+   "ref": "CVE-2026-102278",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 119,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/trivy.json#/Results/0/Vulnerabilities/2 :: brace-expansion: brace-expansion: Denial of Service via uncontrolled recursion in nested brace patterns",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0018",
+   "kind": "advisory",
+   "tool": "epss",
+   "tool_version": "v2026.06.15",
+   "ref": "CVE-2026-102278",
+   "file": null,
+   "line": null,
+   "graph_node": null,
+   "excerpt": "epss=0.00491 percentile=0.43058 score_date=2026-11-22T12:03:04Z",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0019",
+   "kind": "scanner_result",
+   "tool": "grype",
+   "tool_version": "grype 0.121.3",
+   "ref": "GHSA-9f6g-j8ch-79g4",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 870,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/grype.json#/matches/5 :: morgan vulnerable to Log Injection via unescaped double quote in quoted log fields",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0020",
+   "kind": "scanner_result",
+   "tool": "osv-scanner",
+   "tool_version": "osv-scanner version: 2.7.1",
+   "ref": "GHSA-9f6g-j8ch-79g4",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 870,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/osv.json#/results/0/packages/2/vulnerabilities/0 :: morgan vulnerable to Log Injection via unescaped double quote in quoted log fields",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0021",
+   "kind": "scanner_result",
+   "tool": "trivy",
+   "tool_version": "Version: 0.76.2",
+   "ref": "CVE-2026-87859",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 870,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/trivy.json#/Results/0/Vulnerabilities/4 :: morgan: morgan: Log Injection via unescaped double quote in log fields",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0022",
+   "kind": "graph_node",
+   "tool": "dependency-graph",
+   "tool_version": null,
+   "ref": null,
+   "file": null,
+   "line": null,
+   "graph_node": "node_modules/morgan",
+   "excerpt": "vulnerable-nodejs@2.1.0 > morgan@1.12.0 | install paths: 1",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0023",
+   "kind": "advisory",
+   "tool": "epss",
+   "tool_version": "v2026.06.15",
+   "ref": "CVE-2026-87859",
+   "file": null,
+   "line": null,
+   "graph_node": null,
+   "excerpt": "epss=0.0041 percentile=0.36065 score_date=2026-11-22T12:03:04Z",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0024",
+   "kind": "scanner_result",
+   "tool": "grype",
+   "tool_version": "grype 0.121.3",
+   "ref": "GHSA-jqcg-44mw-7w3h",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 1081,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/grype.json#/matches/3 :: proxy-addr vulnerable to IP spoofing via IPv4-mapped IPv6 trust subnet",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0025",
+   "kind": "scanner_result",
+   "tool": "osv-scanner",
+   "tool_version": "osv-scanner version: 2.7.1",
+   "ref": "GHSA-jqcg-44mw-7w3h",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 1081,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/osv.json#/results/0/packages/3/vulnerabilities/0 :: proxy-addr vulnerable to IP spoofing via IPv4-mapped IPv6 trust subnet",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0026",
+   "kind": "scanner_result",
+   "tool": "trivy",
+   "tool_version": "Version: 0.76.2",
+   "ref": "CVE-2026-90711",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 1081,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/trivy.json#/Results/0/Vulnerabilities/5 :: proxy-addr: proxy-addr vulnerable to IP spoofing via IPv4-mapped IPv6 trust subnet",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0027",
+   "kind": "graph_node",
+   "tool": "dependency-graph",
+   "tool_version": null,
+   "ref": null,
+   "file": null,
+   "line": null,
+   "graph_node": "node_modules/proxy-addr",
+   "excerpt": "vulnerable-nodejs@2.1.0 > express@4.22.2 > proxy-addr@2.0.7 | install paths: 1",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0028",
+   "kind": "advisory",
+   "tool": "epss",
+   "tool_version": "v2026.06.15",
+   "ref": "CVE-2026-90711",
+   "file": null,
+   "line": null,
+   "graph_node": null,
+   "excerpt": "epss=0.0026 percentile=0.17796 score_date=2026-11-22T12:03:04Z",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0029",
+   "kind": "scanner_result",
+   "tool": "grype",
+   "tool_version": "grype 0.121.3",
+   "ref": "GHSA-6pq8-jhm2-2vcw",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 1103,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/grype.json#/matches/6 :: qs : qs.stringify with arrayFormat 'comma' throws an uncaught TypeError on array elements carrying a non-callable own toString (DoS)",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0030",
+   "kind": "scanner_result",
+   "tool": "osv-scanner",
+   "tool_version": "osv-scanner version: 2.7.1",
+   "ref": "GHSA-6pq8-jhm2-2vcw",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 1103,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/osv.json#/results/0/packages/4/vulnerabilities/0 :: qs : qs.stringify with arrayFormat 'comma' throws an uncaught TypeError on array elements carrying a non-callable own toString (DoS)",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0031",
+   "kind": "scanner_result",
+   "tool": "trivy",
+   "tool_version": "Version: 0.76.2",
+   "ref": "CVE-2026-110816",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 1103,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/trivy.json#/Results/0/Vulnerabilities/6 :: qs: qs: Denial of Service via unhandled exception during array serialization",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0032",
+   "kind": "graph_node",
+   "tool": "dependency-graph",
+   "tool_version": null,
+   "ref": null,
+   "file": null,
+   "line": null,
+   "graph_node": "node_modules/qs",
+   "excerpt": "vulnerable-nodejs@2.1.0 > express@4.22.2 > qs@6.16.0 | install paths: 1",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0033",
+   "kind": "advisory",
+   "tool": "epss",
+   "tool_version": "v2026.06.15",
+   "ref": "CVE-2026-110816",
+   "file": null,
+   "line": null,
+   "graph_node": null,
+   "excerpt": "epss=0.00368 percentile=0.31335 score_date=2026-11-22T12:03:04Z",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0034",
+   "kind": "scanner_result",
+   "tool": "zizmor",
+   "tool_version": "zizmor 1.32.0",
+   "ref": "artipacked",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci-hardened.yml",
+   "line": 30,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/zizmor.json#/0 :: credential persistence through GitHub Actions artifacts",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0035",
+   "kind": "scanner_result",
+   "tool": "zizmor",
+   "tool_version": "zizmor 1.32.0",
+   "ref": "artipacked",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci-hardened.yml",
+   "line": 61,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/zizmor.json#/1 :: credential persistence through GitHub Actions artifacts",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0036",
+   "kind": "scanner_result",
+   "tool": "zizmor",
+   "tool_version": "zizmor 1.32.0",
+   "ref": "artipacked",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci-hardened.yml",
+   "line": 94,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/zizmor.json#/2 :: credential persistence through GitHub Actions artifacts",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0037",
+   "kind": "scanner_result",
+   "tool": "zizmor",
+   "tool_version": "zizmor 1.32.0",
+   "ref": "excessive-permissions",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+   "line": 21,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/zizmor.json#/4 :: overly broad permissions",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0038",
+   "kind": "scanner_result",
+   "tool": "zizmor",
+   "tool_version": "zizmor 1.32.0",
+   "ref": "artipacked",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+   "line": 27,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/zizmor.json#/3 :: credential persistence through GitHub Actions artifacts",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0039",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-CI-001",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+   "line": 28,
+   "graph_node": null,
+   "excerpt": "uses: actions/checkout@v4          # VULN (3): mutable tag",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0040",
+   "kind": "scanner_result",
+   "tool": "zizmor",
+   "tool_version": "zizmor 1.32.0",
+   "ref": "unpinned-uses",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+   "line": 28,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/zizmor.json#/8 :: unpinned action reference",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0041",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-CI-001",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+   "line": 33,
+   "graph_node": null,
+   "excerpt": "uses: actions/setup-node@v4        # VULN (3): mutable tag",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0042",
+   "kind": "scanner_result",
+   "tool": "zizmor",
+   "tool_version": "zizmor 1.32.0",
+   "ref": "unpinned-uses",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+   "line": 33,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/zizmor.json#/9 :: unpinned action reference",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0043",
+   "kind": "scanner_result",
+   "tool": "zizmor",
+   "tool_version": "zizmor 1.32.0",
+   "ref": "template-injection",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+   "line": 50,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/zizmor.json#/5 :: code injection via template expansion",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0044",
+   "kind": "scanner_result",
+   "tool": "zizmor",
+   "tool_version": "zizmor 1.32.0",
+   "ref": "template-injection",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+   "line": 50,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/zizmor.json#/6 :: code injection via template expansion",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0045",
+   "kind": "scanner_result",
+   "tool": "zizmor",
+   "tool_version": "zizmor 1.32.0",
+   "ref": "template-injection",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+   "line": 56,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/zizmor.json#/7 :: code injection via template expansion",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0046",
+   "kind": "scanner_result",
+   "tool": "zizmor",
+   "tool_version": "zizmor 1.32.0",
+   "ref": "artipacked",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/sast-benchmark.yml",
+   "line": 22,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/zizmor.json#/10 :: credential persistence through GitHub Actions artifacts",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0047",
+   "kind": "scanner_result",
+   "tool": "zizmor",
+   "tool_version": "zizmor 1.32.0",
+   "ref": "artipacked",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/sast-benchmark.yml",
+   "line": 58,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/zizmor.json#/11 :: credential persistence through GitHub Actions artifacts",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0048",
+   "kind": "scanner_result",
+   "tool": "zizmor",
+   "tool_version": "zizmor 1.32.0",
+   "ref": "artipacked",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/sast-benchmark.yml",
+   "line": 111,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/zizmor.json#/12 :: credential persistence through GitHub Actions artifacts",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0049",
+   "kind": "scanner_result",
+   "tool": "trivy",
+   "tool_version": "Version: 0.76.2",
+   "ref": "DS-0026",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/Dockerfile",
+   "line": null,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/trivy-config.json#/Results/0/Misconfigurations/0 :: No HEALTHCHECK defined",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0050",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-IMG-001",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/Dockerfile",
+   "line": 2,
+   "graph_node": null,
+   "excerpt": "FROM node:22-slim",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0051",
+   "kind": "scanner_result",
+   "tool": "hadolint",
+   "tool_version": "Haskell Dockerfile Linter 2.15.1",
+   "ref": "DL3066",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/Dockerfile",
+   "line": 21,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/hadolint.json#/0 :: Non-numeric user-id may not be resolvable by host system",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0052",
+   "kind": "scanner_result",
+   "tool": "trivy",
+   "tool_version": "Version: 0.76.2",
+   "ref": "DS-0002",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/imds/Dockerfile",
+   "line": null,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/trivy-config.json#/Results/1/Misconfigurations/0 :: Image user should not be 'root'",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0053",
+   "kind": "scanner_result",
+   "tool": "trivy",
+   "tool_version": "Version: 0.76.2",
+   "ref": "DS-0026",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/imds/Dockerfile",
+   "line": null,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/trivy-config.json#/Results/1/Misconfigurations/1 :: No HEALTHCHECK defined",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0054",
+   "kind": "scanner_result",
+   "tool": "trivy",
+   "tool_version": "Version: 0.76.2",
+   "ref": "DS-0002",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/vault/Dockerfile",
+   "line": null,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/trivy-config.json#/Results/2/Misconfigurations/0 :: Image user should not be 'root'",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0055",
+   "kind": "scanner_result",
+   "tool": "trivy",
+   "tool_version": "Version: 0.76.2",
+   "ref": "DS-0026",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/vault/Dockerfile",
+   "line": null,
+   "graph_node": null,
+   "excerpt": "runs/cr0hn__vulnerable-node-20261123T140538Z/trivy-config.json#/Results/2/Misconfigurations/1 :: No HEALTHCHECK defined",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0056",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-REACH-001",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/server.js",
+   "line": 9,
+   "graph_node": null,
+   "excerpt": "const morgan = require(\"morgan\");",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0057",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-REACH-002",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+   "line": 871,
+   "graph_node": null,
+   "excerpt": "\"version\": \"1.12.0\",",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0058",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-EXPO-001",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/imds/server.js",
+   "line": 34,
+   "graph_node": null,
+   "excerpt": ".listen(8090, () => console.log(\"mock IMDS on :8090\"));",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0059",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-EXPO-001",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/vault/server.js",
+   "line": 24,
+   "graph_node": null,
+   "excerpt": ".listen(8091, () => console.log(\"mock vault on :8091\"));",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0060",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-EXPO-001",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/sast/seeds/clean-escaped.js",
+   "line": 26,
+   "graph_node": null,
+   "excerpt": "app.listen(3000);",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0061",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-EXPO-001",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/sast/seeds/deserialization.js",
+   "line": 26,
+   "graph_node": null,
+   "excerpt": "app.listen(3000);",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0062",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-EXPO-001",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/sast/seeds/eval-code.js",
+   "line": 20,
+   "graph_node": null,
+   "excerpt": "app.listen(3000);",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0063",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-EXPO-001",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/sast/seeds/open-redirect.js",
+   "line": 15,
+   "graph_node": null,
+   "excerpt": "app.listen(3000);",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0064",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-EXPO-001",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/sast/seeds/ssrf-fetch.js",
+   "line": 20,
+   "graph_node": null,
+   "excerpt": "app.listen(3000);",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0065",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-EXPO-001",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/sast/seeds/xss-raw-echo.js",
+   "line": 20,
+   "graph_node": null,
+   "excerpt": "app.listen(3000);",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0066",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-EXPO-001",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/server.js",
+   "line": 98,
+   "graph_node": null,
+   "excerpt": "app.listen(config.port, () =>",
+   "redacted": false,
+   "collected_at": null
+  },
+  {
+   "id": "E-0067",
+   "kind": "file_location",
+   "tool": "guardian-rules",
+   "tool_version": "guardian 0.1.0",
+   "ref": "GR-EXPO-001",
+   "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/Dockerfile",
+   "line": 23,
+   "graph_node": null,
+   "excerpt": "EXPOSE 3000",
+   "redacted": false,
+   "collected_at": null
+  }
+ ],
+ "findings": [
+  {
+   "id": "F-001",
+   "type": "misconfiguration",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/imds/Dockerfile: Image user should not be 'root'",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/imds/Dockerfile",
+    "version": null,
+    "purl": null,
+    "ecosystem": "oci"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "DS-0002"
+   ],
+   "severity": "high",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0052",
+     "tool": "trivy",
+     "ref": "DS-0002",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/imds/Dockerfile",
+     "line": null
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "runtime_internal",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 50.0,
+    "level": "Medium",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 1.0,
+      "contribution": 50.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-002",
+   "type": "misconfiguration",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/vault/Dockerfile: Image user should not be 'root'",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/vault/Dockerfile",
+    "version": null,
+    "purl": null,
+    "ecosystem": "oci"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "DS-0002"
+   ],
+   "severity": "high",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0054",
+     "tool": "trivy",
+     "ref": "DS-0002",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/vault/Dockerfile",
+     "line": null
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "runtime_internal",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 50.0,
+    "level": "Medium",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 1.0,
+      "contribution": 50.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-003",
+   "type": "misconfiguration",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/Dockerfile: No HEALTHCHECK defined",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/Dockerfile",
+    "version": null,
+    "purl": null,
+    "ecosystem": "oci"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "DS-0026"
+   ],
+   "severity": "low",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0049",
+     "tool": "trivy",
+     "ref": "DS-0026",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/Dockerfile",
+     "line": null
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "runtime_internal",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 50.0,
+    "level": "Medium",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 1.0,
+      "contribution": 50.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-004",
+   "type": "misconfiguration",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/Dockerfile: Non-numeric user-id may not be resolvable by host system",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/Dockerfile",
+    "version": null,
+    "purl": null,
+    "ecosystem": "oci"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "DL3066"
+   ],
+   "severity": "low",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0051",
+     "tool": "hadolint",
+     "ref": "DL3066",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/Dockerfile",
+     "line": 21
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "runtime_internal",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 50.0,
+    "level": "Medium",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 1.0,
+      "contribution": 50.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-005",
+   "type": "misconfiguration",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/imds/Dockerfile: No HEALTHCHECK defined",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/imds/Dockerfile",
+    "version": null,
+    "purl": null,
+    "ecosystem": "oci"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "DS-0026"
+   ],
+   "severity": "low",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0053",
+     "tool": "trivy",
+     "ref": "DS-0026",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/imds/Dockerfile",
+     "line": null
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "runtime_internal",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 50.0,
+    "level": "Medium",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 1.0,
+      "contribution": 50.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-006",
+   "type": "misconfiguration",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/vault/Dockerfile: No HEALTHCHECK defined",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/vault/Dockerfile",
+    "version": null,
+    "purl": null,
+    "ecosystem": "oci"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "DS-0026"
+   ],
+   "severity": "low",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0055",
+     "tool": "trivy",
+     "ref": "DS-0026",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/vault/Dockerfile",
+     "line": null
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "runtime_internal",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 50.0,
+    "level": "Medium",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 1.0,
+      "contribution": 50.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-007",
+   "type": "untrusted_image",
+   "title": "node@22-slim: base image is not pinned by digest",
+   "component": {
+    "name": "node",
+    "version": "22-slim",
+    "purl": "pkg:docker/library/node@22-slim",
+    "ecosystem": "oci"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "GR-IMG-001"
+   ],
+   "severity": "medium",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0050",
+     "tool": "guardian-rules",
+     "ref": "GR-IMG-001",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/Dockerfile",
+     "line": 2
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "runtime_internal",
+    "provenance": 40.0,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 45.0,
+    "level": "Medium",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 0.5,
+      "contribution": 25.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": 40.0,
+      "effective_weight": 0.5,
+      "contribution": 20.0
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability"
+    ],
+    "weight_coverage": 0.3,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-008",
+   "type": "vulnerable_direct",
+   "title": "morgan@1.12.0: morgan vulnerable to Log Injection via unescaped double quote in quoted log fields",
+   "component": {
+    "name": "morgan",
+    "version": "1.12.0",
+    "purl": "pkg:npm/morgan@1.12.0",
+    "ecosystem": "npm"
+   },
+   "dependency_path": [
+    "vulnerable-nodejs@2.1.0",
+    "morgan@1.12.0"
+   ],
+   "introduced_by": [
+    "morgan@1.12.0"
+   ],
+   "advisory_ids": [
+    "CVE-2026-87859",
+    "GHSA-9f6g-j8ch-79g4"
+   ],
+   "severity": "medium",
+   "fixed_in": [
+    {
+     "tool": "grype",
+     "versions": [
+      "1.12.1"
+     ]
+    },
+    {
+     "tool": "osv-scanner",
+     "versions": [
+      "1.12.1"
+     ]
+    },
+    {
+     "tool": "trivy",
+     "versions": [
+      "1.12.1"
+     ]
+    }
+   ],
+   "evidence": [
+    {
+     "evidence_id": "E-0019",
+     "tool": "grype",
+     "ref": "GHSA-9f6g-j8ch-79g4",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 870
+    },
+    {
+     "evidence_id": "E-0020",
+     "tool": "osv-scanner",
+     "ref": "GHSA-9f6g-j8ch-79g4",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 870
+    },
+    {
+     "evidence_id": "E-0021",
+     "tool": "trivy",
+     "ref": "CVE-2026-87859",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 870
+    },
+    {
+     "evidence_id": "E-0022",
+     "tool": "dependency-graph",
+     "ref": null,
+     "file": null,
+     "line": null
+    },
+    {
+     "evidence_id": "E-0023",
+     "tool": "epss",
+     "ref": "CVE-2026-87859",
+     "file": null,
+     "line": null
+    },
+    {
+     "evidence_id": "E-0056",
+     "tool": "guardian-rules",
+     "ref": "GR-REACH-001",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/server.js",
+     "line": 9
+    },
+    {
+     "evidence_id": "E-0057",
+     "tool": "guardian-rules",
+     "ref": "GR-REACH-002",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 871
+    },
+    {
+     "evidence_id": "E-0058",
+     "tool": "guardian-rules",
+     "ref": "GR-EXPO-001",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/imds/server.js",
+     "line": 34
+    },
+    {
+     "evidence_id": "E-0059",
+     "tool": "guardian-rules",
+     "ref": "GR-EXPO-001",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/vault/server.js",
+     "line": 24
+    },
+    {
+     "evidence_id": "E-0060",
+     "tool": "guardian-rules",
+     "ref": "GR-EXPO-001",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/sast/seeds/clean-escaped.js",
+     "line": 26
+    },
+    {
+     "evidence_id": "E-0061",
+     "tool": "guardian-rules",
+     "ref": "GR-EXPO-001",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/sast/seeds/deserialization.js",
+     "line": 26
+    },
+    {
+     "evidence_id": "E-0062",
+     "tool": "guardian-rules",
+     "ref": "GR-EXPO-001",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/sast/seeds/eval-code.js",
+     "line": 20
+    },
+    {
+     "evidence_id": "E-0063",
+     "tool": "guardian-rules",
+     "ref": "GR-EXPO-001",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/sast/seeds/open-redirect.js",
+     "line": 15
+    },
+    {
+     "evidence_id": "E-0064",
+     "tool": "guardian-rules",
+     "ref": "GR-EXPO-001",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/sast/seeds/ssrf-fetch.js",
+     "line": 20
+    },
+    {
+     "evidence_id": "E-0065",
+     "tool": "guardian-rules",
+     "ref": "GR-EXPO-001",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/sast/seeds/xss-raw-echo.js",
+     "line": 20
+    },
+    {
+     "evidence_id": "E-0066",
+     "tool": "guardian-rules",
+     "ref": "GR-EXPO-001",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/server.js",
+     "line": 98
+    },
+    {
+     "evidence_id": "E-0067",
+     "tool": "guardian-rules",
+     "ref": "GR-EXPO-001",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/Dockerfile",
+     "line": 23
+    }
+   ],
+   "factors": {
+    "cvss": 5.3,
+    "epss": 0.0041,
+    "kev": false,
+    "reachability": "imported",
+    "exposure": "runtime_network",
+    "provenance": 0.0,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 42.98,
+    "level": "Medium",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": 53.0,
+      "effective_weight": 0.3,
+      "contribution": 15.9
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": 0.41000000000000003,
+      "effective_weight": 0.2,
+      "contribution": 0.08
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": 60.0,
+      "effective_weight": 0.2,
+      "contribution": 12.0
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 100.0,
+      "effective_weight": 0.15,
+      "contribution": 15.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": 0.0,
+      "effective_weight": 0.15,
+      "contribution": 0.0
+     }
+    ],
+    "unknown_factors": [],
+    "weight_coverage": 1.0,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-009",
+   "type": "vulnerable_transitive",
+   "title": "proxy-addr@2.0.7: proxy-addr vulnerable to IP spoofing via IPv4-mapped IPv6 trust subnet",
+   "component": {
+    "name": "proxy-addr",
+    "version": "2.0.7",
+    "purl": "pkg:npm/proxy-addr@2.0.7",
+    "ecosystem": "npm"
+   },
+   "dependency_path": [
+    "vulnerable-nodejs@2.1.0",
+    "express@4.22.2",
+    "proxy-addr@2.0.7"
+   ],
+   "introduced_by": [
+    "express@4.22.2"
+   ],
+   "advisory_ids": [
+    "CVE-2026-90711",
+    "GHSA-jqcg-44mw-7w3h"
+   ],
+   "severity": "critical",
+   "fixed_in": [
+    {
+     "tool": "grype",
+     "versions": [
+      "2.0.8"
+     ]
+    },
+    {
+     "tool": "osv-scanner",
+     "versions": [
+      "2.0.8"
+     ]
+    },
+    {
+     "tool": "trivy",
+     "versions": [
+      "2.0.8"
+     ]
+    }
+   ],
+   "evidence": [
+    {
+     "evidence_id": "E-0024",
+     "tool": "grype",
+     "ref": "GHSA-jqcg-44mw-7w3h",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 1081
+    },
+    {
+     "evidence_id": "E-0025",
+     "tool": "osv-scanner",
+     "ref": "GHSA-jqcg-44mw-7w3h",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 1081
+    },
+    {
+     "evidence_id": "E-0026",
+     "tool": "trivy",
+     "ref": "CVE-2026-90711",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 1081
+    },
+    {
+     "evidence_id": "E-0027",
+     "tool": "dependency-graph",
+     "ref": null,
+     "file": null,
+     "line": null
+    },
+    {
+     "evidence_id": "E-0028",
+     "tool": "epss",
+     "ref": "CVE-2026-90711",
+     "file": null,
+     "line": null
+    }
+   ],
+   "factors": {
+    "cvss": 9.1,
+    "epss": 0.0026,
+    "kev": false,
+    "reachability": "present_only",
+    "exposure": "runtime_internal",
+    "provenance": 0.0,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 40.85,
+    "level": "Medium",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": 91.0,
+      "effective_weight": 0.3,
+      "contribution": 27.3
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": 0.26,
+      "effective_weight": 0.2,
+      "contribution": 0.05
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": 30.0,
+      "effective_weight": 0.2,
+      "contribution": 6.0
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 0.15,
+      "contribution": 7.5
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": 0.0,
+      "effective_weight": 0.15,
+      "contribution": 0.0
+     }
+    ],
+    "unknown_factors": [],
+    "weight_coverage": 1.0,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-010",
+   "type": "vulnerable_transitive",
+   "title": "brace-expansion@2.1.4: brace-expansion: DoS via uncontrolled recursion in parseCommaParts causing stack exhaustion",
+   "component": {
+    "name": "brace-expansion",
+    "version": "2.1.4",
+    "purl": "pkg:npm/brace-expansion@2.1.4",
+    "ecosystem": "npm"
+   },
+   "dependency_path": [
+    "vulnerable-nodejs@2.1.0",
+    "ejs@3.1.10",
+    "jake@10.9.4",
+    "filelist@1.0.6",
+    "minimatch@5.1.9",
+    "brace-expansion@2.1.4"
+   ],
+   "introduced_by": [
+    "ejs@3.1.10"
+   ],
+   "advisory_ids": [
+    "CVE-2026-102276",
+    "GHSA-6j4f-fj2g-mc7p"
+   ],
+   "severity": "high",
+   "fixed_in": [
+    {
+     "tool": "grype",
+     "versions": [
+      "2.1.5"
+     ]
+    },
+    {
+     "tool": "osv-scanner",
+     "versions": [
+      "1.1.19",
+      "2.1.5",
+      "3.0.7",
+      "5.0.10"
+     ]
+    },
+    {
+     "tool": "trivy",
+     "versions": [
+      "1.1.19",
+      "2.1.5",
+      "3.0.7",
+      "5.0.10"
+     ]
+    }
+   ],
+   "evidence": [
+    {
+     "evidence_id": "E-0006",
+     "tool": "grype",
+     "ref": "GHSA-6j4f-fj2g-mc7p",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 119
+    },
+    {
+     "evidence_id": "E-0007",
+     "tool": "osv-scanner",
+     "ref": "GHSA-6j4f-fj2g-mc7p",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 119
+    },
+    {
+     "evidence_id": "E-0008",
+     "tool": "trivy",
+     "ref": "CVE-2026-102276",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 119
+    },
+    {
+     "evidence_id": "E-0009",
+     "tool": "dependency-graph",
+     "ref": null,
+     "file": null,
+     "line": null
+    },
+    {
+     "evidence_id": "E-0010",
+     "tool": "epss",
+     "ref": "CVE-2026-102276",
+     "file": null,
+     "line": null
+    }
+   ],
+   "factors": {
+    "cvss": 7.5,
+    "epss": 0.00491,
+    "kev": false,
+    "reachability": "present_only",
+    "exposure": "runtime_internal",
+    "provenance": 0.0,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 36.1,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": 75.0,
+      "effective_weight": 0.3,
+      "contribution": 22.5
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": 0.49100000000000005,
+      "effective_weight": 0.2,
+      "contribution": 0.1
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": 30.0,
+      "effective_weight": 0.2,
+      "contribution": 6.0
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 0.15,
+      "contribution": 7.5
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": 0.0,
+      "effective_weight": 0.15,
+      "contribution": 0.0
+     }
+    ],
+    "unknown_factors": [],
+    "weight_coverage": 1.0,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-011",
+   "type": "vulnerable_transitive",
+   "title": "brace-expansion@2.1.4: brace-expansion: DoS via uncontrolled recursion on nested brace groups causing stack exhaustion",
+   "component": {
+    "name": "brace-expansion",
+    "version": "2.1.4",
+    "purl": "pkg:npm/brace-expansion@2.1.4",
+    "ecosystem": "npm"
+   },
+   "dependency_path": [
+    "vulnerable-nodejs@2.1.0",
+    "ejs@3.1.10",
+    "jake@10.9.4",
+    "filelist@1.0.6",
+    "minimatch@5.1.9",
+    "brace-expansion@2.1.4"
+   ],
+   "introduced_by": [
+    "ejs@3.1.10"
+   ],
+   "advisory_ids": [
+    "CVE-2026-102278",
+    "GHSA-qhr7-859c-m2p7"
+   ],
+   "severity": "high",
+   "fixed_in": [
+    {
+     "tool": "grype",
+     "versions": [
+      "2.1.6"
+     ]
+    },
+    {
+     "tool": "osv-scanner",
+     "versions": [
+      "1.1.20",
+      "2.1.6",
+      "3.0.8",
+      "5.0.11"
+     ]
+    },
+    {
+     "tool": "trivy",
+     "versions": [
+      "1.1.20",
+      "2.1.6",
+      "3.0.8",
+      "5.0.11"
+     ]
+    }
+   ],
+   "evidence": [
+    {
+     "evidence_id": "E-0015",
+     "tool": "grype",
+     "ref": "GHSA-qhr7-859c-m2p7",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 119
+    },
+    {
+     "evidence_id": "E-0016",
+     "tool": "osv-scanner",
+     "ref": "GHSA-qhr7-859c-m2p7",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 119
+    },
+    {
+     "evidence_id": "E-0017",
+     "tool": "trivy",
+     "ref": "CVE-2026-102278",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 119
+    },
+    {
+     "evidence_id": "E-0009",
+     "tool": "dependency-graph",
+     "ref": null,
+     "file": null,
+     "line": null
+    },
+    {
+     "evidence_id": "E-0018",
+     "tool": "epss",
+     "ref": "CVE-2026-102278",
+     "file": null,
+     "line": null
+    }
+   ],
+   "factors": {
+    "cvss": 7.5,
+    "epss": 0.00491,
+    "kev": false,
+    "reachability": "present_only",
+    "exposure": "runtime_internal",
+    "provenance": 0.0,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 36.1,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": 75.0,
+      "effective_weight": 0.3,
+      "contribution": 22.5
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": 0.49100000000000005,
+      "effective_weight": 0.2,
+      "contribution": 0.1
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": 30.0,
+      "effective_weight": 0.2,
+      "contribution": 6.0
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 0.15,
+      "contribution": 7.5
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": 0.0,
+      "effective_weight": 0.15,
+      "contribution": 0.0
+     }
+    ],
+    "unknown_factors": [],
+    "weight_coverage": 1.0,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-012",
+   "type": "vulnerable_transitive",
+   "title": "body-parser@1.20.6: body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body",
+   "component": {
+    "name": "body-parser",
+    "version": "1.20.6",
+    "purl": "pkg:npm/body-parser@1.20.6",
+    "ecosystem": "npm"
+   },
+   "dependency_path": [
+    "vulnerable-nodejs@2.1.0",
+    "express@4.22.2",
+    "body-parser@1.20.6"
+   ],
+   "introduced_by": [
+    "express@4.22.2"
+   ],
+   "advisory_ids": [
+    "CVE-2026-111181",
+    "GHSA-27r3-jxmh-p828"
+   ],
+   "severity": "high",
+   "fixed_in": [
+    {
+     "tool": "grype",
+     "versions": [
+      "1.20.9"
+     ]
+    },
+    {
+     "tool": "osv-scanner",
+     "versions": [
+      "1.20.9",
+      "2.4.0"
+     ]
+    },
+    {
+     "tool": "trivy",
+     "versions": [
+      "1.20.9",
+      "2.4.0"
+     ]
+    }
+   ],
+   "evidence": [
+    {
+     "evidence_id": "E-0001",
+     "tool": "grype",
+     "ref": "GHSA-27r3-jxmh-p828",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 95
+    },
+    {
+     "evidence_id": "E-0002",
+     "tool": "osv-scanner",
+     "ref": "GHSA-27r3-jxmh-p828",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 95
+    },
+    {
+     "evidence_id": "E-0003",
+     "tool": "trivy",
+     "ref": "CVE-2026-111181",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 95
+    },
+    {
+     "evidence_id": "E-0004",
+     "tool": "dependency-graph",
+     "ref": null,
+     "file": null,
+     "line": null
+    },
+    {
+     "evidence_id": "E-0005",
+     "tool": "epss",
+     "ref": "CVE-2026-111181",
+     "file": null,
+     "line": null
+    }
+   ],
+   "factors": {
+    "cvss": 7.5,
+    "epss": 0.00388,
+    "kev": false,
+    "reachability": "present_only",
+    "exposure": "runtime_internal",
+    "provenance": 0.0,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 36.08,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": 75.0,
+      "effective_weight": 0.3,
+      "contribution": 22.5
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": 0.388,
+      "effective_weight": 0.2,
+      "contribution": 0.08
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": 30.0,
+      "effective_weight": 0.2,
+      "contribution": 6.0
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 0.15,
+      "contribution": 7.5
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": 0.0,
+      "effective_weight": 0.15,
+      "contribution": 0.0
+     }
+    ],
+    "unknown_factors": [],
+    "weight_coverage": 1.0,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-013",
+   "type": "unpinned_ci",
+   "title": "actions/checkout@v4: action is referenced by tag or branch, not a full commit SHA",
+   "component": {
+    "name": "actions/checkout",
+    "version": "v4",
+    "purl": "pkg:github/actions/checkout@v4",
+    "ecosystem": "github-actions"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "GR-CI-001",
+    "unpinned-uses"
+   ],
+   "severity": "high",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0039",
+     "tool": "guardian-rules",
+     "ref": "GR-CI-001",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+     "line": 28
+    },
+    {
+     "evidence_id": "E-0040",
+     "tool": "zizmor",
+     "ref": "unpinned-uses",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+     "line": 28
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "build_or_dev",
+    "provenance": 50.0,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 35.0,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 20.0,
+      "effective_weight": 0.5,
+      "contribution": 10.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 0.5,
+      "contribution": 25.0
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability"
+    ],
+    "weight_coverage": 0.3,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-014",
+   "type": "unpinned_ci",
+   "title": "actions/setup-node@v4: action is referenced by tag or branch, not a full commit SHA",
+   "component": {
+    "name": "actions/setup-node",
+    "version": "v4",
+    "purl": "pkg:github/actions/setup-node@v4",
+    "ecosystem": "github-actions"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "GR-CI-001",
+    "unpinned-uses"
+   ],
+   "severity": "high",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0041",
+     "tool": "guardian-rules",
+     "ref": "GR-CI-001",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+     "line": 33
+    },
+    {
+     "evidence_id": "E-0042",
+     "tool": "zizmor",
+     "ref": "unpinned-uses",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+     "line": 33
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "build_or_dev",
+    "provenance": 50.0,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 35.0,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 20.0,
+      "effective_weight": 0.5,
+      "contribution": 10.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 0.5,
+      "contribution": 25.0
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability"
+    ],
+    "weight_coverage": 0.3,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-015",
+   "type": "vulnerable_transitive",
+   "title": "qs@6.16.0: qs : qs.stringify with arrayFormat 'comma' throws an uncaught TypeError on array elements carrying a non-callable own toString (DoS)",
+   "component": {
+    "name": "qs",
+    "version": "6.16.0",
+    "purl": "pkg:npm/qs@6.16.0",
+    "ecosystem": "npm"
+   },
+   "dependency_path": [
+    "vulnerable-nodejs@2.1.0",
+    "express@4.22.2",
+    "qs@6.16.0"
+   ],
+   "introduced_by": [
+    "express@4.22.2"
+   ],
+   "advisory_ids": [
+    "CVE-2026-110816",
+    "GHSA-6pq8-jhm2-2vcw"
+   ],
+   "severity": "medium",
+   "fixed_in": [
+    {
+     "tool": "grype",
+     "versions": [
+      "6.16.1"
+     ]
+    },
+    {
+     "tool": "osv-scanner",
+     "versions": [
+      "6.16.1"
+     ]
+    },
+    {
+     "tool": "trivy",
+     "versions": [
+      "6.16.1"
+     ]
+    }
+   ],
+   "evidence": [
+    {
+     "evidence_id": "E-0029",
+     "tool": "grype",
+     "ref": "GHSA-6pq8-jhm2-2vcw",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 1103
+    },
+    {
+     "evidence_id": "E-0030",
+     "tool": "osv-scanner",
+     "ref": "GHSA-6pq8-jhm2-2vcw",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 1103
+    },
+    {
+     "evidence_id": "E-0031",
+     "tool": "trivy",
+     "ref": "CVE-2026-110816",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 1103
+    },
+    {
+     "evidence_id": "E-0032",
+     "tool": "dependency-graph",
+     "ref": null,
+     "file": null,
+     "line": null
+    },
+    {
+     "evidence_id": "E-0033",
+     "tool": "epss",
+     "ref": "CVE-2026-110816",
+     "file": null,
+     "line": null
+    }
+   ],
+   "factors": {
+    "cvss": 6.3,
+    "epss": 0.00368,
+    "kev": false,
+    "reachability": "present_only",
+    "exposure": "runtime_internal",
+    "provenance": 0.0,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 32.47,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": 63.0,
+      "effective_weight": 0.3,
+      "contribution": 18.9
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": 0.368,
+      "effective_weight": 0.2,
+      "contribution": 0.07
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": 30.0,
+      "effective_weight": 0.2,
+      "contribution": 6.0
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 0.15,
+      "contribution": 7.5
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": 0.0,
+      "effective_weight": 0.15,
+      "contribution": 0.0
+     }
+    ],
+    "unknown_factors": [],
+    "weight_coverage": 1.0,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-016",
+   "type": "vulnerable_transitive",
+   "title": "brace-expansion@2.1.4: brace-expansion: Quadratic-time expansion of the `{a},b}` rewrite causes CPU denial of service",
+   "component": {
+    "name": "brace-expansion",
+    "version": "2.1.4",
+    "purl": "pkg:npm/brace-expansion@2.1.4",
+    "ecosystem": "npm"
+   },
+   "dependency_path": [
+    "vulnerable-nodejs@2.1.0",
+    "ejs@3.1.10",
+    "jake@10.9.4",
+    "filelist@1.0.6",
+    "minimatch@5.1.9",
+    "brace-expansion@2.1.4"
+   ],
+   "introduced_by": [
+    "ejs@3.1.10"
+   ],
+   "advisory_ids": [
+    "CVE-2026-102277",
+    "GHSA-q2hr-2g5m-vwhr"
+   ],
+   "severity": "medium",
+   "fixed_in": [
+    {
+     "tool": "grype",
+     "versions": [
+      "2.1.7"
+     ]
+    },
+    {
+     "tool": "osv-scanner",
+     "versions": [
+      "1.1.21",
+      "2.1.7",
+      "3.0.9",
+      "5.0.12"
+     ]
+    },
+    {
+     "tool": "trivy",
+     "versions": [
+      "1.1.21",
+      "2.1.7",
+      "3.0.9",
+      "5.0.12"
+     ]
+    }
+   ],
+   "evidence": [
+    {
+     "evidence_id": "E-0011",
+     "tool": "grype",
+     "ref": "GHSA-q2hr-2g5m-vwhr",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 119
+    },
+    {
+     "evidence_id": "E-0012",
+     "tool": "osv-scanner",
+     "ref": "GHSA-q2hr-2g5m-vwhr",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 119
+    },
+    {
+     "evidence_id": "E-0013",
+     "tool": "trivy",
+     "ref": "CVE-2026-102277",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+     "line": 119
+    },
+    {
+     "evidence_id": "E-0009",
+     "tool": "dependency-graph",
+     "ref": null,
+     "file": null,
+     "line": null
+    },
+    {
+     "evidence_id": "E-0014",
+     "tool": "epss",
+     "ref": "CVE-2026-102277",
+     "file": null,
+     "line": null
+    }
+   ],
+   "factors": {
+    "cvss": 5.3,
+    "epss": 0.00428,
+    "kev": false,
+    "reachability": "present_only",
+    "exposure": "runtime_internal",
+    "provenance": 0.0,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 29.49,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": 53.0,
+      "effective_weight": 0.3,
+      "contribution": 15.9
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": 0.428,
+      "effective_weight": 0.2,
+      "contribution": 0.09
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": 30.0,
+      "effective_weight": 0.2,
+      "contribution": 6.0
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 50.0,
+      "effective_weight": 0.15,
+      "contribution": 7.5
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": 0.0,
+      "effective_weight": 0.15,
+      "contribution": 0.0
+     }
+    ],
+    "unknown_factors": [],
+    "weight_coverage": 1.0,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-017",
+   "type": "unpinned_ci",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml: code injection via template expansion",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+    "version": null,
+    "purl": null,
+    "ecosystem": "github-actions"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "template-injection"
+   ],
+   "severity": "high",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0043",
+     "tool": "zizmor",
+     "ref": "template-injection",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+     "line": 50
+    },
+    {
+     "evidence_id": "E-0044",
+     "tool": "zizmor",
+     "ref": "template-injection",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+     "line": 50
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "build_or_dev",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 20.0,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 20.0,
+      "effective_weight": 1.0,
+      "contribution": 20.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-018",
+   "type": "unpinned_ci",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml: code injection via template expansion",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+    "version": null,
+    "purl": null,
+    "ecosystem": "github-actions"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "template-injection"
+   ],
+   "severity": "high",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0045",
+     "tool": "zizmor",
+     "ref": "template-injection",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+     "line": 56
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "build_or_dev",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 20.0,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 20.0,
+      "effective_weight": 1.0,
+      "contribution": 20.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-019",
+   "type": "unpinned_ci",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci-hardened.yml: credential persistence through GitHub Actions artifacts",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci-hardened.yml",
+    "version": null,
+    "purl": null,
+    "ecosystem": "github-actions"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "artipacked"
+   ],
+   "severity": "medium",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0034",
+     "tool": "zizmor",
+     "ref": "artipacked",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci-hardened.yml",
+     "line": 30
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "build_or_dev",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 20.0,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 20.0,
+      "effective_weight": 1.0,
+      "contribution": 20.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-020",
+   "type": "unpinned_ci",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci-hardened.yml: credential persistence through GitHub Actions artifacts",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci-hardened.yml",
+    "version": null,
+    "purl": null,
+    "ecosystem": "github-actions"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "artipacked"
+   ],
+   "severity": "medium",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0035",
+     "tool": "zizmor",
+     "ref": "artipacked",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci-hardened.yml",
+     "line": 61
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "build_or_dev",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 20.0,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 20.0,
+      "effective_weight": 1.0,
+      "contribution": 20.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-021",
+   "type": "unpinned_ci",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci-hardened.yml: credential persistence through GitHub Actions artifacts",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci-hardened.yml",
+    "version": null,
+    "purl": null,
+    "ecosystem": "github-actions"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "artipacked"
+   ],
+   "severity": "medium",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0036",
+     "tool": "zizmor",
+     "ref": "artipacked",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci-hardened.yml",
+     "line": 94
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "build_or_dev",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 20.0,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 20.0,
+      "effective_weight": 1.0,
+      "contribution": 20.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-022",
+   "type": "unpinned_ci",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml: overly broad permissions",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+    "version": null,
+    "purl": null,
+    "ecosystem": "github-actions"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "excessive-permissions"
+   ],
+   "severity": "medium",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0037",
+     "tool": "zizmor",
+     "ref": "excessive-permissions",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+     "line": 21
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "build_or_dev",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 20.0,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 20.0,
+      "effective_weight": 1.0,
+      "contribution": 20.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-023",
+   "type": "unpinned_ci",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml: credential persistence through GitHub Actions artifacts",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+    "version": null,
+    "purl": null,
+    "ecosystem": "github-actions"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "artipacked"
+   ],
+   "severity": "medium",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0038",
+     "tool": "zizmor",
+     "ref": "artipacked",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+     "line": 27
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "build_or_dev",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 20.0,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 20.0,
+      "effective_weight": 1.0,
+      "contribution": 20.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-024",
+   "type": "unpinned_ci",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/sast-benchmark.yml: credential persistence through GitHub Actions artifacts",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/sast-benchmark.yml",
+    "version": null,
+    "purl": null,
+    "ecosystem": "github-actions"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "artipacked"
+   ],
+   "severity": "medium",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0048",
+     "tool": "zizmor",
+     "ref": "artipacked",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/sast-benchmark.yml",
+     "line": 111
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "build_or_dev",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 20.0,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 20.0,
+      "effective_weight": 1.0,
+      "contribution": 20.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-025",
+   "type": "unpinned_ci",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/sast-benchmark.yml: credential persistence through GitHub Actions artifacts",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/sast-benchmark.yml",
+    "version": null,
+    "purl": null,
+    "ecosystem": "github-actions"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "artipacked"
+   ],
+   "severity": "medium",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0046",
+     "tool": "zizmor",
+     "ref": "artipacked",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/sast-benchmark.yml",
+     "line": 22
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "build_or_dev",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 20.0,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 20.0,
+      "effective_weight": 1.0,
+      "contribution": 20.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  },
+  {
+   "id": "F-026",
+   "type": "unpinned_ci",
+   "title": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/sast-benchmark.yml: credential persistence through GitHub Actions artifacts",
+   "component": {
+    "name": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/sast-benchmark.yml",
+    "version": null,
+    "purl": null,
+    "ecosystem": "github-actions"
+   },
+   "dependency_path": [],
+   "introduced_by": [],
+   "advisory_ids": [
+    "artipacked"
+   ],
+   "severity": "medium",
+   "fixed_in": [],
+   "evidence": [
+    {
+     "evidence_id": "E-0047",
+     "tool": "zizmor",
+     "ref": "artipacked",
+     "file": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/sast-benchmark.yml",
+     "line": 58
+    }
+   ],
+   "factors": {
+    "cvss": null,
+    "epss": null,
+    "kev": null,
+    "reachability": "unknown",
+    "exposure": "build_or_dev",
+    "provenance": null,
+    "confirmed_malicious": false
+   },
+   "risk": {
+    "score": 20.0,
+    "level": "Low",
+    "contributions": [
+     {
+      "factor": "cvss",
+      "weight": 0.3,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "epss_kev",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "reachability",
+      "weight": 0.2,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     },
+     {
+      "factor": "exposure",
+      "weight": 0.15,
+      "value": 20.0,
+      "effective_weight": 1.0,
+      "contribution": 20.0
+     },
+     {
+      "factor": "provenance",
+      "weight": 0.15,
+      "value": null,
+      "effective_weight": 0.0,
+      "contribution": null
+     }
+    ],
+    "unknown_factors": [
+     "cvss",
+     "epss_kev",
+     "reachability",
+     "provenance"
+    ],
+    "weight_coverage": 0.15,
+    "override": null
+   },
+   "rationale": null,
+   "fix": null
+  }
+ ]
+}

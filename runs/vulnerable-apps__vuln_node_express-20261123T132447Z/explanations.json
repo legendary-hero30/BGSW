@@ -1,0 +1,637 @@
+{
+  "run_id": "runs/vulnerable-apps__vuln_node_express-20261123T132447Z",
+  "provider": "deepinfra",
+  "model": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+  "generator": "language model",
+  "accepted": [
+    {
+      "finding_id": "F-001",
+      "risk": {
+        "score": 50.0,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 1.0,
+            "contribution": 50.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.15,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-001",
+        "why_it_matters": "The container image is configured to run as root, so any process compromise inside the container gains root privileges and eases container escape or lateral movement.",
+        "reachability": "unknown",
+        "confidence": "medium",
+        "confidence_reason": "Trivy config scan (DS-0002) directly reports the root-user misconfiguration, but no CVSS/EPSS/reachability factors were available so the risk score rests only on exposure.",
+        "cited_evidence": [
+          "E-0321"
+        ]
+      },
+      "rationale": "The container image is configured to run as root, so any process compromise inside the container gains root privileges and eases container escape or lateral movement. unknown. Confidence medium: Trivy config scan (DS-0002) directly reports the root-user misconfiguration, but no CVSS/EPSS/reachability factors were available so the risk score rests only on exposure. [E-0321]"
+    },
+    {
+      "finding_id": "F-002",
+      "risk": {
+        "score": 50.0,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 1.0,
+            "contribution": 50.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.15,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-002",
+        "why_it_matters": "The final stage of the image has no non-root USER directive, so the Node.js application runs with root privileges at runtime.",
+        "reachability": "unknown",
+        "confidence": "medium",
+        "confidence_reason": "Guardian rule GR-IMG-003 points at the FROM line of the Dockerfile, but the finding carries no CVSS/EPSS/reachability data and the rule evidence is a single file location.",
+        "cited_evidence": [
+          "E-0324"
+        ]
+      },
+      "rationale": "The final stage of the image has no non-root USER directive, so the Node.js application runs with root privileges at runtime. unknown. Confidence medium: Guardian rule GR-IMG-003 points at the FROM line of the Dockerfile, but the finding carries no CVSS/EPSS/reachability data and the rule evidence is a single file location. [E-0324]"
+    },
+    {
+      "finding_id": "F-003",
+      "risk": {
+        "score": 50.0,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 1.0,
+            "contribution": 50.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.15,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-003",
+        "why_it_matters": "Without a HEALTHCHECK the orchestrator cannot detect a hung or compromised container, delaying restarts and incident response.",
+        "reachability": "unknown",
+        "confidence": "medium",
+        "confidence_reason": "Trivy config scan (DS-0026) reports the missing HEALTHCHECK, but this is a low-severity hygiene issue with no exploitability factors recorded.",
+        "cited_evidence": [
+          "E-0322"
+        ]
+      },
+      "rationale": "Without a HEALTHCHECK the orchestrator cannot detect a hung or compromised container, delaying restarts and incident response. unknown. Confidence medium: Trivy config scan (DS-0026) reports the missing HEALTHCHECK, but this is a low-severity hygiene issue with no exploitability factors recorded. [E-0322]"
+    },
+    {
+      "finding_id": "F-004",
+      "risk": {
+        "score": 45.46,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 61.0,
+            "effective_weight": 0.3,
+            "contribution": 18.3
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 0.786,
+            "effective_weight": 0.2,
+            "contribution": 0.16
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": 60.0,
+            "effective_weight": 0.2,
+            "contribution": 12.0
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 100.0,
+            "effective_weight": 0.15,
+            "contribution": 15.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 0.0,
+            "effective_weight": 0.15,
+            "contribution": 0.0
+          }
+        ],
+        "unknown_factors": [],
+        "weight_coverage": 1.0,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-004",
+        "why_it_matters": "Express 4.16.4 is vulnerable to an open redirect in malformed URLs (CVE-2024-29041 / GHSA-rv95-896h-c2vc), which can be abused for phishing or OAuth token leakage from a network-exposed service.",
+        "reachability": "imported",
+        "confidence": "high",
+        "confidence_reason": "Three independent scanners (grype, osv-scanner, trivy) agree on the advisory, the dependency graph confirms a direct install path, and guardian-rules shows express is required in app.js with port 3000 exposed.",
+        "cited_evidence": [
+          "E-0066",
+          "E-0067",
+          "E-0068",
+          "E-0069",
+          "E-0070",
+          "E-0325",
+          "E-0326",
+          "E-0327"
+        ]
+      },
+      "rationale": "Express 4.16.4 is vulnerable to an open redirect in malformed URLs (CVE-2024-29041 / GHSA-rv95-896h-c2vc), which can be abused for phishing or OAuth token leakage from a network-exposed service. imported. Confidence high: Three independent scanners (grype, osv-scanner, trivy) agree on the advisory, the dependency graph confirms a direct install path, and guardian-rules shows express is required in app.js with port 3000 exposed. [E-0066] [E-0067] [E-0068] [E-0069] [E-0070] [E-0325] [E-0326] [E-0327]"
+    },
+    {
+      "finding_id": "F-005",
+      "risk": {
+        "score": 45.0,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.5,
+            "contribution": 25.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 40.0,
+            "effective_weight": 0.5,
+            "contribution": 20.0
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability"
+        ],
+        "weight_coverage": 0.3,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-005",
+        "why_it_matters": "The base image node:14.16.1-buster is referenced by tag rather than digest, so builds can silently pull different, potentially tampered content.",
+        "reachability": "unknown",
+        "confidence": "medium",
+        "confidence_reason": "Guardian rule GR-IMG-001 flags the unpinned FROM line and a provenance factor of 40.0 was recorded, but no CVSS/EPSS/reachability data exists for this supply-chain hygiene finding.",
+        "cited_evidence": [
+          "E-0323"
+        ]
+      },
+      "rationale": "The base image node:14.16.1-buster is referenced by tag rather than digest, so builds can silently pull different, potentially tampered content. unknown. Confidence medium: Guardian rule GR-IMG-001 flags the unpinned FROM line and a provenance factor of 40.0 was recorded, but no CVSS/EPSS/reachability data exists for this supply-chain hygiene finding. [E-0323]"
+    },
+    {
+      "finding_id": "F-006",
+      "risk": {
+        "score": 43.82,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 98.0,
+            "effective_weight": 0.3,
+            "contribution": 29.4
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 4.5809999999999995,
+            "effective_weight": 0.2,
+            "contribution": 0.92
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": 30.0,
+            "effective_weight": 0.2,
+            "contribution": 6.0
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.15,
+            "contribution": 7.5
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 0.0,
+            "effective_weight": 0.15,
+            "contribution": 0.0
+          }
+        ],
+        "unknown_factors": [],
+        "weight_coverage": 1.0,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-006",
+        "why_it_matters": "minimist 0.0.8 is vulnerable to prototype pollution (CVE-2021-44906 / GHSA-xvch-5gv4-984h, CVSS 9.8), which can corrupt object prototypes and lead to logic bypass or RCE in dependent code.",
+        "reachability": "present_only",
+        "confidence": "high",
+        "confidence_reason": "grype, osv-scanner and trivy all report the advisory and the dependency graph gives a single install path, but the package is only present in the tree (not shown as imported by application code).",
+        "cited_evidence": [
+          "E-0138",
+          "E-0139",
+          "E-0140",
+          "E-0136",
+          "E-0141"
+        ]
+      },
+      "rationale": "minimist 0.0.8 is vulnerable to prototype pollution (CVE-2021-44906 / GHSA-xvch-5gv4-984h, CVSS 9.8), which can corrupt object prototypes and lead to logic bypass or RCE in dependent code. present_only. Confidence high: grype, osv-scanner and trivy all report the advisory and the dependency graph gives a single install path, but the package is only present in the tree (not shown as imported by application code). [E-0138] [E-0139] [E-0140] [E-0136] [E-0141]"
+    },
+    {
+      "finding_id": "F-007",
+      "risk": {
+        "score": 43.82,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 98.0,
+            "effective_weight": 0.3,
+            "contribution": 29.4
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 4.5809999999999995,
+            "effective_weight": 0.2,
+            "contribution": 0.92
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": 30.0,
+            "effective_weight": 0.2,
+            "contribution": 6.0
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.15,
+            "contribution": 7.5
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 0.0,
+            "effective_weight": 0.15,
+            "contribution": 0.0
+          }
+        ],
+        "unknown_factors": [],
+        "weight_coverage": 1.0,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-007",
+        "why_it_matters": "minimist 1.2.0 is also affected by prototype pollution (CVE-2021-44906 / GHSA-xvch-5gv4-984h, CVSS 9.8), giving a second exploitable copy of the same flaw in the dependency tree.",
+        "reachability": "present_only",
+        "confidence": "high",
+        "confidence_reason": "All three scanners agree on the advisory and the dependency graph shows one install path via rc@1.2.8, but reachability is limited to presence in the tree.",
+        "cited_evidence": [
+          "E-0146",
+          "E-0147",
+          "E-0148",
+          "E-0145",
+          "E-0141"
+        ]
+      },
+      "rationale": "minimist 1.2.0 is also affected by prototype pollution (CVE-2021-44906 / GHSA-xvch-5gv4-984h, CVSS 9.8), giving a second exploitable copy of the same flaw in the dependency tree. present_only. Confidence high: All three scanners agree on the advisory and the dependency graph shows one install path via rc@1.2.8, but reachability is limited to presence in the tree. [E-0146] [E-0147] [E-0148] [E-0145] [E-0141]"
+    },
+    {
+      "finding_id": "F-008",
+      "risk": {
+        "score": 43.67,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 98.0,
+            "effective_weight": 0.3,
+            "contribution": 29.4
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 3.83,
+            "effective_weight": 0.2,
+            "contribution": 0.77
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": 30.0,
+            "effective_weight": 0.2,
+            "contribution": 6.0
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.15,
+            "contribution": 7.5
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 0.0,
+            "effective_weight": 0.15,
+            "contribution": 0.0
+          }
+        ],
+        "unknown_factors": [],
+        "weight_coverage": 1.0,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-008",
+        "why_it_matters": "json-schema 0.2.3 is vulnerable to prototype pollution (CVE-2021-3918 / GHSA-896r-f27r-55mw, CVSS 9.8), which can be triggered through schema validation of attacker-controlled input.",
+        "reachability": "present_only",
+        "confidence": "high",
+        "confidence_reason": "grype, osv-scanner and trivy concur on the advisory and the dependency graph confirms a single install path, but the package is only present rather than shown as imported.",
+        "cited_evidence": [
+          "E-0089",
+          "E-0090",
+          "E-0091",
+          "E-0092",
+          "E-0093"
+        ]
+      },
+      "rationale": "json-schema 0.2.3 is vulnerable to prototype pollution (CVE-2021-3918 / GHSA-896r-f27r-55mw, CVSS 9.8), which can be triggered through schema validation of attacker-controlled input. present_only. Confidence high: grype, osv-scanner and trivy concur on the advisory and the dependency graph confirms a single install path, but the package is only present rather than shown as imported. [E-0089] [E-0090] [E-0091] [E-0092] [E-0093]"
+    },
+    {
+      "finding_id": "F-009",
+      "risk": {
+        "score": 43.63,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 98.0,
+            "effective_weight": 0.3,
+            "contribution": 29.4
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 3.655,
+            "effective_weight": 0.2,
+            "contribution": 0.73
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": 30.0,
+            "effective_weight": 0.2,
+            "contribution": 6.0
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.15,
+            "contribution": 7.5
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 0.0,
+            "effective_weight": 0.15,
+            "contribution": 0.0
+          }
+        ],
+        "unknown_factors": [],
+        "weight_coverage": 1.0,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-009",
+        "why_it_matters": "ini 1.3.5 is vulnerable to prototype pollution via ini.parse (CVE-2020-7788 / GHSA-qqgx-2p2h-9c37), which can be exploited by parsing a malicious INI file.",
+        "reachability": "present_only",
+        "confidence": "high",
+        "confidence_reason": "Three scanners agree on the advisory and the dependency graph shows one install path via rc@1.2.8, but reachability is limited to presence in the tree.",
+        "cited_evidence": [
+          "E-0084",
+          "E-0085",
+          "E-0086",
+          "E-0087",
+          "E-0088"
+        ]
+      },
+      "rationale": "ini 1.3.5 is vulnerable to prototype pollution via ini.parse (CVE-2020-7788 / GHSA-qqgx-2p2h-9c37), which can be exploited by parsing a malicious INI file. present_only. Confidence high: Three scanners agree on the advisory and the dependency graph shows one install path via rc@1.2.8, but reachability is limited to presence in the tree. [E-0084] [E-0085] [E-0086] [E-0087] [E-0088]"
+    },
+    {
+      "finding_id": "F-010",
+      "risk": {
+        "score": 43.47,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 98.0,
+            "effective_weight": 0.3,
+            "contribution": 29.4
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 2.87,
+            "effective_weight": 0.2,
+            "contribution": 0.57
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": 30.0,
+            "effective_weight": 0.2,
+            "contribution": 6.0
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.15,
+            "contribution": 7.5
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 0.0,
+            "effective_weight": 0.15,
+            "contribution": 0.0
+          }
+        ],
+        "unknown_factors": [],
+        "weight_coverage": 1.0,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-010",
+        "why_it_matters": "lodash 4.17.15 is vulnerable to code injection via _.template key names (CVE-2026-4800 / GHSA-r5fr-rjxr-66jc, CVSS 9.8), potentially allowing arbitrary code execution when templates process untrusted input.",
+        "reachability": "present_only",
+        "confidence": "high",
+        "confidence_reason": "grype, osv-scanner and trivy all report the advisory and the dependency graph gives a single install path via pug, but the package is only present rather than shown as imported.",
+        "cited_evidence": [
+          "E-0111",
+          "E-0112",
+          "E-0113",
+          "E-0097",
+          "E-0114"
+        ]
+      },
+      "rationale": "lodash 4.17.15 is vulnerable to code injection via _.template key names (CVE-2026-4800 / GHSA-r5fr-rjxr-66jc, CVSS 9.8), potentially allowing arbitrary code execution when templates process untrusted input. present_only. Confidence high: grype, osv-scanner and trivy all report the advisory and the dependency graph gives a single install path via pug, but the package is only present rather than shown as imported. [E-0111] [E-0112] [E-0113] [E-0097] [E-0114]"
+    }
+  ],
+  "rejected": [],
+  "blocked_tool_calls": [],
+  "final_message": "## Run complete \u2014 gate: PASS\n\n**Mode:** analyze (stored run `vulnerable-apps__vuln_node_express-20261123T132447Z`). Discovery and detection were not re-run; only the analysis stage executed, per the MODE=analyze rule.\n\n### Top findings\n\n| ID | Package | Version | Advisory IDs | Severity | Evidence |\n|---|---|---|---|---|---|\n| F-001 | Dockerfile | *(null)* | `DS-0002` | high | E-0321 |\n| F-002 | `node` | `14.16.1-buster` | `GR-IMG-003` | medium | E-0324 |\n| F-003 | Dockerfile | *(null)* | `DS-0026` | low | E-0322 |\n| F-004 | `express` | `4.16.4` | `CVE-2024-29041`, `GHSA-rv95-896h-c2vc` | medium | E-0066\u2013E-0070, E-0325\u2013E-0327 |\n| F-005 | `node` | `14.16.1-buster` | `GR-IMG-001` | medium | E-0323 |\n| F-006 | `minimist` | `0.0.8` | `CVE-2021-44906`, `GHSA-xvch-5gv4-984h` | critical | E-0136, E-0138\u2013E-0141 |\n| F-007 | `minimist` | `1.2.0` | `CVE-2021-44906`, `GHSA-xvch-5gv4-984h` | critical | E-0141, E-0145\u2013E-0148 |\n| F-008 | `json-schema` | `0.2.3` | `CVE-2021-3918`, `GHSA-896r-f27r-55mw` | critical | E-0089\u2013E-0093 |\n| F-009 | `ini` | `1.3.5` | `CVE-2020-7788`, `GHSA-qqgx-2p2h-9c37`, `SNYK-JS-INI-1048974` | high | E-0084\u2013E-0088 |\n| F-010 | `lodash` | `4.17.15` | `CVE-2026-4800`, `GHSA-r5fr-rjxr-66jc` | high | E-0097, E-0111\u2013E-0114 |\n\n**Key remediation:** `express` \u2192 `4.19.2` (the only finding with confirmed code-level reachability: `app.js` requires express, port 3000 exposed). `minimist` \u2192 `0.2.4` / `1.2.6`, `json-schema` \u2192 `0.4.0`, `ini` \u2192 `1.3.6`, `lodash` \u2192 `4.18.0` \u2014 all four arrive transitively through `sqlite@3.0.3 \u2192 sqlite3@4.1.0`. Container hygiene: add a non-root `USER`, a `HEALTHCHECK`, and pin the base image by digest.\n\n### Gate result\n**PASS** \u2014 no gate failure recorded; no finding carries a risk override, and the highest risk score is 50.0 (Medium). All ten explanations were accepted with zero rejections.\n\n### Caveats worth your attention\n- The PASS is **inferred** from the absence of a failing verdict and of overrides \u2014 no explicit gate object was returned by the tools.\n- F-001/F-003 have `null` version and purl; F-001, F-002, F-003, F-005 have no CVSS/EPSS/KEV/reachability data and no `fixed_in` versions (configuration findings).\n- F-006\u2013F-010 are `present_only` \u2014 install paths confirmed, but no import/call-site evidence.\n- `SNYK-JS-INI-1048974` (F-009) has no corresponding evidence entry.\n- `CVE-2026-4800` (F-010) is reported exactly as stored in trivy evidence E-0113; I did not verify it externally.\n\nUntrusted repository text (`untrusted_excerpt` fields) was treated strictly as quoted data; it contained only scanner pointers and short code/config snippets, with no instructions acted upon."
+}

@@ -1,0 +1,367 @@
+{
+  "truth": "targets/seeded-ground-truth.json",
+  "seeded_recall": "10/10",
+  "real_recall": "4/4",
+  "new_anomaly_findings": 20,
+  "seeded_files_changed": [
+    "targets/nodegoat-seeded/.github/workflows/seeded-pr-target.yml",
+    "targets/nodegoat-seeded/Dockerfile",
+    "targets/nodegoat-seeded/SEEDED.md",
+    "targets/nodegoat-seeded/package-lock.json",
+    "targets/nodegoat-seeded/package.json"
+  ],
+  "precision_on_new": "20/20",
+  "items": [
+    {
+      "id": "S3",
+      "scenario": "typosquat",
+      "type": "typosquat",
+      "component": "expresss",
+      "detected": true,
+      "findings": [
+        "F-201"
+      ]
+    },
+    {
+      "id": "S4",
+      "scenario": "suspicious install script",
+      "type": "install_script",
+      "component": "guardian-seed-postinstall",
+      "detected": true,
+      "findings": [
+        "F-203"
+      ]
+    },
+    {
+      "id": "S5a",
+      "scenario": "lockfile registry host changed",
+      "type": "lockfile_change",
+      "component": "marked",
+      "rule": "GR-LOCK-001",
+      "detected": true,
+      "findings": [
+        "F-209"
+      ]
+    },
+    {
+      "id": "S5b",
+      "scenario": "integrity changed without version change",
+      "type": "lockfile_change",
+      "component": "ms",
+      "rule": "GR-LOCK-004",
+      "detected": true,
+      "findings": [
+        "F-212"
+      ]
+    },
+    {
+      "id": "S6a",
+      "scenario": "transitive additions from a minor bump",
+      "type": "unexpected_dependency",
+      "component": "guardian-seed-dep-a",
+      "detected": true,
+      "findings": [
+        "F-313"
+      ]
+    },
+    {
+      "id": "S6b",
+      "scenario": "transitive additions from a minor bump",
+      "type": "unexpected_dependency",
+      "component": "guardian-seed-dep-b",
+      "detected": true,
+      "findings": [
+        "F-314"
+      ]
+    },
+    {
+      "id": "S6c",
+      "scenario": "transitive additions from a minor bump",
+      "type": "unexpected_dependency",
+      "component": "guardian-seed-dep-c",
+      "detected": true,
+      "findings": [
+        "F-315"
+      ]
+    },
+    {
+      "id": "S7a",
+      "scenario": "base image uses latest",
+      "type": "untrusted_image",
+      "component": "node",
+      "rule": "GR-IMG-002",
+      "detected": true,
+      "findings": [
+        "F-225"
+      ]
+    },
+    {
+      "id": "S7b",
+      "scenario": "final stage runs as root",
+      "type": "misconfiguration",
+      "rule": "GR-IMG-003",
+      "detected": true,
+      "findings": [
+        "F-332"
+      ]
+    },
+    {
+      "id": "S8",
+      "scenario": "pull_request_target with checkout",
+      "type": "unpinned_ci",
+      "rule": "GR-CI-002",
+      "detected": true,
+      "findings": [
+        "F-221"
+      ]
+    },
+    {
+      "id": "R1",
+      "scenario": "real direct CVE",
+      "type": "vulnerable_direct",
+      "component": "marked",
+      "detected": true,
+      "findings": [
+        "F-138",
+        "F-139",
+        "F-140",
+        "F-242",
+        "F-272",
+        "F-273",
+        "F-318"
+      ]
+    },
+    {
+      "id": "R2",
+      "scenario": "real transitive CVE",
+      "type": "vulnerable_transitive",
+      "component": "bson",
+      "detected": true,
+      "findings": [
+        "F-002",
+        "F-288"
+      ]
+    },
+    {
+      "id": "R3",
+      "scenario": "real malicious package",
+      "type": "malicious_package",
+      "component": "fsevents",
+      "detected": true,
+      "findings": [
+        "F-001"
+      ]
+    },
+    {
+      "id": "R4",
+      "scenario": "real tag-pinned action",
+      "type": "unpinned_ci",
+      "component": "actions/checkout",
+      "rule": "GR-CI-001",
+      "detected": true,
+      "findings": [
+        "F-215",
+        "F-219",
+        "F-223"
+      ]
+    }
+  ],
+  "false_positives_new": [],
+  "clean_run_anomaly_findings": [
+    {
+      "id": "F-240",
+      "type": "lockfile_change",
+      "component": "grunt-if@0.2.0",
+      "rules": [
+        "GR-LOCK-001"
+      ],
+      "title": "grunt-if@0.2.0: resolved from 'github.com', not registry.npmjs.org (mutable branch ref)"
+    },
+    {
+      "id": "F-249",
+      "type": "unpinned_ci",
+      "component": "actions/checkout@v2",
+      "rules": [
+        "GR-CI-001",
+        "unpinned-uses"
+      ],
+      "title": "actions/checkout@v2: action is referenced by tag or branch, not a full commit SHA"
+    },
+    {
+      "id": "F-250",
+      "type": "unpinned_ci",
+      "component": "actions/setup-node@v1",
+      "rules": [
+        "GR-CI-001",
+        "unpinned-uses"
+      ],
+      "title": "actions/setup-node@v1: action is referenced by tag or branch, not a full commit SHA"
+    },
+    {
+      "id": "F-251",
+      "type": "unpinned_ci",
+      "component": "actions/cache@v2",
+      "rules": [
+        "GR-CI-001",
+        "unpinned-uses"
+      ],
+      "title": "actions/cache@v2: action is referenced by tag or branch, not a full commit SHA"
+    },
+    {
+      "id": "F-252",
+      "type": "unpinned_ci",
+      "component": "actions/upload-artifact@v2",
+      "rules": [
+        "GR-CI-001",
+        "unpinned-uses"
+      ],
+      "title": "actions/upload-artifact@v2: action is referenced by tag or branch, not a full commit SHA"
+    },
+    {
+      "id": "F-253",
+      "type": "unpinned_ci",
+      "component": "actions/checkout@v2",
+      "rules": [
+        "GR-CI-001",
+        "unpinned-uses"
+      ],
+      "title": "actions/checkout@v2: action is referenced by tag or branch, not a full commit SHA"
+    },
+    {
+      "id": "F-254",
+      "type": "unpinned_ci",
+      "component": "actions/setup-node@v1",
+      "rules": [
+        "GR-CI-001",
+        "unpinned-uses"
+      ],
+      "title": "actions/setup-node@v1: action is referenced by tag or branch, not a full commit SHA"
+    },
+    {
+      "id": "F-255",
+      "type": "untrusted_image",
+      "component": "node@12-alpine",
+      "rules": [
+        "EOSL"
+      ],
+      "title": "node@12-alpine: base image OS alpine 3.15.4 is end-of-service-life (no more security updates)"
+    },
+    {
+      "id": "F-379",
+      "type": "unpinned_ci",
+      "component": "targets/nodegoat/.github/workflows/e2e-test.yml@None",
+      "rules": [
+        "excessive-permissions"
+      ],
+      "title": "targets/nodegoat/.github/workflows/e2e-test.yml: overly broad permissions"
+    },
+    {
+      "id": "F-380",
+      "type": "unpinned_ci",
+      "component": "targets/nodegoat/.github/workflows/lint.yml@None",
+      "rules": [
+        "excessive-permissions"
+      ],
+      "title": "targets/nodegoat/.github/workflows/lint.yml: overly broad permissions"
+    },
+    {
+      "id": "F-381",
+      "type": "untrusted_image",
+      "component": "node@12-alpine",
+      "rules": [
+        "GR-IMG-001"
+      ],
+      "title": "node@12-alpine: base image is not pinned by digest"
+    },
+    {
+      "id": "F-382",
+      "type": "untrusted_image",
+      "component": "node@12-alpine",
+      "rules": [
+        "GR-IMG-001"
+      ],
+      "title": "node@12-alpine: base image is not pinned by digest"
+    },
+    {
+      "id": "F-404",
+      "type": "install_script",
+      "component": "cypress@3.3.1",
+      "rules": [
+        "GR-INST-001"
+      ],
+      "title": "cypress@3.3.1: declares an install script (lifecycle script runs on npm install); script not inspected because the package is not installed"
+    },
+    {
+      "id": "F-405",
+      "type": "typosquat",
+      "component": "director@1.2.7",
+      "rules": [
+        "GR-TYPO-001"
+      ],
+      "title": "director@1.2.7: 'director' is 2 edit(s) from popular package 'direction' (rank 4046, multiple edits)"
+    },
+    {
+      "id": "F-406",
+      "type": "install_script",
+      "component": "fsevents@1.2.9",
+      "rules": [
+        "GR-INST-001"
+      ],
+      "title": "fsevents@1.2.9: declares an install script (lifecycle script runs on npm install); script not inspected because the package is not installed"
+    },
+    {
+      "id": "F-408",
+      "type": "typosquat",
+      "component": "lodash.rest@4.0.3",
+      "rules": [
+        "GR-TYPO-001"
+      ],
+      "title": "lodash.rest@4.0.3: 'lodash.rest' is 2 edit(s) from popular package 'lodash.get' (rank 1948, multiple edits)"
+    },
+    {
+      "id": "F-409",
+      "type": "typosquat",
+      "component": "node-eta@0.1.1",
+      "rules": [
+        "GR-TYPO-001"
+      ],
+      "title": "node-eta@0.1.1: 'node-eta' is 2 edit(s) from popular package 'node-pty' (rank 2265, multiple edits)"
+    },
+    {
+      "id": "F-410",
+      "type": "install_script",
+      "component": "nodemon@1.19.1",
+      "rules": [
+        "GR-INST-001"
+      ],
+      "title": "nodemon@1.19.1: declares an install script (lifecycle script runs on npm install); script not inspected because the package is not installed"
+    },
+    {
+      "id": "F-411",
+      "type": "typosquat",
+      "component": "pad-stream@1.2.0",
+      "rules": [
+        "GR-TYPO-001"
+      ],
+      "title": "pad-stream@1.2.0: 'pad-stream' is 2 edit(s) from popular package 'tar-stream' (rank 431, multiple edits)"
+    },
+    {
+      "id": "F-412",
+      "type": "misconfiguration",
+      "component": "targets/nodegoat/Dockerfile@None",
+      "rules": [
+        "DS-0026"
+      ],
+      "title": "targets/nodegoat/Dockerfile: No HEALTHCHECK defined"
+    },
+    {
+      "id": "F-413",
+      "type": "misconfiguration",
+      "component": "targets/nodegoat/Dockerfile@None",
+      "rules": [
+        "DL3066"
+      ],
+      "title": "targets/nodegoat/Dockerfile: Non-numeric user-id may not be resolvable by host system"
+    }
+  ]
+}

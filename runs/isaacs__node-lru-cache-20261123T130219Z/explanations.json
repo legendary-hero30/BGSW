@@ -1,0 +1,648 @@
+{
+  "run_id": "runs/isaacs__node-lru-cache-20261123T130219Z",
+  "provider": "deepinfra",
+  "model": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+  "generator": "language model",
+  "accepted": [
+    {
+      "finding_id": "F-001",
+      "risk": {
+        "score": 35.0,
+        "level": "Low",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 20.0,
+            "effective_weight": 0.5,
+            "contribution": 10.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.5,
+            "contribution": 25.0
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability"
+        ],
+        "weight_coverage": 0.3,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-001",
+        "why_it_matters": "The benchmark workflow invokes actions/checkout@v6 by mutable tag, so a compromised or retagged upstream action could execute arbitrary code in CI with the workflow's token and repository access.",
+        "reachability": "unknown",
+        "confidence": "high",
+        "confidence_reason": "Both guardian-rules (GR-CI-001) and zizmor (unpinned-uses) independently flag the same line 26 reference in benchmark.yml, and the excerpt shows a tag rather than a commit SHA.",
+        "cited_evidence": [
+          "E-0246",
+          "E-0247"
+        ]
+      },
+      "rationale": "The benchmark workflow invokes actions/checkout@v6 by mutable tag, so a compromised or retagged upstream action could execute arbitrary code in CI with the workflow's token and repository access. unknown. Confidence high: Both guardian-rules (GR-CI-001) and zizmor (unpinned-uses) independently flag the same line 26 reference in benchmark.yml, and the excerpt shows a tag rather than a commit SHA. [E-0246] [E-0247]"
+    },
+    {
+      "finding_id": "F-002",
+      "risk": {
+        "score": 35.0,
+        "level": "Low",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 20.0,
+            "effective_weight": 0.5,
+            "contribution": 10.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.5,
+            "contribution": 25.0
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability"
+        ],
+        "weight_coverage": 0.3,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-002",
+        "why_it_matters": "actions/setup-node@v6 is pinned only to a tag in the benchmark workflow, allowing a mutable upstream reference to run unreviewed code during CI setup.",
+        "reachability": "unknown",
+        "confidence": "high",
+        "confidence_reason": "guardian-rules GR-CI-001 and zizmor unpinned-uses agree on the same line 29 reference in benchmark.yml.",
+        "cited_evidence": [
+          "E-0248",
+          "E-0249"
+        ]
+      },
+      "rationale": "actions/setup-node@v6 is pinned only to a tag in the benchmark workflow, allowing a mutable upstream reference to run unreviewed code during CI setup. unknown. Confidence high: guardian-rules GR-CI-001 and zizmor unpinned-uses agree on the same line 29 reference in benchmark.yml. [E-0248] [E-0249]"
+    },
+    {
+      "finding_id": "F-003",
+      "risk": {
+        "score": 35.0,
+        "level": "Low",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 20.0,
+            "effective_weight": 0.5,
+            "contribution": 10.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.5,
+            "contribution": 25.0
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability"
+        ],
+        "weight_coverage": 0.3,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-003",
+        "why_it_matters": "The main CI workflow checks out the repository via actions/checkout@v6 by tag, so a hijacked action tag could tamper with build and test results or exfiltrate secrets.",
+        "reachability": "unknown",
+        "confidence": "high",
+        "confidence_reason": "Two independent scanners (guardian-rules GR-CI-001 and zizmor unpinned-uses) report the identical line 45 reference in ci.yml.",
+        "cited_evidence": [
+          "E-0251",
+          "E-0252"
+        ]
+      },
+      "rationale": "The main CI workflow checks out the repository via actions/checkout@v6 by tag, so a hijacked action tag could tamper with build and test results or exfiltrate secrets. unknown. Confidence high: Two independent scanners (guardian-rules GR-CI-001 and zizmor unpinned-uses) report the identical line 45 reference in ci.yml. [E-0251] [E-0252]"
+    },
+    {
+      "finding_id": "F-004",
+      "risk": {
+        "score": 35.0,
+        "level": "Low",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 20.0,
+            "effective_weight": 0.5,
+            "contribution": 10.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.5,
+            "contribution": 25.0
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability"
+        ],
+        "weight_coverage": 0.3,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-004",
+        "why_it_matters": "actions/setup-node@v6 is referenced by tag in the primary CI workflow, leaving the Node toolchain setup step open to supply-chain substitution.",
+        "reachability": "unknown",
+        "confidence": "high",
+        "confidence_reason": "guardian-rules GR-CI-001 and zizmor unpinned-uses both identify the same line 48 reference in ci.yml.",
+        "cited_evidence": [
+          "E-0253",
+          "E-0254"
+        ]
+      },
+      "rationale": "actions/setup-node@v6 is referenced by tag in the primary CI workflow, leaving the Node toolchain setup step open to supply-chain substitution. unknown. Confidence high: guardian-rules GR-CI-001 and zizmor unpinned-uses both identify the same line 48 reference in ci.yml. [E-0253] [E-0254]"
+    },
+    {
+      "finding_id": "F-005",
+      "risk": {
+        "score": 35.0,
+        "level": "Low",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 20.0,
+            "effective_weight": 0.5,
+            "contribution": 10.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.5,
+            "contribution": 25.0
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability"
+        ],
+        "weight_coverage": 0.3,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-005",
+        "why_it_matters": "The typedoc workflow uses actions/checkout@v6 by tag, so a mutable action reference could inject code into the documentation build pipeline.",
+        "reachability": "unknown",
+        "confidence": "high",
+        "confidence_reason": "guardian-rules GR-CI-001 and zizmor unpinned-uses both flag line 25 of typedoc.yml.",
+        "cited_evidence": [
+          "E-0256",
+          "E-0257"
+        ]
+      },
+      "rationale": "The typedoc workflow uses actions/checkout@v6 by tag, so a mutable action reference could inject code into the documentation build pipeline. unknown. Confidence high: guardian-rules GR-CI-001 and zizmor unpinned-uses both flag line 25 of typedoc.yml. [E-0256] [E-0257]"
+    },
+    {
+      "finding_id": "F-006",
+      "risk": {
+        "score": 35.0,
+        "level": "Low",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 20.0,
+            "effective_weight": 0.5,
+            "contribution": 10.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.5,
+            "contribution": 25.0
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability"
+        ],
+        "weight_coverage": 0.3,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-006",
+        "why_it_matters": "actions/setup-node@v6 is tag-pinned in the typedoc workflow, permitting an altered upstream action to run in the docs build.",
+        "reachability": "unknown",
+        "confidence": "high",
+        "confidence_reason": "guardian-rules GR-CI-001 and zizmor unpinned-uses agree on line 27 of typedoc.yml.",
+        "cited_evidence": [
+          "E-0258",
+          "E-0259"
+        ]
+      },
+      "rationale": "actions/setup-node@v6 is tag-pinned in the typedoc workflow, permitting an altered upstream action to run in the docs build. unknown. Confidence high: guardian-rules GR-CI-001 and zizmor unpinned-uses agree on line 27 of typedoc.yml. [E-0258] [E-0259]"
+    },
+    {
+      "finding_id": "F-007",
+      "risk": {
+        "score": 35.0,
+        "level": "Low",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 20.0,
+            "effective_weight": 0.5,
+            "contribution": 10.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.5,
+            "contribution": 25.0
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability"
+        ],
+        "weight_coverage": 0.3,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-007",
+        "why_it_matters": "actions/configure-pages@v5 is referenced by tag in the typedoc workflow, so a mutable reference could alter GitHub Pages configuration during the build.",
+        "reachability": "unknown",
+        "confidence": "high",
+        "confidence_reason": "guardian-rules GR-CI-001 and zizmor unpinned-uses both report line 36 of typedoc.yml.",
+        "cited_evidence": [
+          "E-0260",
+          "E-0261"
+        ]
+      },
+      "rationale": "actions/configure-pages@v5 is referenced by tag in the typedoc workflow, so a mutable reference could alter GitHub Pages configuration during the build. unknown. Confidence high: guardian-rules GR-CI-001 and zizmor unpinned-uses both report line 36 of typedoc.yml. [E-0260] [E-0261]"
+    },
+    {
+      "finding_id": "F-008",
+      "risk": {
+        "score": 35.0,
+        "level": "Low",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 20.0,
+            "effective_weight": 0.5,
+            "contribution": 10.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.5,
+            "contribution": 25.0
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability"
+        ],
+        "weight_coverage": 0.3,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-008",
+        "why_it_matters": "actions/upload-pages-artifact@v4 is tag-pinned, allowing a substituted action to tamper with the artifact published to GitHub Pages.",
+        "reachability": "unknown",
+        "confidence": "high",
+        "confidence_reason": "guardian-rules GR-CI-001 and zizmor unpinned-uses both flag line 38 of typedoc.yml.",
+        "cited_evidence": [
+          "E-0262",
+          "E-0263"
+        ]
+      },
+      "rationale": "actions/upload-pages-artifact@v4 is tag-pinned, allowing a substituted action to tamper with the artifact published to GitHub Pages. unknown. Confidence high: guardian-rules GR-CI-001 and zizmor unpinned-uses both flag line 38 of typedoc.yml. [E-0262] [E-0263]"
+    },
+    {
+      "finding_id": "F-009",
+      "risk": {
+        "score": 35.0,
+        "level": "Low",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 20.0,
+            "effective_weight": 0.5,
+            "contribution": 10.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.5,
+            "contribution": 25.0
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability"
+        ],
+        "weight_coverage": 0.3,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-009",
+        "why_it_matters": "actions/deploy-pages@v4 is referenced by tag, so a mutable upstream reference could control what gets deployed to the published Pages site.",
+        "reachability": "unknown",
+        "confidence": "high",
+        "confidence_reason": "guardian-rules GR-CI-001 and zizmor unpinned-uses agree on line 43 of typedoc.yml.",
+        "cited_evidence": [
+          "E-0264",
+          "E-0265"
+        ]
+      },
+      "rationale": "actions/deploy-pages@v4 is referenced by tag, so a mutable upstream reference could control what gets deployed to the published Pages site. unknown. Confidence high: guardian-rules GR-CI-001 and zizmor unpinned-uses agree on line 43 of typedoc.yml. [E-0264] [E-0265]"
+    },
+    {
+      "finding_id": "F-010",
+      "risk": {
+        "score": 30.72,
+        "level": "Low",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 92.0,
+            "effective_weight": 0.3,
+            "contribution": 27.6
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 0.582,
+            "effective_weight": 0.2,
+            "contribution": 0.12
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": 0.0,
+            "effective_weight": 0.2,
+            "contribution": 0.0
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 20.0,
+            "effective_weight": 0.15,
+            "contribution": 3.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 0.0,
+            "effective_weight": 0.15,
+            "contribution": 0.0
+          }
+        ],
+        "unknown_factors": [],
+        "weight_coverage": 1.0,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-010",
+        "why_it_matters": "tar@7.5.15 carries a critical-severity decompression/parse DoS (CVE-2026-59873 / GHSA-23hp-3jrh-7fpw, CVSS 9.2) reachable through the dev-only test toolchain, so a crafted archive processed during test or install tooling could exhaust resources.",
+        "reachability": "dev_only_unused",
+        "confidence": "high",
+        "confidence_reason": "Three scanners (grype, osv-scanner, trivy) agree on the advisory and the 7.5.19 fix, the dependency graph confirms the path lru-cache@11.5.3 > tap@21.7.4 > @tapjs/run@4.5.8 > pacote@21.5.0 > tar@7.5.15, and the finding records reachability as dev_only_unused with EPSS 0.00582 and no KEV listing.",
+        "cited_evidence": [
+          "E-0162",
+          "E-0163",
+          "E-0164",
+          "E-0156",
+          "E-0165"
+        ]
+      },
+      "rationale": "tar@7.5.15 carries a critical-severity decompression/parse DoS (CVE-2026-59873 / GHSA-23hp-3jrh-7fpw, CVSS 9.2) reachable through the dev-only test toolchain, so a crafted archive processed during test or install tooling could exhaust resources. dev_only_unused. Confidence high: Three scanners (grype, osv-scanner, trivy) agree on the advisory and the 7.5.19 fix, the dependency graph confirms the path lru-cache@11.5.3 > tap@21.7.4 > @tapjs/run@4.5.8 > pacote@21.5.0 > tar@7.5.15, and the finding records reachability as dev_only_unused with EPSS 0.00582 and no KEV listing. [E-0162] [E-0163] [E-0164] [E-0156] [E-0165]"
+    }
+  ],
+  "rejected": [
+    {
+      "finding_id": "F-010",
+      "attempt": 1,
+      "reasons": [
+        "schema: ('reachability',): String should have at least 5 characters"
+      ]
+    }
+  ],
+  "blocked_tool_calls": [],
+  "final_message": "**Run complete \u2014 gate result: PASS.**\n\nThe stored run `isaacs__node-lru-cache-20261123T130219Z` was present and complete, so I delegated only to `analysis` (no discovery or detection re-run, per MODE=analyze).\n\n**Top findings (10 total, all accepted):**\n\n**1. Unpinned GitHub Actions (F-001 \u2013 F-009)** \u2014 `unpinned_ci`, severity `high`, risk score 35.0. Nine references pinned by mutable tag instead of commit SHA, flagged by both `guardian-rules` (GR-CI-001) and `zizmor` (`unpinned-uses`):\n\n| Finding | Action | Workflow | Line | Evidence |\n|---|---|---|---|---|\n| F-001 | `actions/checkout@v6` | `.github/workflows/benchmark.yml` | 26 | E-0246, E-0247 |\n| F-002 | `actions/setup-node@v6` | `.github/workflows/benchmark.yml` | 29 | E-0248, E-0249 |\n| F-003 | `actions/checkout@v6` | `.github/workflows/ci.yml` | 45 | E-0251, E-0252 |\n| F-004 | `actions/setup-node@v6` | `.github/workflows/ci.yml` | 48 | E-0253, E-0254 |\n| F-005 | `actions/checkout@v6` | `.github/workflows/typedoc.yml` | 25 | E-0256, E-0257 |\n| F-006 | `actions/setup-node@v6` | `.github/workflows/typedoc.yml` | 27 | E-0258, E-0259 |\n| F-007 | `actions/configure-pages@v5` | `.github/workflows/typedoc.yml` | 36 | E-0260, E-0261 |\n| F-008 | `actions/upload-pages-artifact@v4` | `.github/workflows/typedoc.yml` | 38 | E-0262, E-0263 |\n| F-009 | `actions/deploy-pages@v4` | `.github/workflows/typedoc.yml` | 43 | E-0264, E-0265 |\n\nA retagged or compromised upstream action runs with the workflow's token and repo access \u2014 build tampering, secret exfiltration, or control of the published Pages site.\n\n**2. F-010 \u2014 `tar@7.5.15` vulnerable transitive dependency** \u2014 `vulnerable_transitive`, severity `critical`, risk score 30.72. `CVE-2026-59873` / `GHSA-23hp-3jrh-7fpw` (node-tar decompression/parse DoS via unlimited input), CVSS 9.2, EPSS 0.00582, KEV false, reachability `dev_only_unused`.\n- Path (E-0156): `lru-cache@11.5.3 > tap@21.7.4 > @tapjs/run@4.5.8 > pacote@21.5.0 > tar@7.5.15`\n- Evidence: E-0162 (grype), E-0163 (osv-scanner), E-0164 (trivy), E-0156 (dependency-graph), E-0165 (EPSS)\n- All three scanners report fixed version `7.5.19`.\n\n**Remediation:**\n- **F-001 \u2013 F-009:** replace each tag with the full 40-char commit SHA (`uses: actions/checkout@<sha> # v6`) and add SHA-pinned Dependabot/Renovate updates. Prioritize `ci.yml` and `benchmark.yml` (default-branch runs).\n- **F-010:** get `tar` to `>= 7.5.19` \u2014 bump `tap@21.7.4` to a release resolving the newer `tar`, or add an npm `overrides` entry. Dev-only and unused, so not a release blocker, but worth clearing.\n\n**Untrusted content:** all `untrusted_excerpt` values were short YAML `uses:` lines and scanner pointer strings; none contained directives. Treated as data only.\n\n**Gate:** PASS \u2014 all 10 findings accepted. One transient rejection (F-010's `reachability` submitted as `dev`, failing a schema min-length check) was corrected to the computed value `dev_only_unused` and accepted; no remaining rejections."
+}

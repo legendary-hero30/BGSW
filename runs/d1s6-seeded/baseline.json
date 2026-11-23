@@ -1,0 +1,119 @@
+{
+  "generated_at": "2026-11-23T09:44:46+00:00",
+  "target": {
+    "name": "nodegoat-seeded",
+    "repo": "local fork of targets/nodegoat (no remote)",
+    "commit": "bb57ba2eb0afab519005f83805f71bcee7db73d3",
+    "license": "Apache-2.0",
+    "path": "targets/nodegoat-seeded"
+  },
+  "tools": {
+    "syft": "syft 1.57.2",
+    "grype": "grype 0.121.3",
+    "trivy": "Version: 0.76.2",
+    "osv-scanner": "osv-scanner version: 2.7.1",
+    "hadolint": "Haskell Dockerfile Linter 2.15.1",
+    "zizmor": "zizmor 1.32.0"
+  },
+  "databases": {
+    "grype_db": {
+      "schema": "v6.1.10",
+      "built": "2026-11-23T06:28:32Z"
+    },
+    "trivy_db": {
+      "version": 2,
+      "updated_at": "2026-11-23T07:04:04.632673631Z"
+    },
+    "osv_npm_db": {
+      "file": "cache/osv/osv-scalibr/npm/all.zip",
+      "downloaded_at": "2026-11-23T08:54:31+00:00"
+    },
+    "feeds": {
+      "epss": {
+        "url": "https://epss.empiricalsecurity.com/epss_scores-current.csv.gz",
+        "file": "cache/feeds/epss_scores-current.csv.gz",
+        "sha256": "cd8fb93ef86b3feecd46ea79ceee9c9073353c841115bf294a30e7ed68d9a1db",
+        "fetched_at": "2026-11-23T08:55:02Z"
+      },
+      "kev": {
+        "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+        "file": "cache/feeds/known_exploited_vulnerabilities.json",
+        "sha256": "12c9ca4c5350ecacdf22bdce91b4ffcf06b8c8dc9c69b8bfb4c1a21be7a5fe50",
+        "fetched_at": "2026-11-23T08:55:03Z"
+      }
+    }
+  },
+  "outputs": {
+    "grype": "runs/d1s6-seeded/grype.json",
+    "trivy": "runs/d1s6-seeded/trivy.json",
+    "osv-scanner": "runs/d1s6-seeded/osv.json",
+    "hadolint": "runs/d1s6-seeded/hadolint.json",
+    "trivy-config": "runs/d1s6-seeded/trivy-config.json",
+    "zizmor": "runs/d1s6-seeded/zizmor.json"
+  },
+  "raw_matches": {
+    "grype": 340,
+    "trivy": 325,
+    "osv-scanner": 313
+  },
+  "groups": 324,
+  "groups_by_tool_count": {
+    "1_tools": 13,
+    "2_tools": 1,
+    "3_tools": 310
+  },
+  "findings": 362,
+  "evidence_records": 1333,
+  "unmapped": [],
+  "by_type": {
+    "malicious_package": 1,
+    "vulnerable_transitive": 303,
+    "vulnerable_direct": 20,
+    "lockfile_change": 5,
+    "typosquat": 5,
+    "install_script": 4,
+    "unpinned_ci": 13,
+    "misconfiguration": 5,
+    "untrusted_image": 3,
+    "unexpected_dependency": 3
+  },
+  "by_severity": {
+    "critical": 34,
+    "high": 191,
+    "medium": 109,
+    "low": 28
+  },
+  "dependency_findings": 324,
+  "runtime_findings": 93,
+  "dev_only_findings": 231,
+  "kev_findings": 0,
+  "with_fix": 312,
+  "vulnerable_packages": 133,
+  "image": null,
+  "posture_hits": {
+    "guardian-rules:GR-IMG-001": 2,
+    "guardian-rules:GR-IMG-002": 1,
+    "guardian-rules:GR-IMG-003": 1,
+    "guardian-rules:GR-CI-001": 7,
+    "guardian-rules:GR-CI-002": 1,
+    "hadolint:DL3007": 1,
+    "trivy:DS-0001": 1,
+    "trivy:DS-0002": 1,
+    "trivy:DS-0026": 1,
+    "zizmor:excessive-permissions": 3,
+    "zizmor:unpinned-uses": 7,
+    "zizmor:artipacked": 1,
+    "zizmor:dangerous-triggers": 1
+  },
+  "anomaly_hits": {
+    "GR-INST-001": 3,
+    "GR-TYPO-001": 5,
+    "GR-LOCK-001": 4,
+    "GR-INST-002": 1,
+    "GR-LOCK-005": 1,
+    "GR-LOCK-004": 1,
+    "GR-DEP-001": 3
+  },
+  "base_target": "nodegoat",
+  "synthetic": true
+}

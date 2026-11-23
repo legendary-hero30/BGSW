@@ -1,0 +1,110 @@
+{
+  "generated_at": "2026-11-23T14:05:44+00:00",
+  "target": {
+    "name": "cr0hn__vulnerable-node-20261123T140538Z",
+    "repo": "https://github.com/cr0hn/vulnerable-node",
+    "commit": "d68f2a3c9277ece2c2feb9976052033bdecd7fbe",
+    "license": "unknown",
+    "path": "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z"
+  },
+  "tools": {
+    "syft": "syft 1.57.2"
+  },
+  "artifacts": {
+    "sbom": {
+      "file": "runs/cr0hn__vulnerable-node-20261123T140538Z/sbom.cdx.json",
+      "sha256": "4342c1b36a7fda88a5e6d50dc7d11b114b981238791ea0064d1173f53e26c1fc",
+      "format": "CycloneDX 1.5 JSON"
+    },
+    "graph": {
+      "file": "runs/cr0hn__vulnerable-node-20261123T140538Z/graph.json"
+    }
+  },
+  "discovered_files": {
+    "manifests": [
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package-lock.json",
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/package.json"
+    ],
+    "dockerfiles": [
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/Dockerfile",
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/imds/Dockerfile",
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/mocks/vault/Dockerfile"
+    ],
+    "compose": [
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/docker-compose.yml"
+    ],
+    "ci": [
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci-hardened.yml",
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/ci.yml",
+      "targets/dynamic/cr0hn__vulnerable-node-20261123T140538Z/.github/workflows/sast-benchmark.yml"
+    ]
+  },
+  "sbom": {
+    "components": 136,
+    "by_purl_type": {
+      "pkg:npm": 125,
+      "pkg:github": 7,
+      "none": 4
+    },
+    "ci_actions": [
+      "pkg:github/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+      "pkg:github/actions/checkout@v4",
+      "pkg:github/actions/checkout@v4.2.2",
+      "pkg:github/actions/setup-node@v4",
+      "pkg:github/actions/setup-node@v4.1.0",
+      "pkg:github/actions/upload-artifact@v4"
+    ],
+    "dependency_records": 53
+  },
+  "graph": {
+    "nodes": 128,
+    "edges": 199,
+    "runtime_install_paths": 127,
+    "dev_install_paths": 0,
+    "unique_runtime_packages": 124,
+    "unique_dev_packages": 0,
+    "direct": {
+      "runtime": [
+        "cookie-parser@1.4.7",
+        "ejs@3.1.10",
+        "express-session@1.19.0",
+        "express@4.22.2",
+        "jsonwebtoken@9.0.3",
+        "mongodb@6.21.0",
+        "morgan@1.12.0",
+        "pg@8.23.0"
+      ],
+      "dev": []
+    },
+    "by_depth": {
+      "0": 1,
+      "1": 8,
+      "2": 55,
+      "3": 35,
+      "4": 15,
+      "5": 4,
+      "6": 9,
+      "7": 1
+    },
+    "max_depth": 7,
+    "unreachable_from_root": [],
+    "unresolved_optional": 0,
+    "unresolved_required": [
+      "node_modules/mongodb -> @aws-sdk/credential-providers",
+      "node_modules/mongodb -> @mongodb-js/zstd",
+      "node_modules/mongodb -> gcp-metadata",
+      "node_modules/mongodb -> kerberos",
+      "node_modules/mongodb -> mongodb-client-encryption",
+      "node_modules/mongodb -> snappy",
+      "node_modules/mongodb -> socks",
+      "node_modules/pg -> pg-native"
+    ]
+  },
+  "cross_check_vs_sbom": {
+    "agrees": true,
+    "graph_runtime_unique": 125,
+    "sbom_npm_unique": 125,
+    "only_in_graph": [],
+    "only_in_sbom": []
+  }
+}

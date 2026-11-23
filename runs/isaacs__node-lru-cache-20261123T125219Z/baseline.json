@@ -1,0 +1,128 @@
+{
+  "generated_at": "2026-11-23T12:52:57+00:00",
+  "target": {
+    "name": "isaacs__node-lru-cache-20261123T125219Z",
+    "repo": "https://github.com/isaacs/node-lru-cache",
+    "commit": "7e71a1f3babdc68dfbadde91f28eaeea919dad9b",
+    "license": "unknown",
+    "path": "targets/dynamic/isaacs__node-lru-cache-20261123T125219Z"
+  },
+  "tools": {
+    "syft": "syft 1.57.2",
+    "grype": "grype 0.121.3",
+    "trivy": "Version: 0.76.2",
+    "osv-scanner": "osv-scanner version: 2.7.1",
+    "hadolint": "Haskell Dockerfile Linter 2.15.1",
+    "zizmor": "zizmor 1.32.0"
+  },
+  "databases": {
+    "grype_db": {
+      "schema": "v6.1.10",
+      "built": "2026-11-23T06:28:32Z"
+    },
+    "trivy_db": {
+      "version": 2,
+      "updated_at": "2026-11-23T07:04:04.632673631Z"
+    },
+    "osv_npm_db": {
+      "file": "cache/osv/osv-scalibr/npm/all.zip",
+      "downloaded_at": "2026-11-23T08:54:31+00:00"
+    },
+    "feeds": {
+      "epss": {
+        "url": "https://epss.empiricalsecurity.com/epss_scores-current.csv.gz",
+        "file": "cache/feeds/epss_scores-current.csv.gz",
+        "sha256": "cd8fb93ef86b3feecd46ea79ceee9c9073353c841115bf294a30e7ed68d9a1db",
+        "fetched_at": "2026-11-23T08:55:02Z"
+      },
+      "kev": {
+        "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+        "file": "cache/feeds/known_exploited_vulnerabilities.json",
+        "sha256": "12c9ca4c5350ecacdf22bdce91b4ffcf06b8c8dc9c69b8bfb4c1a21be7a5fe50",
+        "fetched_at": "2026-11-23T08:55:03Z"
+      }
+    }
+  },
+  "outputs": {
+    "grype": "runs/isaacs__node-lru-cache-20261123T125219Z/grype.json",
+    "trivy": "runs/isaacs__node-lru-cache-20261123T125219Z/trivy.json",
+    "osv-scanner": "runs/isaacs__node-lru-cache-20261123T125219Z/osv.json",
+    "hadolint": "runs/isaacs__node-lru-cache-20261123T125219Z/hadolint.json",
+    "trivy-config": "runs/isaacs__node-lru-cache-20261123T125219Z/trivy-config.json",
+    "zizmor": "runs/isaacs__node-lru-cache-20261123T125219Z/zizmor.json"
+  },
+  "raw_matches": {
+    "grype": 59,
+    "trivy": 59,
+    "osv-scanner": 59
+  },
+  "groups": 59,
+  "groups_by_tool_count": {
+    "3_tools": 59
+  },
+  "findings": 74,
+  "evidence_records": 269,
+  "unmapped": [],
+  "by_type": {
+    "unpinned_ci": 13,
+    "vulnerable_transitive": 58,
+    "typosquat": 1,
+    "vulnerable_direct": 1,
+    "install_script": 1
+  },
+  "by_severity": {
+    "high": 34,
+    "critical": 1,
+    "medium": 30,
+    "low": 9
+  },
+  "dependency_findings": 59,
+  "runtime_findings": 0,
+  "dev_only_findings": 59,
+  "kev_findings": 0,
+  "with_fix": 59,
+  "vulnerable_packages": 17,
+  "image": null,
+  "posture_hits": {
+    "guardian-rules:GR-CI-001": 9,
+    "zizmor:artipacked": 3,
+    "zizmor:excessive-permissions": 1,
+    "zizmor:unpinned-uses": 9
+  },
+  "anomaly_hits": {
+    "GR-INST-001": 1,
+    "GR-TYPO-001": 1
+  },
+  "base_target": null,
+  "synthetic": false,
+  "by_risk_level": {
+    "Low": 74
+  },
+  "by_reachability": {
+    "unknown": 13,
+    "dev_only_unused": 61
+  },
+  "by_exposure": {
+    "build_or_dev": 74
+  },
+  "app_context": {
+    "runtime_imports": [
+      "keysort",
+      "markdown-tables",
+      "mkdirp",
+      "ora",
+      "precise",
+      "retsu",
+      "tiny-worker"
+    ],
+    "dev_imports": [
+      "tap"
+    ],
+    "network_facts": [],
+    "dynamic_requires": 6
+  },
+  "store": {
+    "db": "runs/guardian.db",
+    "run_id": "runs/isaacs__node-lru-cache-20261123T125219Z"
+  }
+}

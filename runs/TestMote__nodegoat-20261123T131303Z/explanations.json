@@ -1,0 +1,659 @@
+{
+  "run_id": "runs/TestMote__nodegoat-20261123T131303Z",
+  "provider": "deepinfra",
+  "model": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+  "generator": "language model",
+  "accepted": [
+    {
+      "finding_id": "F-001",
+      "risk": {
+        "score": 57.0,
+        "level": "Critical",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": 30.0,
+            "effective_weight": 0.4,
+            "contribution": 12.0
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.3,
+            "contribution": 15.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 100.0,
+            "effective_weight": 0.3,
+            "contribution": 30.0
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev"
+        ],
+        "weight_coverage": 0.5,
+        "override": "confirmed_malicious"
+      },
+      "explanation": {
+        "finding_id": "F-001",
+        "why_it_matters": "fsevents@1.2.9 is flagged as malicious code by both grype (GHSA-xv2f-5jw4-v95m) and osv-scanner (MAL-2023-462), and it is the only finding in this run with confirmed_malicious=true, so a compromised package would execute with install-time privileges.",
+        "reachability": "present",
+        "confidence": "high",
+        "confidence_reason": "Two independent scanners agree on malicious status, the dependency path is resolved in the graph, and the lockfile entry carries hasInstallScript, but no import/call-site evidence exists so reachability is present_only rather than called.",
+        "cited_evidence": [
+          "E-0305",
+          "E-0306",
+          "E-0303",
+          "E-1292"
+        ]
+      },
+      "rationale": "fsevents@1.2.9 is flagged as malicious code by both grype (GHSA-xv2f-5jw4-v95m) and osv-scanner (MAL-2023-462), and it is the only finding in this run with confirmed_malicious=true, so a compromised package would execute with install-time privileges. present. Confidence high: Two independent scanners agree on malicious status, the dependency path is resolved in the graph, and the lockfile entry carries hasInstallScript, but no import/call-site evidence exists so reachability is present_only rather than called. [E-0305] [E-0306] [E-0303] [E-1292]"
+    },
+    {
+      "finding_id": "F-002",
+      "risk": {
+        "score": 64.73,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 65.0,
+            "effective_weight": 0.461538,
+            "contribution": 30.0
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 75.358,
+            "effective_weight": 0.307692,
+            "contribution": 23.19
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.230769,
+            "contribution": 11.54
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.65,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-002",
+        "why_it_matters": "libcrypto1.1@1.1.1n-r0 in the node:12-alpine base image is affected by CVE-2023-2650, an OpenSSL DoS with a high EPSS of 0.75358 (percentile 0.99524), meaning exploitation is considered likely in the wild.",
+        "reachability": "unknown",
+        "confidence": "medium",
+        "confidence_reason": "grype and trivy both report the CVE and agree on the fix version, but the run records reachability as unknown with no call-graph or import evidence for the native library.",
+        "cited_evidence": [
+          "E-1306",
+          "E-1373",
+          "E-1374",
+          "E-1375"
+        ]
+      },
+      "rationale": "libcrypto1.1@1.1.1n-r0 in the node:12-alpine base image is affected by CVE-2023-2650, an OpenSSL DoS with a high EPSS of 0.75358 (percentile 0.99524), meaning exploitation is considered likely in the wild. unknown. Confidence medium: grype and trivy both report the CVE and agree on the fix version, but the run records reachability as unknown with no call-graph or import evidence for the native library. [E-1306] [E-1373] [E-1374] [E-1375]"
+    },
+    {
+      "finding_id": "F-003",
+      "risk": {
+        "score": 64.73,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 65.0,
+            "effective_weight": 0.461538,
+            "contribution": 30.0
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 75.358,
+            "effective_weight": 0.307692,
+            "contribution": 23.19
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.230769,
+            "contribution": 11.54
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.65,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-003",
+        "why_it_matters": "libssl1.1@1.1.1n-r0 in the node:12-alpine base image carries the same CVE-2023-2650 OpenSSL DoS, so the vulnerable code is duplicated across both the crypto and TLS shared libraries.",
+        "reachability": "unknown",
+        "confidence": "medium",
+        "confidence_reason": "Two scanners corroborate the CVE and fix version, but reachability is recorded as unknown and no usage evidence for libssl is present in the stored run.",
+        "cited_evidence": [
+          "E-1306",
+          "E-1399",
+          "E-1400",
+          "E-1375"
+        ]
+      },
+      "rationale": "libssl1.1@1.1.1n-r0 in the node:12-alpine base image carries the same CVE-2023-2650 OpenSSL DoS, so the vulnerable code is duplicated across both the crypto and TLS shared libraries. unknown. Confidence medium: Two scanners corroborate the CVE and fix version, but reachability is recorded as unknown and no usage evidence for libssl is present in the stored run. [E-1306] [E-1399] [E-1400] [E-1375]"
+    },
+    {
+      "finding_id": "F-004",
+      "risk": {
+        "score": 64.69,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 74.0,
+            "effective_weight": 0.461538,
+            "contribution": 34.15
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 61.757,
+            "effective_weight": 0.307692,
+            "contribution": 19.0
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.230769,
+            "contribution": 11.54
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.65,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-004",
+        "why_it_matters": "libcrypto1.1@1.1.1n-r0 is affected by CVE-2023-0286, a high-severity X.400 address type confusion in X.509 GeneralName (CVSS 7.4, EPSS 0.61757) that can lead to memory disclosure or crash during certificate parsing.",
+        "reachability": "unknown",
+        "confidence": "medium",
+        "confidence_reason": "grype and trivy both report the advisory with matching fix version 1.1.1t-r0, but the run has no evidence of certificate-parsing call sites, so reachability stays unknown.",
+        "cited_evidence": [
+          "E-1306",
+          "E-1364",
+          "E-1365",
+          "E-1366"
+        ]
+      },
+      "rationale": "libcrypto1.1@1.1.1n-r0 is affected by CVE-2023-0286, a high-severity X.400 address type confusion in X.509 GeneralName (CVSS 7.4, EPSS 0.61757) that can lead to memory disclosure or crash during certificate parsing. unknown. Confidence medium: grype and trivy both report the advisory with matching fix version 1.1.1t-r0, but the run has no evidence of certificate-parsing call sites, so reachability stays unknown. [E-1306] [E-1364] [E-1365] [E-1366]"
+    },
+    {
+      "finding_id": "F-005",
+      "risk": {
+        "score": 64.69,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 74.0,
+            "effective_weight": 0.461538,
+            "contribution": 34.15
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 61.757,
+            "effective_weight": 0.307692,
+            "contribution": 19.0
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.230769,
+            "contribution": 11.54
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.65,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-005",
+        "why_it_matters": "libssl1.1@1.1.1n-r0 is affected by the same high-severity CVE-2023-0286 X.400 type confusion, so the TLS library in the base image shares the vulnerable OpenSSL code path.",
+        "reachability": "unknown",
+        "confidence": "medium",
+        "confidence_reason": "Corroborated by grype and trivy with an agreed fix version, but no import or call-site evidence exists in the stored run, so reachability is unknown.",
+        "cited_evidence": [
+          "E-1306",
+          "E-1393",
+          "E-1394",
+          "E-1366"
+        ]
+      },
+      "rationale": "libssl1.1@1.1.1n-r0 is affected by the same high-severity CVE-2023-0286 X.400 type confusion, so the TLS library in the base image shares the vulnerable OpenSSL code path. unknown. Confidence medium: Corroborated by grype and trivy with an agreed fix version, but no import or call-site evidence exists in the stored run, so reachability is unknown. [E-1306] [E-1393] [E-1394] [E-1366]"
+    },
+    {
+      "finding_id": "F-006",
+      "risk": {
+        "score": 62.69,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 98.0,
+            "effective_weight": 0.461538,
+            "contribution": 45.23
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 19.243,
+            "effective_weight": 0.307692,
+            "contribution": 5.92
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.230769,
+            "contribution": 11.54
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.65,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-006",
+        "why_it_matters": "zlib@1.2.12-r0 in the node:12-alpine image is affected by CVE-2022-37434, a critical (CVSS 9.8) heap-based buffer over-read/overflow in inflate() reachable via a large gzip header extra field.",
+        "reachability": "unknown",
+        "confidence": "medium",
+        "confidence_reason": "Both scanners report the CVE and agree on fix 1.2.12-r2, but the advisory notes only applications calling inflateGetHeader are affected and the run contains no evidence of such a call site.",
+        "cited_evidence": [
+          "E-1306",
+          "E-1458",
+          "E-1459",
+          "E-1460"
+        ]
+      },
+      "rationale": "zlib@1.2.12-r0 in the node:12-alpine image is affected by CVE-2022-37434, a critical (CVSS 9.8) heap-based buffer over-read/overflow in inflate() reachable via a large gzip header extra field. unknown. Confidence medium: Both scanners report the CVE and agree on fix 1.2.12-r2, but the advisory notes only applications calling inflateGetHeader are affected and the run contains no evidence of such a call site. [E-1306] [E-1458] [E-1459] [E-1460]"
+    },
+    {
+      "finding_id": "F-007",
+      "risk": {
+        "score": 59.32,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 98.0,
+            "effective_weight": 0.461538,
+            "contribution": 45.23
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 8.279,
+            "effective_weight": 0.307692,
+            "contribution": 2.55
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.230769,
+            "contribution": 11.54
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.65,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-007",
+        "why_it_matters": "ip@1.1.5 in the node:12-alpine image is affected by CVE-2024-29415 / GHSA-2p57-rm9w-gvfp, an SSRF-relevant improper categorization in isPublic, and no fixed version is listed for this advisory.",
+        "reachability": "unknown",
+        "confidence": "medium",
+        "confidence_reason": "grype and trivy report the issue but under different advisory IDs, fixed_in is empty, and there is no call-site evidence, so reachability cannot be determined.",
+        "cited_evidence": [
+          "E-1306",
+          "E-1349",
+          "E-1350",
+          "E-1351"
+        ]
+      },
+      "rationale": "ip@1.1.5 in the node:12-alpine image is affected by CVE-2024-29415 / GHSA-2p57-rm9w-gvfp, an SSRF-relevant improper categorization in isPublic, and no fixed version is listed for this advisory. unknown. Confidence medium: grype and trivy report the issue but under different advisory IDs, fixed_in is empty, and there is no call-site evidence, so reachability cannot be determined. [E-1306] [E-1349] [E-1350] [E-1351]"
+    },
+    {
+      "finding_id": "F-008",
+      "risk": {
+        "score": 58.18,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 98.0,
+            "effective_weight": 0.461538,
+            "contribution": 45.23
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 4.5809999999999995,
+            "effective_weight": 0.307692,
+            "contribution": 1.41
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.230769,
+            "contribution": 11.54
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.65,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-008",
+        "why_it_matters": "minimist@1.2.5 in the node:12-alpine image is affected by CVE-2021-44906 / GHSA-xvch-5gv4-984h prototype pollution, rated critical (CVSS 9.8) and fixable by upgrading to 1.2.6.",
+        "reachability": "unknown",
+        "confidence": "medium",
+        "confidence_reason": "Two scanners agree on the advisory and fix version, but EPSS is low (0.04581) and the run contains no evidence that minimist parses attacker-controlled arguments.",
+        "cited_evidence": [
+          "E-1306",
+          "E-1415",
+          "E-1416",
+          "E-0743"
+        ]
+      },
+      "rationale": "minimist@1.2.5 in the node:12-alpine image is affected by CVE-2021-44906 / GHSA-xvch-5gv4-984h prototype pollution, rated critical (CVSS 9.8) and fixable by upgrading to 1.2.6. unknown. Confidence medium: Two scanners agree on the advisory and fix version, but EPSS is low (0.04581) and the run contains no evidence that minimist parses attacker-controlled arguments. [E-1306] [E-1415] [E-1416] [E-0743]"
+    },
+    {
+      "finding_id": "F-009",
+      "risk": {
+        "score": 57.58,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 98.0,
+            "effective_weight": 0.461538,
+            "contribution": 45.23
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 2.6270000000000002,
+            "effective_weight": 0.307692,
+            "contribution": 0.81
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.230769,
+            "contribution": 11.54
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.65,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-009",
+        "why_it_matters": "tough-cookie@2.4.3 in the node:12-alpine image is affected by CVE-2023-26136 / GHSA-72xf-g2v4-qvf3 prototype pollution in the cookie memstore, which can corrupt object prototypes when cookies are parsed.",
+        "reachability": "unknown",
+        "confidence": "medium",
+        "confidence_reason": "grype and trivy both report the advisory with fix 4.1.3, but EPSS is low (0.02627) and no cookie-handling call sites are evidenced in the stored run.",
+        "cited_evidence": [
+          "E-1306",
+          "E-1454",
+          "E-1455",
+          "E-1169"
+        ]
+      },
+      "rationale": "tough-cookie@2.4.3 in the node:12-alpine image is affected by CVE-2023-26136 / GHSA-72xf-g2v4-qvf3 prototype pollution in the cookie memstore, which can corrupt object prototypes when cookies are parsed. unknown. Confidence medium: grype and trivy both report the advisory with fix 4.1.3, but EPSS is low (0.02627) and no cookie-handling call sites are evidenced in the stored run. [E-1306] [E-1454] [E-1455] [E-1169]"
+    },
+    {
+      "finding_id": "F-010",
+      "risk": {
+        "score": 57.27,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 98.0,
+            "effective_weight": 0.461538,
+            "contribution": 45.23
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 1.6129999999999998,
+            "effective_weight": 0.307692,
+            "contribution": 0.5
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.230769,
+            "contribution": 11.54
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.65,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-010",
+        "why_it_matters": "ip@1.1.5 in the node:12-alpine image is affected by CVE-2023-42282 / GHSA-78xj-cgh5-2h22, where isPublic() can be abused for arbitrary code execution, and it is fixable by upgrading to 1.1.9.",
+        "reachability": "unknown",
+        "confidence": "medium",
+        "confidence_reason": "Both scanners report the advisory and agree on fix 1.1.9, but EPSS is very low (0.01613) and there is no evidence of isPublic() usage in the stored run.",
+        "cited_evidence": [
+          "E-1306",
+          "E-1346",
+          "E-1347",
+          "E-1348"
+        ]
+      },
+      "rationale": "ip@1.1.5 in the node:12-alpine image is affected by CVE-2023-42282 / GHSA-78xj-cgh5-2h22, where isPublic() can be abused for arbitrary code execution, and it is fixable by upgrading to 1.1.9. unknown. Confidence medium: Both scanners report the advisory and agree on fix 1.1.9, but EPSS is very low (0.01613) and there is no evidence of isPublic() usage in the stored run. [E-1306] [E-1346] [E-1347] [E-1348]"
+    }
+  ],
+  "rejected": [
+    {
+      "finding_id": "F-007",
+      "attempt": 1,
+      "reasons": [
+        "mentions CVE-2023-42282, which is not an advisory of F-007"
+      ]
+    }
+  ],
+  "blocked_tool_calls": [],
+  "final_message": "## Run summary \u2014 `TestMote__nodegoat-20261123T131303Z` (MODE=analyze)\n\nPer the analyze-mode plan, I delegated only to **analysis** (no discovery or detection re-run). It explained the top 10 findings and accepted all ten explanations.\n\n**Gate result: not reported.** The analysis agent found no gate object, verdict, threshold, or reason string in any tool output it could reach. I'm not going to state pass/fail \u2014 that would be inventing a value. If the gate result lives in a stored run artifact (e.g. a gate/summary JSON), it wasn't exposed through the finding tools, and that's the one gap versus what you asked for.\n\n**Top findings (all values from tool output):**\n\n| ID | Package | Advisory | Risk |\n|---|---|---|---|\n| F-001 | fsevents@1.2.9 | GHSA-xv2f-5jw4-v95m / MAL-2023-462 | 57.0 Critical \u2014 only `confirmed_malicious: true` |\n| F-002/F-003 | libcrypto1.1 / libssl1.1 @1.1.1n-r0 | CVE-2023-2650 | 64.73 Medium |\n| F-004/F-005 | libcrypto1.1 / libssl1.1 @1.1.1n-r0 | CVE-2023-0286 | 64.69 Medium |\n| F-006 | zlib@1.2.12-r0 | CVE-2022-37434 | 62.69 Medium |\n| F-007 | ip@1.1.5 | CVE-2024-29415 / GHSA-2p57-rm9w-gvfp | 59.32 Medium |\n| F-008 | minimist@1.2.5 | CVE-2021-44906 / GHSA-xvch-5gv4-984h | 58.18 Medium |\n| F-009 | tough-cookie@2.4.3 | CVE-2023-26136 / GHSA-72xf-g2v4-qvf3 | 57.58 Medium |\n| F-010 | ip@1.1.5 | CVE-2023-42282 / GHSA-78xj-cgh5-2h22 | 57.27 Medium |\n\nF-001 is the standout: a malicious-package finding on `fsevents@1.2.9`, reached via `owasp-nodejs-goat@1.3.0 > forever@2.0.0 > forever-monitor@2.0.0 > chokidar@2.1.8 > fsevents@1.2.9`, with `hasInstallScript: true` (GR-INST-001) and `fixed_in` 1.2.11.\n\n**Caveats worth your attention:**\n- Reachability is `unknown` for 9 of 10 findings; only F-001 has a value (`present_only`).\n- F-001 has no CVSS/EPSS/KEV data \u2014 its Critical level comes from the `confirmed_malicious` override, not a score.\n- The 10 findings are fewer distinct issues: F-002/F-003 and F-004/F-005 are the same CVEs across two OpenSSL libs from one base image; F-007 and F-010 are the same `ip@1.1.5` package under two advisories.\n- Advisory IDs disagree between grype and trivy for F-007 and F-010; F-007 has no `fixed_in`.\n- Only the top 10 were examined \u2014 the run may hold more.\n\nAll quoted excerpts were treated as data; none contained instructions that were acted on."
+}

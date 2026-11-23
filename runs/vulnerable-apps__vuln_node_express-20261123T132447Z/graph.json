@@ -1,0 +1,5624 @@
+{
+ "root": ".",
+ "nodes": [
+  {
+   "bom_ref": ".",
+   "component": {
+    "name": "nodeexpressvulny",
+    "version": "0.0.0",
+    "purl": "pkg:npm/nodeexpressvulny@0.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": null,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 7
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/@types/babel-types",
+   "component": {
+    "name": "@types/babel-types",
+    "version": "7.0.7",
+    "purl": "pkg:npm/%40types/babel-types@7.0.7",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 21
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/@types/babylon",
+   "component": {
+    "name": "@types/babylon",
+    "version": "6.16.5",
+    "purl": "pkg:npm/%40types/babylon@6.16.5",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 26
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/abbrev",
+   "component": {
+    "name": "abbrev",
+    "version": "1.1.1",
+    "purl": "pkg:npm/abbrev@1.1.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 34
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/accepts",
+   "component": {
+    "name": "accepts",
+    "version": "1.3.7",
+    "purl": "pkg:npm/accepts@1.3.7",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 39
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/acorn",
+   "component": {
+    "name": "acorn",
+    "version": "3.3.0",
+    "purl": "pkg:npm/acorn@3.3.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 51
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/acorn-globals",
+   "component": {
+    "name": "acorn-globals",
+    "version": "3.1.0",
+    "purl": "pkg:npm/acorn-globals@3.1.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 62
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/acorn-globals/node_modules/acorn",
+   "component": {
+    "name": "acorn",
+    "version": "4.0.13",
+    "purl": "pkg:npm/acorn@4.0.13",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 70
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/ajv",
+   "component": {
+    "name": "ajv",
+    "version": "6.10.2",
+    "purl": "pkg:npm/ajv@6.10.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 81
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/align-text",
+   "component": {
+    "name": "align-text",
+    "version": "0.1.4",
+    "purl": "pkg:npm/align-text@0.1.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 92
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/ansi-regex",
+   "component": {
+    "name": "ansi-regex",
+    "version": "2.1.1",
+    "purl": "pkg:npm/ansi-regex@2.1.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 105
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/aproba",
+   "component": {
+    "name": "aproba",
+    "version": "1.2.0",
+    "purl": "pkg:npm/aproba@1.2.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 113
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/are-we-there-yet",
+   "component": {
+    "name": "are-we-there-yet",
+    "version": "1.1.5",
+    "purl": "pkg:npm/are-we-there-yet@1.1.5",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 118
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/array-flatten",
+   "component": {
+    "name": "array-flatten",
+    "version": "1.1.1",
+    "purl": "pkg:npm/array-flatten@1.1.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 127
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/asap",
+   "component": {
+    "name": "asap",
+    "version": "2.0.6",
+    "purl": "pkg:npm/asap@2.0.6",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 132
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/asn1",
+   "component": {
+    "name": "asn1",
+    "version": "0.2.4",
+    "purl": "pkg:npm/asn1@0.2.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 137
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/assert-plus",
+   "component": {
+    "name": "assert-plus",
+    "version": "1.0.0",
+    "purl": "pkg:npm/assert-plus@1.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 145
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/asynckit",
+   "component": {
+    "name": "asynckit",
+    "version": "0.4.0",
+    "purl": "pkg:npm/asynckit@0.4.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 153
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/aws-sign2",
+   "component": {
+    "name": "aws-sign2",
+    "version": "0.7.0",
+    "purl": "pkg:npm/aws-sign2@0.7.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 158
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/aws4",
+   "component": {
+    "name": "aws4",
+    "version": "1.8.0",
+    "purl": "pkg:npm/aws4@1.8.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 166
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/babel-runtime",
+   "component": {
+    "name": "babel-runtime",
+    "version": "6.26.0",
+    "purl": "pkg:npm/babel-runtime@6.26.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 171
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/babel-types",
+   "component": {
+    "name": "babel-types",
+    "version": "6.26.0",
+    "purl": "pkg:npm/babel-types@6.26.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 180
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/babylon",
+   "component": {
+    "name": "babylon",
+    "version": "6.18.0",
+    "purl": "pkg:npm/babylon@6.18.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 191
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/balanced-match",
+   "component": {
+    "name": "balanced-match",
+    "version": "1.0.0",
+    "purl": "pkg:npm/balanced-match@1.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 199
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/basic-auth",
+   "component": {
+    "name": "basic-auth",
+    "version": "2.0.1",
+    "purl": "pkg:npm/basic-auth@2.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 204
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/bcrypt-pbkdf",
+   "component": {
+    "name": "bcrypt-pbkdf",
+    "version": "1.0.2",
+    "purl": "pkg:npm/bcrypt-pbkdf@1.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 215
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/body-parser",
+   "component": {
+    "name": "body-parser",
+    "version": "1.18.3",
+    "purl": "pkg:npm/body-parser@1.18.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 223
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/brace-expansion",
+   "component": {
+    "name": "brace-expansion",
+    "version": "1.1.11",
+    "purl": "pkg:npm/brace-expansion@1.1.11",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 243
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/bytes",
+   "component": {
+    "name": "bytes",
+    "version": "3.0.0",
+    "purl": "pkg:npm/bytes@3.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 252
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/camelcase",
+   "component": {
+    "name": "camelcase",
+    "version": "1.2.1",
+    "purl": "pkg:npm/camelcase@1.2.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 260
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/caseless",
+   "component": {
+    "name": "caseless",
+    "version": "0.12.0",
+    "purl": "pkg:npm/caseless@0.12.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 268
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/center-align",
+   "component": {
+    "name": "center-align",
+    "version": "0.1.3",
+    "purl": "pkg:npm/center-align@0.1.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 273
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/character-parser",
+   "component": {
+    "name": "character-parser",
+    "version": "2.2.0",
+    "purl": "pkg:npm/character-parser@2.2.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 285
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/chownr",
+   "component": {
+    "name": "chownr",
+    "version": "1.1.2",
+    "purl": "pkg:npm/chownr@1.1.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 293
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/clean-css",
+   "component": {
+    "name": "clean-css",
+    "version": "4.2.1",
+    "purl": "pkg:npm/clean-css@4.2.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 298
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/cliui",
+   "component": {
+    "name": "cliui",
+    "version": "2.1.0",
+    "purl": "pkg:npm/cliui@2.1.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 309
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/code-point-at",
+   "component": {
+    "name": "code-point-at",
+    "version": "1.1.0",
+    "purl": "pkg:npm/code-point-at@1.1.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 319
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/combined-stream",
+   "component": {
+    "name": "combined-stream",
+    "version": "1.0.8",
+    "purl": "pkg:npm/combined-stream@1.0.8",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 327
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/concat-map",
+   "component": {
+    "name": "concat-map",
+    "version": "0.0.1",
+    "purl": "pkg:npm/concat-map@0.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 338
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/console-control-strings",
+   "component": {
+    "name": "console-control-strings",
+    "version": "1.1.0",
+    "purl": "pkg:npm/console-control-strings@1.1.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 343
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/constantinople",
+   "component": {
+    "name": "constantinople",
+    "version": "3.1.2",
+    "purl": "pkg:npm/constantinople@3.1.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 348
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/content-disposition",
+   "component": {
+    "name": "content-disposition",
+    "version": "0.5.2",
+    "purl": "pkg:npm/content-disposition@0.5.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 359
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/content-type",
+   "component": {
+    "name": "content-type",
+    "version": "1.0.4",
+    "purl": "pkg:npm/content-type@1.0.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 367
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/cookie",
+   "component": {
+    "name": "cookie",
+    "version": "0.3.1",
+    "purl": "pkg:npm/cookie@0.3.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 375
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/cookie-parser",
+   "component": {
+    "name": "cookie-parser",
+    "version": "1.4.4",
+    "purl": "pkg:npm/cookie-parser@1.4.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": true,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 383
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/cookie-signature",
+   "component": {
+    "name": "cookie-signature",
+    "version": "1.0.6",
+    "purl": "pkg:npm/cookie-signature@1.0.6",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 395
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/core-js",
+   "component": {
+    "name": "core-js",
+    "version": "2.6.10",
+    "purl": "pkg:npm/core-js@2.6.10",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 400
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/core-util-is",
+   "component": {
+    "name": "core-util-is",
+    "version": "1.0.2",
+    "purl": "pkg:npm/core-util-is@1.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 405
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/dashdash",
+   "component": {
+    "name": "dashdash",
+    "version": "1.14.1",
+    "purl": "pkg:npm/dashdash@1.14.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 410
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/debug",
+   "component": {
+    "name": "debug",
+    "version": "2.6.9",
+    "purl": "pkg:npm/debug@2.6.9",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": true,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 421
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/decamelize",
+   "component": {
+    "name": "decamelize",
+    "version": "1.2.0",
+    "purl": "pkg:npm/decamelize@1.2.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 429
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/deep-extend",
+   "component": {
+    "name": "deep-extend",
+    "version": "0.6.0",
+    "purl": "pkg:npm/deep-extend@0.6.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 437
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/delayed-stream",
+   "component": {
+    "name": "delayed-stream",
+    "version": "1.0.0",
+    "purl": "pkg:npm/delayed-stream@1.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 445
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/delegates",
+   "component": {
+    "name": "delegates",
+    "version": "1.0.0",
+    "purl": "pkg:npm/delegates@1.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 453
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/depd",
+   "component": {
+    "name": "depd",
+    "version": "1.1.2",
+    "purl": "pkg:npm/depd@1.1.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 458
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/destroy",
+   "component": {
+    "name": "destroy",
+    "version": "1.0.4",
+    "purl": "pkg:npm/destroy@1.0.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 466
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/detect-libc",
+   "component": {
+    "name": "detect-libc",
+    "version": "1.0.3",
+    "purl": "pkg:npm/detect-libc@1.0.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 471
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/doctypes",
+   "component": {
+    "name": "doctypes",
+    "version": "1.1.0",
+    "purl": "pkg:npm/doctypes@1.1.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 482
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/ecc-jsbn",
+   "component": {
+    "name": "ecc-jsbn",
+    "version": "0.1.2",
+    "purl": "pkg:npm/ecc-jsbn@0.1.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 487
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/ee-first",
+   "component": {
+    "name": "ee-first",
+    "version": "1.1.1",
+    "purl": "pkg:npm/ee-first@1.1.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 496
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/encodeurl",
+   "component": {
+    "name": "encodeurl",
+    "version": "1.0.2",
+    "purl": "pkg:npm/encodeurl@1.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 501
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/escape-html",
+   "component": {
+    "name": "escape-html",
+    "version": "1.0.3",
+    "purl": "pkg:npm/escape-html@1.0.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 509
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/esutils",
+   "component": {
+    "name": "esutils",
+    "version": "2.0.3",
+    "purl": "pkg:npm/esutils@2.0.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 514
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/etag",
+   "component": {
+    "name": "etag",
+    "version": "1.8.1",
+    "purl": "pkg:npm/etag@1.8.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 522
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/express",
+   "component": {
+    "name": "express",
+    "version": "4.16.4",
+    "purl": "pkg:npm/express@4.16.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": true,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 530
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/express-list-endpoints",
+   "component": {
+    "name": "express-list-endpoints",
+    "version": "4.0.1",
+    "purl": "pkg:npm/express-list-endpoints@4.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": true,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 570
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/extend",
+   "component": {
+    "name": "extend",
+    "version": "3.0.2",
+    "purl": "pkg:npm/extend@3.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 578
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/extsprintf",
+   "component": {
+    "name": "extsprintf",
+    "version": "1.3.0",
+    "purl": "pkg:npm/extsprintf@1.3.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 583
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/fast-deep-equal",
+   "component": {
+    "name": "fast-deep-equal",
+    "version": "2.0.1",
+    "purl": "pkg:npm/fast-deep-equal@2.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 591
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/fast-json-stable-stringify",
+   "component": {
+    "name": "fast-json-stable-stringify",
+    "version": "2.0.0",
+    "purl": "pkg:npm/fast-json-stable-stringify@2.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 596
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/finalhandler",
+   "component": {
+    "name": "finalhandler",
+    "version": "1.1.1",
+    "purl": "pkg:npm/finalhandler@1.1.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 601
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/forever-agent",
+   "component": {
+    "name": "forever-agent",
+    "version": "0.6.1",
+    "purl": "pkg:npm/forever-agent@0.6.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 618
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/form-data",
+   "component": {
+    "name": "form-data",
+    "version": "2.3.3",
+    "purl": "pkg:npm/form-data@2.3.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 626
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/forwarded",
+   "component": {
+    "name": "forwarded",
+    "version": "0.1.2",
+    "purl": "pkg:npm/forwarded@0.1.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 639
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/fresh",
+   "component": {
+    "name": "fresh",
+    "version": "0.5.2",
+    "purl": "pkg:npm/fresh@0.5.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 647
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/fs-minipass",
+   "component": {
+    "name": "fs-minipass",
+    "version": "1.2.6",
+    "purl": "pkg:npm/fs-minipass@1.2.6",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 655
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/fs.realpath",
+   "component": {
+    "name": "fs.realpath",
+    "version": "1.0.0",
+    "purl": "pkg:npm/fs.realpath@1.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 663
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/function-bind",
+   "component": {
+    "name": "function-bind",
+    "version": "1.1.1",
+    "purl": "pkg:npm/function-bind@1.1.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 668
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/gauge",
+   "component": {
+    "name": "gauge",
+    "version": "2.7.4",
+    "purl": "pkg:npm/gauge@2.7.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 673
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/getpass",
+   "component": {
+    "name": "getpass",
+    "version": "0.1.7",
+    "purl": "pkg:npm/getpass@0.1.7",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 688
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/glob",
+   "component": {
+    "name": "glob",
+    "version": "7.1.4",
+    "purl": "pkg:npm/glob@7.1.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 696
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/har-schema",
+   "component": {
+    "name": "har-schema",
+    "version": "2.0.0",
+    "purl": "pkg:npm/har-schema@2.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 712
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/har-validator",
+   "component": {
+    "name": "har-validator",
+    "version": "5.1.3",
+    "purl": "pkg:npm/har-validator@5.1.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 720
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/has",
+   "component": {
+    "name": "has",
+    "version": "1.0.3",
+    "purl": "pkg:npm/has@1.0.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 732
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/has-unicode",
+   "component": {
+    "name": "has-unicode",
+    "version": "2.0.1",
+    "purl": "pkg:npm/has-unicode@2.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 743
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/http-errors",
+   "component": {
+    "name": "http-errors",
+    "version": "1.6.3",
+    "purl": "pkg:npm/http-errors@1.6.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": true,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 748
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/http-signature",
+   "component": {
+    "name": "http-signature",
+    "version": "1.2.0",
+    "purl": "pkg:npm/http-signature@1.2.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 762
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/iconv-lite",
+   "component": {
+    "name": "iconv-lite",
+    "version": "0.4.23",
+    "purl": "pkg:npm/iconv-lite@0.4.23",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 776
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/ignore-walk",
+   "component": {
+    "name": "ignore-walk",
+    "version": "3.0.1",
+    "purl": "pkg:npm/ignore-walk@3.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 787
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/inflight",
+   "component": {
+    "name": "inflight",
+    "version": "1.0.6",
+    "purl": "pkg:npm/inflight@1.0.6",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 795
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/inherits",
+   "component": {
+    "name": "inherits",
+    "version": "2.0.3",
+    "purl": "pkg:npm/inherits@2.0.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 804
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/ini",
+   "component": {
+    "name": "ini",
+    "version": "1.3.5",
+    "purl": "pkg:npm/ini@1.3.5",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 809
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/ipaddr.js",
+   "component": {
+    "name": "ipaddr.js",
+    "version": "1.9.0",
+    "purl": "pkg:npm/ipaddr.js@1.9.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 817
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/is-buffer",
+   "component": {
+    "name": "is-buffer",
+    "version": "1.1.6",
+    "purl": "pkg:npm/is-buffer@1.1.6",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 825
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/is-expression",
+   "component": {
+    "name": "is-expression",
+    "version": "3.0.0",
+    "purl": "pkg:npm/is-expression@3.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 830
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/is-expression/node_modules/acorn",
+   "component": {
+    "name": "acorn",
+    "version": "4.0.13",
+    "purl": "pkg:npm/acorn@4.0.13",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 839
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/is-fullwidth-code-point",
+   "component": {
+    "name": "is-fullwidth-code-point",
+    "version": "1.0.0",
+    "purl": "pkg:npm/is-fullwidth-code-point@1.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 850
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/is-promise",
+   "component": {
+    "name": "is-promise",
+    "version": "2.1.0",
+    "purl": "pkg:npm/is-promise@2.1.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 861
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/is-regex",
+   "component": {
+    "name": "is-regex",
+    "version": "1.0.4",
+    "purl": "pkg:npm/is-regex@1.0.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 866
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/is-typedarray",
+   "component": {
+    "name": "is-typedarray",
+    "version": "1.0.0",
+    "purl": "pkg:npm/is-typedarray@1.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 877
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/isarray",
+   "component": {
+    "name": "isarray",
+    "version": "1.0.0",
+    "purl": "pkg:npm/isarray@1.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 882
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/isstream",
+   "component": {
+    "name": "isstream",
+    "version": "0.1.2",
+    "purl": "pkg:npm/isstream@0.1.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 887
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/js-stringify",
+   "component": {
+    "name": "js-stringify",
+    "version": "1.0.2",
+    "purl": "pkg:npm/js-stringify@1.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 892
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/jsbn",
+   "component": {
+    "name": "jsbn",
+    "version": "0.1.1",
+    "purl": "pkg:npm/jsbn@0.1.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 897
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/json-schema",
+   "component": {
+    "name": "json-schema",
+    "version": "0.2.3",
+    "purl": "pkg:npm/json-schema@0.2.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 902
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/json-schema-traverse",
+   "component": {
+    "name": "json-schema-traverse",
+    "version": "0.4.1",
+    "purl": "pkg:npm/json-schema-traverse@0.4.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 907
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/json-stringify-safe",
+   "component": {
+    "name": "json-stringify-safe",
+    "version": "5.0.1",
+    "purl": "pkg:npm/json-stringify-safe@5.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 912
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/jsprim",
+   "component": {
+    "name": "jsprim",
+    "version": "1.4.1",
+    "purl": "pkg:npm/jsprim@1.4.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 917
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/jstransformer",
+   "component": {
+    "name": "jstransformer",
+    "version": "1.0.0",
+    "purl": "pkg:npm/jstransformer@1.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 931
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/kind-of",
+   "component": {
+    "name": "kind-of",
+    "version": "3.2.2",
+    "purl": "pkg:npm/kind-of@3.2.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 940
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/lazy-cache",
+   "component": {
+    "name": "lazy-cache",
+    "version": "1.0.4",
+    "purl": "pkg:npm/lazy-cache@1.0.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 951
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/lodash",
+   "component": {
+    "name": "lodash",
+    "version": "4.17.15",
+    "purl": "pkg:npm/lodash@4.17.15",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 959
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/longest",
+   "component": {
+    "name": "longest",
+    "version": "1.0.1",
+    "purl": "pkg:npm/longest@1.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 964
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/media-typer",
+   "component": {
+    "name": "media-typer",
+    "version": "0.3.0",
+    "purl": "pkg:npm/media-typer@0.3.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 972
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/merge-descriptors",
+   "component": {
+    "name": "merge-descriptors",
+    "version": "1.0.1",
+    "purl": "pkg:npm/merge-descriptors@1.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 980
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/methods",
+   "component": {
+    "name": "methods",
+    "version": "1.1.2",
+    "purl": "pkg:npm/methods@1.1.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 985
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/mime",
+   "component": {
+    "name": "mime",
+    "version": "1.4.1",
+    "purl": "pkg:npm/mime@1.4.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 993
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/mime-db",
+   "component": {
+    "name": "mime-db",
+    "version": "1.40.0",
+    "purl": "pkg:npm/mime-db@1.40.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1001
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/mime-types",
+   "component": {
+    "name": "mime-types",
+    "version": "2.1.24",
+    "purl": "pkg:npm/mime-types@2.1.24",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1009
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/minimatch",
+   "component": {
+    "name": "minimatch",
+    "version": "3.0.4",
+    "purl": "pkg:npm/minimatch@3.0.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1020
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/minimist",
+   "component": {
+    "name": "minimist",
+    "version": "0.0.8",
+    "purl": "pkg:npm/minimist@0.0.8",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1031
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/minipass",
+   "component": {
+    "name": "minipass",
+    "version": "2.3.5",
+    "purl": "pkg:npm/minipass@2.3.5",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1036
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/minizlib",
+   "component": {
+    "name": "minizlib",
+    "version": "1.2.1",
+    "purl": "pkg:npm/minizlib@1.2.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1045
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/mkdirp",
+   "component": {
+    "name": "mkdirp",
+    "version": "0.5.1",
+    "purl": "pkg:npm/mkdirp@0.5.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1053
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/morgan",
+   "component": {
+    "name": "morgan",
+    "version": "1.9.1",
+    "purl": "pkg:npm/morgan@1.9.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": true,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1064
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/ms",
+   "component": {
+    "name": "ms",
+    "version": "2.0.0",
+    "purl": "pkg:npm/ms@2.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1079
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/nan",
+   "component": {
+    "name": "nan",
+    "version": "2.14.0",
+    "purl": "pkg:npm/nan@2.14.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1084
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/needle",
+   "component": {
+    "name": "needle",
+    "version": "2.4.0",
+    "purl": "pkg:npm/needle@2.4.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1089
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/needle/node_modules/debug",
+   "component": {
+    "name": "debug",
+    "version": "3.2.6",
+    "purl": "pkg:npm/debug@3.2.6",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1105
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/needle/node_modules/ms",
+   "component": {
+    "name": "ms",
+    "version": "2.1.2",
+    "purl": "pkg:npm/ms@2.1.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1113
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/negotiator",
+   "component": {
+    "name": "negotiator",
+    "version": "0.6.2",
+    "purl": "pkg:npm/negotiator@0.6.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1118
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/node-pre-gyp",
+   "component": {
+    "name": "node-pre-gyp",
+    "version": "0.11.0",
+    "purl": "pkg:npm/node-pre-gyp@0.11.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1126
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/nopt",
+   "component": {
+    "name": "nopt",
+    "version": "4.0.1",
+    "purl": "pkg:npm/nopt@4.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1146
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/npm-bundled",
+   "component": {
+    "name": "npm-bundled",
+    "version": "1.0.6",
+    "purl": "pkg:npm/npm-bundled@1.0.6",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1158
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/npm-packlist",
+   "component": {
+    "name": "npm-packlist",
+    "version": "1.4.4",
+    "purl": "pkg:npm/npm-packlist@1.4.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1163
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/npmlog",
+   "component": {
+    "name": "npmlog",
+    "version": "4.1.2",
+    "purl": "pkg:npm/npmlog@4.1.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1172
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/number-is-nan",
+   "component": {
+    "name": "number-is-nan",
+    "version": "1.0.1",
+    "purl": "pkg:npm/number-is-nan@1.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1183
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/oauth-sign",
+   "component": {
+    "name": "oauth-sign",
+    "version": "0.9.0",
+    "purl": "pkg:npm/oauth-sign@0.9.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1191
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/object-assign",
+   "component": {
+    "name": "object-assign",
+    "version": "4.1.1",
+    "purl": "pkg:npm/object-assign@4.1.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1199
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/on-finished",
+   "component": {
+    "name": "on-finished",
+    "version": "2.3.0",
+    "purl": "pkg:npm/on-finished@2.3.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1207
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/on-headers",
+   "component": {
+    "name": "on-headers",
+    "version": "1.0.2",
+    "purl": "pkg:npm/on-headers@1.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1218
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/once",
+   "component": {
+    "name": "once",
+    "version": "1.4.0",
+    "purl": "pkg:npm/once@1.4.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1226
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/os-homedir",
+   "component": {
+    "name": "os-homedir",
+    "version": "1.0.2",
+    "purl": "pkg:npm/os-homedir@1.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1234
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/os-tmpdir",
+   "component": {
+    "name": "os-tmpdir",
+    "version": "1.0.2",
+    "purl": "pkg:npm/os-tmpdir@1.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1242
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/osenv",
+   "component": {
+    "name": "osenv",
+    "version": "0.1.5",
+    "purl": "pkg:npm/osenv@0.1.5",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1250
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/parseurl",
+   "component": {
+    "name": "parseurl",
+    "version": "1.3.3",
+    "purl": "pkg:npm/parseurl@1.3.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1259
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/path-is-absolute",
+   "component": {
+    "name": "path-is-absolute",
+    "version": "1.0.1",
+    "purl": "pkg:npm/path-is-absolute@1.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1267
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/path-parse",
+   "component": {
+    "name": "path-parse",
+    "version": "1.0.6",
+    "purl": "pkg:npm/path-parse@1.0.6",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1275
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/path-to-regexp",
+   "component": {
+    "name": "path-to-regexp",
+    "version": "0.1.7",
+    "purl": "pkg:npm/path-to-regexp@0.1.7",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1280
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/performance-now",
+   "component": {
+    "name": "performance-now",
+    "version": "2.1.0",
+    "purl": "pkg:npm/performance-now@2.1.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1285
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/process-nextick-args",
+   "component": {
+    "name": "process-nextick-args",
+    "version": "2.0.1",
+    "purl": "pkg:npm/process-nextick-args@2.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1290
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/promise",
+   "component": {
+    "name": "promise",
+    "version": "7.3.1",
+    "purl": "pkg:npm/promise@7.3.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1295
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/proxy-addr",
+   "component": {
+    "name": "proxy-addr",
+    "version": "2.0.5",
+    "purl": "pkg:npm/proxy-addr@2.0.5",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1303
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/psl",
+   "component": {
+    "name": "psl",
+    "version": "1.3.0",
+    "purl": "pkg:npm/psl@1.3.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1315
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/pug",
+   "component": {
+    "name": "pug",
+    "version": "2.0.4",
+    "purl": "pkg:npm/pug@2.0.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": true,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1320
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/pug-attrs",
+   "component": {
+    "name": "pug-attrs",
+    "version": "2.0.4",
+    "purl": "pkg:npm/pug-attrs@2.0.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1335
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/pug-code-gen",
+   "component": {
+    "name": "pug-code-gen",
+    "version": "2.0.2",
+    "purl": "pkg:npm/pug-code-gen@2.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1345
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/pug-error",
+   "component": {
+    "name": "pug-error",
+    "version": "1.3.3",
+    "purl": "pkg:npm/pug-error@1.3.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1360
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/pug-filters",
+   "component": {
+    "name": "pug-filters",
+    "version": "3.1.1",
+    "purl": "pkg:npm/pug-filters@3.1.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1365
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/pug-lexer",
+   "component": {
+    "name": "pug-lexer",
+    "version": "4.1.0",
+    "purl": "pkg:npm/pug-lexer@4.1.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1379
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/pug-linker",
+   "component": {
+    "name": "pug-linker",
+    "version": "3.0.6",
+    "purl": "pkg:npm/pug-linker@3.0.6",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1389
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/pug-load",
+   "component": {
+    "name": "pug-load",
+    "version": "2.0.12",
+    "purl": "pkg:npm/pug-load@2.0.12",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1398
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/pug-parser",
+   "component": {
+    "name": "pug-parser",
+    "version": "5.0.1",
+    "purl": "pkg:npm/pug-parser@5.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1407
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/pug-runtime",
+   "component": {
+    "name": "pug-runtime",
+    "version": "2.0.5",
+    "purl": "pkg:npm/pug-runtime@2.0.5",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1416
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/pug-strip-comments",
+   "component": {
+    "name": "pug-strip-comments",
+    "version": "1.0.4",
+    "purl": "pkg:npm/pug-strip-comments@1.0.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1421
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/pug-walk",
+   "component": {
+    "name": "pug-walk",
+    "version": "1.1.8",
+    "purl": "pkg:npm/pug-walk@1.1.8",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1429
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/punycode",
+   "component": {
+    "name": "punycode",
+    "version": "2.1.1",
+    "purl": "pkg:npm/punycode@2.1.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1434
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/qs",
+   "component": {
+    "name": "qs",
+    "version": "6.5.2",
+    "purl": "pkg:npm/qs@6.5.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1442
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/range-parser",
+   "component": {
+    "name": "range-parser",
+    "version": "1.2.1",
+    "purl": "pkg:npm/range-parser@1.2.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1450
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/raw-body",
+   "component": {
+    "name": "raw-body",
+    "version": "2.3.3",
+    "purl": "pkg:npm/raw-body@2.3.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1458
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/rc",
+   "component": {
+    "name": "rc",
+    "version": "1.2.8",
+    "purl": "pkg:npm/rc@1.2.8",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1472
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/rc/node_modules/minimist",
+   "component": {
+    "name": "minimist",
+    "version": "1.2.0",
+    "purl": "pkg:npm/minimist@1.2.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1486
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/readable-stream",
+   "component": {
+    "name": "readable-stream",
+    "version": "2.3.6",
+    "purl": "pkg:npm/readable-stream@2.3.6",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1491
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/regenerator-runtime",
+   "component": {
+    "name": "regenerator-runtime",
+    "version": "0.11.1",
+    "purl": "pkg:npm/regenerator-runtime@0.11.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1505
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/repeat-string",
+   "component": {
+    "name": "repeat-string",
+    "version": "1.6.1",
+    "purl": "pkg:npm/repeat-string@1.6.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1510
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/request",
+   "component": {
+    "name": "request",
+    "version": "2.88.0",
+    "purl": "pkg:npm/request@2.88.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1518
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/resolve",
+   "component": {
+    "name": "resolve",
+    "version": "1.12.0",
+    "purl": "pkg:npm/resolve@1.12.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1548
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/right-align",
+   "component": {
+    "name": "right-align",
+    "version": "0.1.3",
+    "purl": "pkg:npm/right-align@0.1.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1556
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/rimraf",
+   "component": {
+    "name": "rimraf",
+    "version": "2.7.1",
+    "purl": "pkg:npm/rimraf@2.7.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1567
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/safe-buffer",
+   "component": {
+    "name": "safe-buffer",
+    "version": "5.1.2",
+    "purl": "pkg:npm/safe-buffer@5.1.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1578
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/safer-buffer",
+   "component": {
+    "name": "safer-buffer",
+    "version": "2.1.2",
+    "purl": "pkg:npm/safer-buffer@2.1.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1583
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/sax",
+   "component": {
+    "name": "sax",
+    "version": "1.2.4",
+    "purl": "pkg:npm/sax@1.2.4",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1588
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/semver",
+   "component": {
+    "name": "semver",
+    "version": "5.7.1",
+    "purl": "pkg:npm/semver@5.7.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1593
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/send",
+   "component": {
+    "name": "send",
+    "version": "0.16.2",
+    "purl": "pkg:npm/send@0.16.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1601
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/serve-static",
+   "component": {
+    "name": "serve-static",
+    "version": "1.13.2",
+    "purl": "pkg:npm/serve-static@1.13.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1624
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/set-blocking",
+   "component": {
+    "name": "set-blocking",
+    "version": "2.0.0",
+    "purl": "pkg:npm/set-blocking@2.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1638
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/setprototypeof",
+   "component": {
+    "name": "setprototypeof",
+    "version": "1.1.0",
+    "purl": "pkg:npm/setprototypeof@1.1.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1643
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/signal-exit",
+   "component": {
+    "name": "signal-exit",
+    "version": "3.0.2",
+    "purl": "pkg:npm/signal-exit@3.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1648
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/source-map",
+   "component": {
+    "name": "source-map",
+    "version": "0.6.1",
+    "purl": "pkg:npm/source-map@0.6.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1653
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/sql-template-strings",
+   "component": {
+    "name": "sql-template-strings",
+    "version": "2.2.2",
+    "purl": "pkg:npm/sql-template-strings@2.2.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": true,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1661
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/sqlite",
+   "component": {
+    "name": "sqlite",
+    "version": "3.0.3",
+    "purl": "pkg:npm/sqlite@3.0.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": true,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1670
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/sqlite3",
+   "component": {
+    "name": "sqlite3",
+    "version": "4.1.0",
+    "purl": "pkg:npm/sqlite3@4.1.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1681
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/sshpk",
+   "component": {
+    "name": "sshpk",
+    "version": "1.16.1",
+    "purl": "pkg:npm/sshpk@1.16.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1691
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/statuses",
+   "component": {
+    "name": "statuses",
+    "version": "1.4.0",
+    "purl": "pkg:npm/statuses@1.4.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1710
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/string_decoder",
+   "component": {
+    "name": "string_decoder",
+    "version": "1.1.1",
+    "purl": "pkg:npm/string_decoder@1.1.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1718
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/string-width",
+   "component": {
+    "name": "string-width",
+    "version": "1.0.2",
+    "purl": "pkg:npm/string-width@1.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1726
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/strip-ansi",
+   "component": {
+    "name": "strip-ansi",
+    "version": "3.0.1",
+    "purl": "pkg:npm/strip-ansi@3.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1739
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/strip-json-comments",
+   "component": {
+    "name": "strip-json-comments",
+    "version": "2.0.1",
+    "purl": "pkg:npm/strip-json-comments@2.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1750
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/tar",
+   "component": {
+    "name": "tar",
+    "version": "4.4.10",
+    "purl": "pkg:npm/tar@4.4.10",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1758
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/to-fast-properties",
+   "component": {
+    "name": "to-fast-properties",
+    "version": "1.0.3",
+    "purl": "pkg:npm/to-fast-properties@1.0.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1775
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/token-stream",
+   "component": {
+    "name": "token-stream",
+    "version": "0.0.1",
+    "purl": "pkg:npm/token-stream@0.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1783
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/tough-cookie",
+   "component": {
+    "name": "tough-cookie",
+    "version": "2.4.3",
+    "purl": "pkg:npm/tough-cookie@2.4.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1788
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/tough-cookie/node_modules/punycode",
+   "component": {
+    "name": "punycode",
+    "version": "1.4.1",
+    "purl": "pkg:npm/punycode@1.4.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1800
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/tunnel-agent",
+   "component": {
+    "name": "tunnel-agent",
+    "version": "0.6.0",
+    "purl": "pkg:npm/tunnel-agent@0.6.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1805
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/tweetnacl",
+   "component": {
+    "name": "tweetnacl",
+    "version": "0.14.5",
+    "purl": "pkg:npm/tweetnacl@0.14.5",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1816
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/type-is",
+   "component": {
+    "name": "type-is",
+    "version": "1.6.18",
+    "purl": "pkg:npm/type-is@1.6.18",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1821
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/uglify-js",
+   "component": {
+    "name": "uglify-js",
+    "version": "2.8.29",
+    "purl": "pkg:npm/uglify-js@2.8.29",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1833
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/uglify-js/node_modules/source-map",
+   "component": {
+    "name": "source-map",
+    "version": "0.5.7",
+    "purl": "pkg:npm/source-map@0.5.7",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1851
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/uglify-to-browserify",
+   "component": {
+    "name": "uglify-to-browserify",
+    "version": "1.0.2",
+    "purl": "pkg:npm/uglify-to-browserify@1.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": true,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1859
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/unpipe",
+   "component": {
+    "name": "unpipe",
+    "version": "1.0.0",
+    "purl": "pkg:npm/unpipe@1.0.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1865
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/uri-js",
+   "component": {
+    "name": "uri-js",
+    "version": "4.2.2",
+    "purl": "pkg:npm/uri-js@4.2.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1873
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/util-deprecate",
+   "component": {
+    "name": "util-deprecate",
+    "version": "1.0.2",
+    "purl": "pkg:npm/util-deprecate@1.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1881
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/utils-merge",
+   "component": {
+    "name": "utils-merge",
+    "version": "1.0.1",
+    "purl": "pkg:npm/utils-merge@1.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1886
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/uuid",
+   "component": {
+    "name": "uuid",
+    "version": "3.3.3",
+    "purl": "pkg:npm/uuid@3.3.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1894
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/vary",
+   "component": {
+    "name": "vary",
+    "version": "1.1.2",
+    "purl": "pkg:npm/vary@1.1.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1902
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/verror",
+   "component": {
+    "name": "verror",
+    "version": "1.10.0",
+    "purl": "pkg:npm/verror@1.10.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1910
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/void-elements",
+   "component": {
+    "name": "void-elements",
+    "version": "2.0.1",
+    "purl": "pkg:npm/void-elements@2.0.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1923
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/wide-align",
+   "component": {
+    "name": "wide-align",
+    "version": "1.1.3",
+    "purl": "pkg:npm/wide-align@1.1.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1931
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/window-size",
+   "component": {
+    "name": "window-size",
+    "version": "0.1.0",
+    "purl": "pkg:npm/window-size@0.1.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1939
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/with",
+   "component": {
+    "name": "with",
+    "version": "5.1.1",
+    "purl": "pkg:npm/with@5.1.1",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1947
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/wordwrap",
+   "component": {
+    "name": "wordwrap",
+    "version": "0.0.2",
+    "purl": "pkg:npm/wordwrap@0.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1956
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/wrappy",
+   "component": {
+    "name": "wrappy",
+    "version": "1.0.2",
+    "purl": "pkg:npm/wrappy@1.0.2",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1964
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/yallist",
+   "component": {
+    "name": "yallist",
+    "version": "3.0.3",
+    "purl": "pkg:npm/yallist@3.0.3",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1969
+    }
+   ]
+  },
+  {
+   "bom_ref": "node_modules/yargs",
+   "component": {
+    "name": "yargs",
+    "version": "3.10.0",
+    "purl": "pkg:npm/yargs@3.10.0",
+    "ecosystem": "npm"
+   },
+   "scope": "runtime",
+   "direct": false,
+   "optional": false,
+   "locations": [
+    {
+     "file": "targets/dynamic/vulnerable-apps__vuln_node_express-20261123T132447Z/package-lock.json",
+     "line": 1974
+    }
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "source": ".",
+   "target": "node_modules/cookie-parser",
+   "kind": "depends_on"
+  },
+  {
+   "source": ".",
+   "target": "node_modules/debug",
+   "kind": "depends_on"
+  },
+  {
+   "source": ".",
+   "target": "node_modules/express",
+   "kind": "depends_on"
+  },
+  {
+   "source": ".",
+   "target": "node_modules/express-list-endpoints",
+   "kind": "depends_on"
+  },
+  {
+   "source": ".",
+   "target": "node_modules/http-errors",
+   "kind": "depends_on"
+  },
+  {
+   "source": ".",
+   "target": "node_modules/morgan",
+   "kind": "depends_on"
+  },
+  {
+   "source": ".",
+   "target": "node_modules/pug",
+   "kind": "depends_on"
+  },
+  {
+   "source": ".",
+   "target": "node_modules/sqlite",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/@types/babylon",
+   "target": "node_modules/@types/babel-types",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/accepts",
+   "target": "node_modules/mime-types",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/accepts",
+   "target": "node_modules/negotiator",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/acorn-globals",
+   "target": "node_modules/acorn-globals/node_modules/acorn",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/ajv",
+   "target": "node_modules/fast-deep-equal",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/ajv",
+   "target": "node_modules/fast-json-stable-stringify",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/ajv",
+   "target": "node_modules/json-schema-traverse",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/ajv",
+   "target": "node_modules/uri-js",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/align-text",
+   "target": "node_modules/kind-of",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/align-text",
+   "target": "node_modules/longest",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/align-text",
+   "target": "node_modules/repeat-string",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/are-we-there-yet",
+   "target": "node_modules/delegates",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/are-we-there-yet",
+   "target": "node_modules/readable-stream",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/asn1",
+   "target": "node_modules/safer-buffer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/babel-runtime",
+   "target": "node_modules/core-js",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/babel-runtime",
+   "target": "node_modules/regenerator-runtime",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/babel-types",
+   "target": "node_modules/babel-runtime",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/babel-types",
+   "target": "node_modules/esutils",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/babel-types",
+   "target": "node_modules/lodash",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/babel-types",
+   "target": "node_modules/to-fast-properties",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/basic-auth",
+   "target": "node_modules/safe-buffer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/bcrypt-pbkdf",
+   "target": "node_modules/tweetnacl",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/body-parser",
+   "target": "node_modules/bytes",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/body-parser",
+   "target": "node_modules/content-type",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/body-parser",
+   "target": "node_modules/debug",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/body-parser",
+   "target": "node_modules/depd",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/body-parser",
+   "target": "node_modules/http-errors",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/body-parser",
+   "target": "node_modules/iconv-lite",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/body-parser",
+   "target": "node_modules/on-finished",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/body-parser",
+   "target": "node_modules/qs",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/body-parser",
+   "target": "node_modules/raw-body",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/body-parser",
+   "target": "node_modules/type-is",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/brace-expansion",
+   "target": "node_modules/balanced-match",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/brace-expansion",
+   "target": "node_modules/concat-map",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/center-align",
+   "target": "node_modules/align-text",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/center-align",
+   "target": "node_modules/lazy-cache",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/character-parser",
+   "target": "node_modules/is-regex",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/clean-css",
+   "target": "node_modules/source-map",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/cliui",
+   "target": "node_modules/center-align",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/cliui",
+   "target": "node_modules/right-align",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/cliui",
+   "target": "node_modules/wordwrap",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/combined-stream",
+   "target": "node_modules/delayed-stream",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/constantinople",
+   "target": "node_modules/@types/babel-types",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/constantinople",
+   "target": "node_modules/@types/babylon",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/constantinople",
+   "target": "node_modules/babel-types",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/constantinople",
+   "target": "node_modules/babylon",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/cookie-parser",
+   "target": "node_modules/cookie",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/cookie-parser",
+   "target": "node_modules/cookie-signature",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/dashdash",
+   "target": "node_modules/assert-plus",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/debug",
+   "target": "node_modules/ms",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/ecc-jsbn",
+   "target": "node_modules/jsbn",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/ecc-jsbn",
+   "target": "node_modules/safer-buffer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/accepts",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/array-flatten",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/body-parser",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/content-disposition",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/content-type",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/cookie",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/cookie-signature",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/debug",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/depd",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/encodeurl",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/escape-html",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/etag",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/finalhandler",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/fresh",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/merge-descriptors",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/methods",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/on-finished",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/parseurl",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/path-to-regexp",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/proxy-addr",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/qs",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/range-parser",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/safe-buffer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/send",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/serve-static",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/setprototypeof",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/statuses",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/type-is",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/utils-merge",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/express",
+   "target": "node_modules/vary",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/finalhandler",
+   "target": "node_modules/debug",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/finalhandler",
+   "target": "node_modules/encodeurl",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/finalhandler",
+   "target": "node_modules/escape-html",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/finalhandler",
+   "target": "node_modules/on-finished",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/finalhandler",
+   "target": "node_modules/parseurl",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/finalhandler",
+   "target": "node_modules/statuses",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/finalhandler",
+   "target": "node_modules/unpipe",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/form-data",
+   "target": "node_modules/asynckit",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/form-data",
+   "target": "node_modules/combined-stream",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/form-data",
+   "target": "node_modules/mime-types",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/fs-minipass",
+   "target": "node_modules/minipass",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/gauge",
+   "target": "node_modules/aproba",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/gauge",
+   "target": "node_modules/console-control-strings",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/gauge",
+   "target": "node_modules/has-unicode",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/gauge",
+   "target": "node_modules/object-assign",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/gauge",
+   "target": "node_modules/signal-exit",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/gauge",
+   "target": "node_modules/string-width",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/gauge",
+   "target": "node_modules/strip-ansi",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/gauge",
+   "target": "node_modules/wide-align",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/getpass",
+   "target": "node_modules/assert-plus",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/glob",
+   "target": "node_modules/fs.realpath",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/glob",
+   "target": "node_modules/inflight",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/glob",
+   "target": "node_modules/inherits",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/glob",
+   "target": "node_modules/minimatch",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/glob",
+   "target": "node_modules/once",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/glob",
+   "target": "node_modules/path-is-absolute",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/har-validator",
+   "target": "node_modules/ajv",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/har-validator",
+   "target": "node_modules/har-schema",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/has",
+   "target": "node_modules/function-bind",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/http-errors",
+   "target": "node_modules/depd",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/http-errors",
+   "target": "node_modules/inherits",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/http-errors",
+   "target": "node_modules/setprototypeof",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/http-errors",
+   "target": "node_modules/statuses",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/http-signature",
+   "target": "node_modules/assert-plus",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/http-signature",
+   "target": "node_modules/jsprim",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/http-signature",
+   "target": "node_modules/sshpk",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/iconv-lite",
+   "target": "node_modules/safer-buffer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/ignore-walk",
+   "target": "node_modules/minimatch",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/inflight",
+   "target": "node_modules/once",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/inflight",
+   "target": "node_modules/wrappy",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/is-expression",
+   "target": "node_modules/is-expression/node_modules/acorn",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/is-expression",
+   "target": "node_modules/object-assign",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/is-fullwidth-code-point",
+   "target": "node_modules/number-is-nan",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/is-regex",
+   "target": "node_modules/has",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/jsprim",
+   "target": "node_modules/assert-plus",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/jsprim",
+   "target": "node_modules/extsprintf",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/jsprim",
+   "target": "node_modules/json-schema",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/jsprim",
+   "target": "node_modules/verror",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/jstransformer",
+   "target": "node_modules/is-promise",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/jstransformer",
+   "target": "node_modules/promise",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/kind-of",
+   "target": "node_modules/is-buffer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/mime-types",
+   "target": "node_modules/mime-db",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/minimatch",
+   "target": "node_modules/brace-expansion",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/minipass",
+   "target": "node_modules/safe-buffer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/minipass",
+   "target": "node_modules/yallist",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/minizlib",
+   "target": "node_modules/minipass",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/mkdirp",
+   "target": "node_modules/minimist",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/morgan",
+   "target": "node_modules/basic-auth",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/morgan",
+   "target": "node_modules/debug",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/morgan",
+   "target": "node_modules/depd",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/morgan",
+   "target": "node_modules/on-finished",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/morgan",
+   "target": "node_modules/on-headers",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/needle",
+   "target": "node_modules/needle/node_modules/debug",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/needle",
+   "target": "node_modules/iconv-lite",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/needle",
+   "target": "node_modules/sax",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/needle/node_modules/debug",
+   "target": "node_modules/needle/node_modules/ms",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/node-pre-gyp",
+   "target": "node_modules/detect-libc",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/node-pre-gyp",
+   "target": "node_modules/mkdirp",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/node-pre-gyp",
+   "target": "node_modules/needle",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/node-pre-gyp",
+   "target": "node_modules/nopt",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/node-pre-gyp",
+   "target": "node_modules/npm-packlist",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/node-pre-gyp",
+   "target": "node_modules/npmlog",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/node-pre-gyp",
+   "target": "node_modules/rc",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/node-pre-gyp",
+   "target": "node_modules/rimraf",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/node-pre-gyp",
+   "target": "node_modules/semver",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/node-pre-gyp",
+   "target": "node_modules/tar",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/nopt",
+   "target": "node_modules/abbrev",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/nopt",
+   "target": "node_modules/osenv",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/npm-packlist",
+   "target": "node_modules/ignore-walk",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/npm-packlist",
+   "target": "node_modules/npm-bundled",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/npmlog",
+   "target": "node_modules/are-we-there-yet",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/npmlog",
+   "target": "node_modules/console-control-strings",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/npmlog",
+   "target": "node_modules/gauge",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/npmlog",
+   "target": "node_modules/set-blocking",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/on-finished",
+   "target": "node_modules/ee-first",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/once",
+   "target": "node_modules/wrappy",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/osenv",
+   "target": "node_modules/os-homedir",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/osenv",
+   "target": "node_modules/os-tmpdir",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/promise",
+   "target": "node_modules/asap",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/proxy-addr",
+   "target": "node_modules/forwarded",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/proxy-addr",
+   "target": "node_modules/ipaddr.js",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug",
+   "target": "node_modules/pug-code-gen",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug",
+   "target": "node_modules/pug-filters",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug",
+   "target": "node_modules/pug-lexer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug",
+   "target": "node_modules/pug-linker",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug",
+   "target": "node_modules/pug-load",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug",
+   "target": "node_modules/pug-parser",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug",
+   "target": "node_modules/pug-runtime",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug",
+   "target": "node_modules/pug-strip-comments",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-attrs",
+   "target": "node_modules/constantinople",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-attrs",
+   "target": "node_modules/js-stringify",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-attrs",
+   "target": "node_modules/pug-runtime",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-code-gen",
+   "target": "node_modules/constantinople",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-code-gen",
+   "target": "node_modules/doctypes",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-code-gen",
+   "target": "node_modules/js-stringify",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-code-gen",
+   "target": "node_modules/pug-attrs",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-code-gen",
+   "target": "node_modules/pug-error",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-code-gen",
+   "target": "node_modules/pug-runtime",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-code-gen",
+   "target": "node_modules/void-elements",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-code-gen",
+   "target": "node_modules/with",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-filters",
+   "target": "node_modules/clean-css",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-filters",
+   "target": "node_modules/constantinople",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-filters",
+   "target": "node_modules/jstransformer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-filters",
+   "target": "node_modules/pug-error",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-filters",
+   "target": "node_modules/pug-walk",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-filters",
+   "target": "node_modules/resolve",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-filters",
+   "target": "node_modules/uglify-js",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-lexer",
+   "target": "node_modules/character-parser",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-lexer",
+   "target": "node_modules/is-expression",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-lexer",
+   "target": "node_modules/pug-error",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-linker",
+   "target": "node_modules/pug-error",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-linker",
+   "target": "node_modules/pug-walk",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-load",
+   "target": "node_modules/object-assign",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-load",
+   "target": "node_modules/pug-walk",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-parser",
+   "target": "node_modules/pug-error",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-parser",
+   "target": "node_modules/token-stream",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/pug-strip-comments",
+   "target": "node_modules/pug-error",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/raw-body",
+   "target": "node_modules/bytes",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/raw-body",
+   "target": "node_modules/http-errors",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/raw-body",
+   "target": "node_modules/iconv-lite",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/raw-body",
+   "target": "node_modules/unpipe",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/rc",
+   "target": "node_modules/deep-extend",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/rc",
+   "target": "node_modules/ini",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/rc",
+   "target": "node_modules/rc/node_modules/minimist",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/rc",
+   "target": "node_modules/strip-json-comments",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/readable-stream",
+   "target": "node_modules/core-util-is",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/readable-stream",
+   "target": "node_modules/inherits",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/readable-stream",
+   "target": "node_modules/isarray",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/readable-stream",
+   "target": "node_modules/process-nextick-args",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/readable-stream",
+   "target": "node_modules/safe-buffer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/readable-stream",
+   "target": "node_modules/string_decoder",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/readable-stream",
+   "target": "node_modules/util-deprecate",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/aws-sign2",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/aws4",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/caseless",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/combined-stream",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/extend",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/forever-agent",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/form-data",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/har-validator",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/http-signature",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/is-typedarray",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/isstream",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/json-stringify-safe",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/mime-types",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/oauth-sign",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/performance-now",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/qs",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/safe-buffer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/tough-cookie",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/tunnel-agent",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/request",
+   "target": "node_modules/uuid",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/resolve",
+   "target": "node_modules/path-parse",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/right-align",
+   "target": "node_modules/align-text",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/rimraf",
+   "target": "node_modules/glob",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/send",
+   "target": "node_modules/debug",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/send",
+   "target": "node_modules/depd",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/send",
+   "target": "node_modules/destroy",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/send",
+   "target": "node_modules/encodeurl",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/send",
+   "target": "node_modules/escape-html",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/send",
+   "target": "node_modules/etag",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/send",
+   "target": "node_modules/fresh",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/send",
+   "target": "node_modules/http-errors",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/send",
+   "target": "node_modules/mime",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/send",
+   "target": "node_modules/ms",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/send",
+   "target": "node_modules/on-finished",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/send",
+   "target": "node_modules/range-parser",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/send",
+   "target": "node_modules/statuses",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/serve-static",
+   "target": "node_modules/encodeurl",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/serve-static",
+   "target": "node_modules/escape-html",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/serve-static",
+   "target": "node_modules/parseurl",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/serve-static",
+   "target": "node_modules/send",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/sqlite",
+   "target": "node_modules/sqlite3",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/sqlite",
+   "target": "node_modules/sql-template-strings",
+   "kind": "optional_depends_on"
+  },
+  {
+   "source": "node_modules/sqlite3",
+   "target": "node_modules/nan",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/sqlite3",
+   "target": "node_modules/node-pre-gyp",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/sqlite3",
+   "target": "node_modules/request",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/sshpk",
+   "target": "node_modules/asn1",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/sshpk",
+   "target": "node_modules/assert-plus",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/sshpk",
+   "target": "node_modules/bcrypt-pbkdf",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/sshpk",
+   "target": "node_modules/dashdash",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/sshpk",
+   "target": "node_modules/ecc-jsbn",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/sshpk",
+   "target": "node_modules/getpass",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/sshpk",
+   "target": "node_modules/jsbn",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/sshpk",
+   "target": "node_modules/safer-buffer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/sshpk",
+   "target": "node_modules/tweetnacl",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/string_decoder",
+   "target": "node_modules/safe-buffer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/string-width",
+   "target": "node_modules/code-point-at",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/string-width",
+   "target": "node_modules/is-fullwidth-code-point",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/string-width",
+   "target": "node_modules/strip-ansi",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/strip-ansi",
+   "target": "node_modules/ansi-regex",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/tar",
+   "target": "node_modules/chownr",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/tar",
+   "target": "node_modules/fs-minipass",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/tar",
+   "target": "node_modules/minipass",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/tar",
+   "target": "node_modules/minizlib",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/tar",
+   "target": "node_modules/mkdirp",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/tar",
+   "target": "node_modules/safe-buffer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/tar",
+   "target": "node_modules/yallist",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/tough-cookie",
+   "target": "node_modules/psl",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/tough-cookie",
+   "target": "node_modules/tough-cookie/node_modules/punycode",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/tunnel-agent",
+   "target": "node_modules/safe-buffer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/type-is",
+   "target": "node_modules/media-typer",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/type-is",
+   "target": "node_modules/mime-types",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/uglify-js",
+   "target": "node_modules/uglify-js/node_modules/source-map",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/uglify-js",
+   "target": "node_modules/yargs",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/uglify-js",
+   "target": "node_modules/uglify-to-browserify",
+   "kind": "optional_depends_on"
+  },
+  {
+   "source": "node_modules/uri-js",
+   "target": "node_modules/punycode",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/verror",
+   "target": "node_modules/assert-plus",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/verror",
+   "target": "node_modules/core-util-is",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/verror",
+   "target": "node_modules/extsprintf",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/wide-align",
+   "target": "node_modules/string-width",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/with",
+   "target": "node_modules/acorn",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/with",
+   "target": "node_modules/acorn-globals",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/yargs",
+   "target": "node_modules/camelcase",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/yargs",
+   "target": "node_modules/cliui",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/yargs",
+   "target": "node_modules/decamelize",
+   "kind": "depends_on"
+  },
+  {
+   "source": "node_modules/yargs",
+   "target": "node_modules/window-size",
+   "kind": "depends_on"
+  }
+ ]
+}

@@ -14,7 +14,6 @@ build/
 *.key
 
 # Generated run artifacts (scanner output, SBOMs, evidence DBs) are added per step
-/runs/
 /cache/
 
 # Pinned tool binaries are reproduced from tools/manifest.json by scripts/install_tools.py

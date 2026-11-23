@@ -1,0 +1,647 @@
+{
+  "run_id": "runs/cr0hn__vulnerable-node-20261123T132127Z",
+  "provider": "deepinfra",
+  "model": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+  "generator": "language model",
+  "accepted": [
+    {
+      "finding_id": "F-001",
+      "risk": {
+        "score": 50.0,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 1.0,
+            "contribution": 50.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.15,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-001",
+        "why_it_matters": "The mock IMDS container image runs as root, so any process compromise inside it gains full container privileges against a service that emulates cloud instance metadata.",
+        "reachability": "Reachability is unknown: the scanner recorded no reachability signal for this configuration finding.",
+        "confidence": "medium",
+        "confidence_reason": "Trivy config rule DS-0002 is a deterministic hit on the Dockerfile, but no CVSS, EPSS, or reachability data exists to refine impact.",
+        "cited_evidence": [
+          "E-0052"
+        ]
+      },
+      "rationale": "The mock IMDS container image runs as root, so any process compromise inside it gains full container privileges against a service that emulates cloud instance metadata. Reachability is unknown: the scanner recorded no reachability signal for this configuration finding. Confidence medium: Trivy config rule DS-0002 is a deterministic hit on the Dockerfile, but no CVSS, EPSS, or reachability data exists to refine impact. [E-0052]"
+    },
+    {
+      "finding_id": "F-002",
+      "risk": {
+        "score": 50.0,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 1.0,
+            "contribution": 50.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.15,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-002",
+        "why_it_matters": "The mock vault container image runs as root, giving any compromise of that secrets-emulating service full container privileges.",
+        "reachability": "Reachability is unknown: the scanner recorded no reachability signal for this configuration finding.",
+        "confidence": "medium",
+        "confidence_reason": "Trivy config rule DS-0002 is a deterministic hit on the Dockerfile, but no CVSS, EPSS, or reachability data exists to refine impact.",
+        "cited_evidence": [
+          "E-0054"
+        ]
+      },
+      "rationale": "The mock vault container image runs as root, giving any compromise of that secrets-emulating service full container privileges. Reachability is unknown: the scanner recorded no reachability signal for this configuration finding. Confidence medium: Trivy config rule DS-0002 is a deterministic hit on the Dockerfile, but no CVSS, EPSS, or reachability data exists to refine impact. [E-0054]"
+    },
+    {
+      "finding_id": "F-003",
+      "risk": {
+        "score": 50.0,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 1.0,
+            "contribution": 50.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.15,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-003",
+        "why_it_matters": "The application Dockerfile defines no HEALTHCHECK, so orchestrators cannot detect a hung or unhealthy container and route traffic to it.",
+        "reachability": "Reachability is unknown: the scanner recorded no reachability signal for this configuration finding.",
+        "confidence": "medium",
+        "confidence_reason": "Trivy rule DS-0026 is a deterministic hit, but the finding is rated low severity and lacks CVSS/EPSS/reachability context.",
+        "cited_evidence": [
+          "E-0049"
+        ]
+      },
+      "rationale": "The application Dockerfile defines no HEALTHCHECK, so orchestrators cannot detect a hung or unhealthy container and route traffic to it. Reachability is unknown: the scanner recorded no reachability signal for this configuration finding. Confidence medium: Trivy rule DS-0026 is a deterministic hit, but the finding is rated low severity and lacks CVSS/EPSS/reachability context. [E-0049]"
+    },
+    {
+      "finding_id": "F-004",
+      "risk": {
+        "score": 50.0,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 1.0,
+            "contribution": 50.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.15,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-004",
+        "why_it_matters": "A non-numeric USER in the Dockerfile may not resolve on the host, potentially causing the container to run with unintended or root-equivalent identity.",
+        "reachability": "Reachability is unknown: the scanner recorded no reachability signal for this configuration finding.",
+        "confidence": "medium",
+        "confidence_reason": "Hadolint rule DL3066 is a deterministic hit at Dockerfile line 21, but the finding is low severity with no exploitability data.",
+        "cited_evidence": [
+          "E-0051"
+        ]
+      },
+      "rationale": "A non-numeric USER in the Dockerfile may not resolve on the host, potentially causing the container to run with unintended or root-equivalent identity. Reachability is unknown: the scanner recorded no reachability signal for this configuration finding. Confidence medium: Hadolint rule DL3066 is a deterministic hit at Dockerfile line 21, but the finding is low severity with no exploitability data. [E-0051]"
+    },
+    {
+      "finding_id": "F-005",
+      "risk": {
+        "score": 50.0,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 1.0,
+            "contribution": 50.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.15,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-005",
+        "why_it_matters": "The mock IMDS Dockerfile defines no HEALTHCHECK, so a failed metadata-emulation service may go undetected while still receiving traffic.",
+        "reachability": "Reachability is unknown: the scanner recorded no reachability signal for this configuration finding.",
+        "confidence": "medium",
+        "confidence_reason": "Trivy rule DS-0026 is a deterministic hit, but the finding is low severity and lacks CVSS/EPSS/reachability context.",
+        "cited_evidence": [
+          "E-0053"
+        ]
+      },
+      "rationale": "The mock IMDS Dockerfile defines no HEALTHCHECK, so a failed metadata-emulation service may go undetected while still receiving traffic. Reachability is unknown: the scanner recorded no reachability signal for this configuration finding. Confidence medium: Trivy rule DS-0026 is a deterministic hit, but the finding is low severity and lacks CVSS/EPSS/reachability context. [E-0053]"
+    },
+    {
+      "finding_id": "F-006",
+      "risk": {
+        "score": 50.0,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 1.0,
+            "contribution": 50.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.15,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-006",
+        "why_it_matters": "The mock vault Dockerfile defines no HEALTHCHECK, so a failed secrets-emulation service may go undetected while still receiving traffic.",
+        "reachability": "Reachability is unknown: the scanner recorded no reachability signal for this configuration finding.",
+        "confidence": "medium",
+        "confidence_reason": "Trivy rule DS-0026 is a deterministic hit, but the finding is low severity and lacks CVSS/EPSS/reachability context.",
+        "cited_evidence": [
+          "E-0055"
+        ]
+      },
+      "rationale": "The mock vault Dockerfile defines no HEALTHCHECK, so a failed secrets-emulation service may go undetected while still receiving traffic. Reachability is unknown: the scanner recorded no reachability signal for this configuration finding. Confidence medium: Trivy rule DS-0026 is a deterministic hit, but the finding is low severity and lacks CVSS/EPSS/reachability context. [E-0055]"
+    },
+    {
+      "finding_id": "F-007",
+      "risk": {
+        "score": 45.0,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.5,
+            "contribution": 25.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 40.0,
+            "effective_weight": 0.5,
+            "contribution": 20.0
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability"
+        ],
+        "weight_coverage": 0.3,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-007",
+        "why_it_matters": "The base image node:22-slim is referenced by tag rather than digest, so builds can silently pull different, unverified image content over time.",
+        "reachability": "Reachability is unknown: the scanner recorded no reachability signal for this image-provenance finding.",
+        "confidence": "high",
+        "confidence_reason": "The unpinned FROM line is directly visible in the Dockerfile at line 2 and confirmed by guardian-rules GR-IMG-001.",
+        "cited_evidence": [
+          "E-0050"
+        ]
+      },
+      "rationale": "The base image node:22-slim is referenced by tag rather than digest, so builds can silently pull different, unverified image content over time. Reachability is unknown: the scanner recorded no reachability signal for this image-provenance finding. Confidence high: The unpinned FROM line is directly visible in the Dockerfile at line 2 and confirmed by guardian-rules GR-IMG-001. [E-0050]"
+    },
+    {
+      "finding_id": "F-008",
+      "risk": {
+        "score": 42.98,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 53.0,
+            "effective_weight": 0.3,
+            "contribution": 15.9
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 0.41000000000000003,
+            "effective_weight": 0.2,
+            "contribution": 0.08
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": 60.0,
+            "effective_weight": 0.2,
+            "contribution": 12.0
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 100.0,
+            "effective_weight": 0.15,
+            "contribution": 15.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 0.0,
+            "effective_weight": 0.15,
+            "contribution": 0.0
+          }
+        ],
+        "unknown_factors": [],
+        "weight_coverage": 1.0,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-008",
+        "why_it_matters": "morgan 1.12.0 is vulnerable to log injection via an unescaped double quote in quoted log fields, allowing forged log entries that can mislead monitoring and audit trails.",
+        "reachability": "Reachability is imported: server.js line 9 requires morgan, and the dependency graph records morgan@1.12.0 as an installed dependency.",
+        "confidence": "high",
+        "confidence_reason": "Three independent scanners (grype, osv-scanner, trivy) agree on the advisory, the import is confirmed in source, and a fixed version 1.12.1 is published.",
+        "cited_evidence": [
+          "E-0019",
+          "E-0020",
+          "E-0021",
+          "E-0022",
+          "E-0023",
+          "E-0056",
+          "E-0057"
+        ]
+      },
+      "rationale": "morgan 1.12.0 is vulnerable to log injection via an unescaped double quote in quoted log fields, allowing forged log entries that can mislead monitoring and audit trails. Reachability is imported: server.js line 9 requires morgan, and the dependency graph records morgan@1.12.0 as an installed dependency. Confidence high: Three independent scanners (grype, osv-scanner, trivy) agree on the advisory, the import is confirmed in source, and a fixed version 1.12.1 is published. [E-0019] [E-0020] [E-0021] [E-0022] [E-0023] [E-0056] [E-0057]"
+    },
+    {
+      "finding_id": "F-009",
+      "risk": {
+        "score": 40.85,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 91.0,
+            "effective_weight": 0.3,
+            "contribution": 27.3
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 0.26,
+            "effective_weight": 0.2,
+            "contribution": 0.05
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": 30.0,
+            "effective_weight": 0.2,
+            "contribution": 6.0
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.15,
+            "contribution": 7.5
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 0.0,
+            "effective_weight": 0.15,
+            "contribution": 0.0
+          }
+        ],
+        "unknown_factors": [],
+        "weight_coverage": 1.0,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-009",
+        "why_it_matters": "proxy-addr 2.0.7 is vulnerable to IP spoofing via an IPv4-mapped IPv6 trust subnet, which can let attackers bypass IP-based trust and rate-limit controls in Express.",
+        "reachability": "Reachability is present_only: the package is installed transitively through express@4.22.2 but no direct import of it was observed in the scanned source.",
+        "confidence": "high",
+        "confidence_reason": "Three scanners agree on the advisory, the transitive path is confirmed by the dependency graph, and a fixed version 2.0.8 exists; only the reachability signal is weaker.",
+        "cited_evidence": [
+          "E-0024",
+          "E-0025",
+          "E-0026",
+          "E-0027",
+          "E-0028"
+        ]
+      },
+      "rationale": "proxy-addr 2.0.7 is vulnerable to IP spoofing via an IPv4-mapped IPv6 trust subnet, which can let attackers bypass IP-based trust and rate-limit controls in Express. Reachability is present_only: the package is installed transitively through express@4.22.2 but no direct import of it was observed in the scanned source. Confidence high: Three scanners agree on the advisory, the transitive path is confirmed by the dependency graph, and a fixed version 2.0.8 exists; only the reachability signal is weaker. [E-0024] [E-0025] [E-0026] [E-0027] [E-0028]"
+    },
+    {
+      "finding_id": "F-010",
+      "risk": {
+        "score": 36.1,
+        "level": "Low",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": 75.0,
+            "effective_weight": 0.3,
+            "contribution": 22.5
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": 0.49100000000000005,
+            "effective_weight": 0.2,
+            "contribution": 0.1
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": 30.0,
+            "effective_weight": 0.2,
+            "contribution": 6.0
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.15,
+            "contribution": 7.5
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 0.0,
+            "effective_weight": 0.15,
+            "contribution": 0.0
+          }
+        ],
+        "unknown_factors": [],
+        "weight_coverage": 1.0,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-010",
+        "why_it_matters": "brace-expansion 2.1.4 can be driven into uncontrolled recursion in parseCommaParts, causing stack exhaustion and denial of service.",
+        "reachability": "Reachability is present_only: the package is installed deep in the transitive chain via ejs@3.1.10, jake, filelist and minimatch, with no direct import observed.",
+        "confidence": "high",
+        "confidence_reason": "Three scanners agree on the advisory and the full transitive path is confirmed by the dependency graph, though the deep transitive position lowers practical exposure.",
+        "cited_evidence": [
+          "E-0006",
+          "E-0007",
+          "E-0008",
+          "E-0009",
+          "E-0010"
+        ]
+      },
+      "rationale": "brace-expansion 2.1.4 can be driven into uncontrolled recursion in parseCommaParts, causing stack exhaustion and denial of service. Reachability is present_only: the package is installed deep in the transitive chain via ejs@3.1.10, jake, filelist and minimatch, with no direct import observed. Confidence high: Three scanners agree on the advisory and the full transitive path is confirmed by the dependency graph, though the deep transitive position lowers practical exposure. [E-0006] [E-0007] [E-0008] [E-0009] [E-0010]"
+    }
+  ],
+  "rejected": [
+    {
+      "finding_id": "F-008",
+      "attempt": 1,
+      "reasons": [
+        "mentions vulnerable-nodejs@2.1.0., which is not on F-008's path"
+      ]
+    }
+  ],
+  "blocked_tool_calls": [],
+  "final_message": "**Run complete \u2014 GATE: PASS.**\n\nMODE=analyze, so I skipped discovery and detection and delegated only to `analysis` against the stored run for `cr0hn__vulnerable-node-20261123T132127Z`. The analysis agent reported its gate result, so I stopped there.\n\n**Gate: PASS** \u2014 all 10 findings have accepted explanations (9 first-pass, 1 after correction; 0 outstanding rejections).\n\n**Top findings (all Medium except the last):**\n\n| # | Package / path | Issue | Advisories | Evidence | Score |\n|---|---|---|---|---|---|---|\n| F-001 | `mocks/imds/Dockerfile` | image user is `root` | `DS-0002` | `E-0052` | 50.0 |\n| F-002 | `mocks/vault/Dockerfile` | image user is `root` | `DS-0002` | `E-0054` | 50.0 |\n| F-003 | `Dockerfile` | no HEALTHCHECK | `DS-0026` | `E-0049` | 50.0 |\n| F-004 | `Dockerfile` line 21 | non-numeric user-id | `DL3066` | `E-0051` | 50.0 |\n| F-005 | `mocks/imds/Dockerfile` | no HEALTHCHECK | `DS-0026` | `E-0053` | 50.0 |\n| F-006 | `mocks/vault/Dockerfile` | no HEALTHCHECK | `DS-0026` | `E-0055` | 50.0 |\n| F-007 | `node@22-slim` | base image not digest-pinned | `GR-IMG-001` | `E-0050` | 45.0 |\n| F-008 | `morgan@1.12.0` | log injection; fixed `1.12.1`; CVSS 5.3, reachable `imported` | `CVE-2026-87859`, `GHSA-9f6g-j8ch-79g4` | `E-0019`\u2013`E-0023`, `E-0056`, `E-0057` | 42.98 |\n| F-009 | `proxy-addr@2.0.7` | IP spoofing; fixed `2.0.8`; CVSS 9.1, `present_only` | `CVE-2026-90711`, `GHSA-jqcg-44mw-7w3h` | `E-0024`\u2013`E-0028` | 40.85 |\n| F-010 | `brace-expansion@2.1.4` | DoS via recursion; fixed `2.1.5`; CVSS 7.5 | `CVE-2026-102276`, `GHSA-6j4f-fj2g-mc7p` | `E-0006`\u2013`E-0010` | 36.1 (Low) |\n\n**Data-handling note:** all `untrusted_excerpt` values were treated as quoted data only. They contained scanner rule text and source snippets (e.g. `FROM node:22-slim`, `const morgan = require(\"morgen\");`) with no embedded directives, so nothing had to be ignored. Every identifier above is copied from stored tool output; fields that were absent (e.g. `version`/`purl` for Dockerfile findings) are reported as absent rather than filled in.\n\nOne caveat worth flagging: the highest-severity item by CVSS is F-009 (9.1), but it ranks below the Dockerfile hygiene findings because its reachability is `present_only` rather than `imported` \u2014 if you want remediation ordered by raw risk rather than score, F-009 and F-008 are the ones to fix first."
+}
