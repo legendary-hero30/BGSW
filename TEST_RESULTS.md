@@ -374,6 +374,10 @@ Environment: Python 3.12.16 (uv-managed), pydantic 2.14.4, pytest 9.2.0, ruff 0.
 
 ## D1.S8: agents and the explanation gate (2026-11-23)
 
+> **Historical:** these runs used the offline scripted model. That model was removed in the D1.S9
+> revision; the equivalent protocol tests now inject `tests/fake_model.py`, and the product uses
+> DeepInfra only. See the revision section at the end.
+
 | Command | Outcome |
 |---|---|
 | `uv lock` (deepagents 0.7.38, exclude-newer 2026-11-16) | 64 packages. pydantic 2.14.3, ruff 0.17.5 (cutoff) |
@@ -420,3 +424,104 @@ Environment: Python 3.12.16 (uv-managed), pydantic 2.14.4, pytest 9.2.0, ruff 0.
   "this is easy to exploit") are not machine-checked.
 - **Global profile registry:** the harness-profile registry is process-global. The profile is
   registered per provider key before each build.
+
+## D1.S9: read-only API, evidence UI and the Day-1 checklist (2026-11-23)
+
+| Command | Outcome |
+|---|---|
+| `uv lock` / `uv sync --extra llm-openai` | 73 packages; added langchain-openai 1.8.0, openai 3.51.0, tiktoken, regex (all older than the 2026-11-16 cutoff) |
+| `cd ui && npm run build` | exit 0: `tsc --noEmit` clean; Vite built `dist/index.html`, 11.9 kB CSS, 676 kB JS |
+| `baseline --target nodegoat --out runs/demo` | exit 0. 415 findings; 324 dependency findings; 1,471 evidence records; 0 unmapped; **10,127/10,127 (100%)** verified |
+| `agents analyze --run runs/demo --limit 10` (scripted) | 10 accepted, 0 rejected, 0 blocked tool calls, 12 tool calls |
+| `guardian.api --port 8765` + curl `/api/runs`, `/api/findings`, `/api/findings/F-001`, `/api/graph/F-001`, `/api/checklist`, `/` | all 200; UI index served; detail returned the stored Step-8 explanation; graph returned the highlighted path |
+| `GET /api/checklist?run=runs/demo` | **10 pass, 0 fail, 2 n/a** (the two Day-2 items). Item 12 now passes because README.md exists |
+| `--provider deepinfra` without a key | refused before any network call: `DEEPINFRA_API_KEY is not set`, exit 2 |
+| `uv run --locked ruff check .` / `ruff format --check .` | All checks passed / 68 files formatted |
+| `uv run --locked pytest -q -m "not integration"` | **239 passed**, 4 deselected |
+
+### New coverage
+
+- **tests/test_api.py:** run/summary, filters and LIKE-escaping, ordered evidence, the accepted
+  explanation, graph roles and path edges, recorded-path graphs, 404s for unknown runs/findings,
+  405 for writes, CSP/security headers, UI serving, path traversal refusal, read-only store, and
+  the loopback CLI refusal.
+- **tests/test_agents.py:** `default_model` for scripted/DeepInfra and the "model required"
+  error for providers without a default; DeepInfra requires its own key.
+- **tests/test_baseline_integration.py:** on a real offline run, the checklist must pass items
+  1-9 and 12, with the two Day-2 items `n/a`.
+
+### Problems found and fixed
+
+- **Dirty provider state:** an earlier uncommitted edit added `deepinfra` and depended on an
+  untracked `langchain-openai`. It removed useful error messages, broke
+  `test_external_providers_need_explicit_opt_in`, and was not reproducible.
+  - Fixed by restoring explicit errors, declaring the optional `llm-openai` extra, locking it,
+    and moving the "package absent" test to `deepseek`.
+- **Missing default model:** `--provider deepinfra` used to send the literal `scripted-v1` as the
+  model. `--model` is now optional per provider and resolves to a tool-calling default.
+- **Checklist item 12 was failing** because `README.md` did not exist. It now exists and
+  documents the repo, setup, dependencies, tools and demo.
+- **Docs drift:** `PROGRESS.md`, `SETUP.md`, `LLM_PROVIDERS.md` still described Step 8 as the last
+  step and the OpenAI client as absent. Updated.
+
+### Limits
+
+- **No DeepInfra call yet:** no `DEEPINFRA_API_KEY` is present in this environment, so the
+  real-model run is not verified. The refusal path is verified, the client is locked, and the
+  command is documented.
+- The three large build artefacts (`ui/dist`, `runs/demo`, `cache/`) are git-ignored and
+  reproducible from the documented commands.
+- The checklist's Day-2 items are `n/a` by design; Day 2 is not implemented.
+
+## D1.S9 revision: DeepInfra-only, Agent Steps and the GitHub input (2026-11-23)
+
+| Command | Outcome |
+|---|---|
+| `uv run --locked ruff check .` / `ruff format --check .` | All checks passed / 76 files formatted |
+| `uv run --locked pytest -q -m "not integration"` | **267 passed**, 4 deselected |
+| `uv run --locked pytest -m integration -q` | **4 passed** in 197 s (real offline scanners) |
+| `cd ui && npm run build` | exit 0: `tsc --noEmit` clean; Vite built the new Agent Steps + repo-input UI |
+| `prepare_target("https://github.com/OWASP/NodeGoat")` | cloned, pinned `c5cb68a7084e...`, `.git` removed, registered in `targets/dynamic.json` |
+| `baseline --target OWASP__NodeGoat-20261123T125015Z` | 415 findings, 0 unmapped, **10,127/10,127 (100%)** verified |
+| **Live DeepInfra** `./scripts/deepinfra_demo.sh runs/OWASP__NodeGoat-20261123T125015Z 10` | `deepinfra:deepseek-ai/DeepSeek-V4.1-Flash-1017`; **10 accepted, 1 rejected attempt, 0 blocked, 13 tool calls** |
+| API `GET /api/agent-steps?run=runs/OWASP__NodeGoat-...` | `task(analysis)` + `list_findings` + 10× `get_finding` + `submit_explanations`; counts 13/10/1/0 |
+| API `GET /api/findings/F-001?run=...` | real DeepInfra explanation, confidence high, cites `E-0305`, `E-0306`, `E-0303`, `E-1288` |
+| API `GET /api/checklist?run=...` | **10 pass, 0 fail, 2 n/a** with the live explanations |
+| API `POST /api/runs` with `http://github.com/a/b` | 400: only https://github.com URLs are accepted |
+| API `POST /api/runs` with `https://github.com/isaacs/node-lru-cache` (no key) | 202, then polling: cloning → scanning → done; **74 findings**; DeepInfra missing-key error reported instead of a fake analysis |
+| **Full UI flow** `POST /api/runs` with `https://github.com/isaacs/node-lru-cache` (DeepInfra configured) | cloning → scanning → analyzing → done; **74 findings**, **10 accepted, 1 rejected, 0 blocked, 14 tool calls**; the live job steps advanced 1 → 6 → 11 → 12 → 13 → 14 as calls landed |
+| API `GET /api/agent-steps?run=runs/isaacs__node-lru-cache-...` | `task(analysis)` + `list_findings` + 10× `get_finding` + 2× `submit_explanations`; provider/model DeepInfra |
+| API `GET /api/agent-steps?run=...` (scan-only run) | empty steps, `provider: null`, zero counts |
+| API `GET /` | 200, the rebuilt UI is served |
+
+### New coverage
+
+- `tests/test_targets.py`: accepted/rejected GitHub URLs (scheme, host, credentials, query,
+  fragment, extra path, `.`, `..`, `.git`, whitespace) and the tool→agent step mapping.
+- `tests/test_jobs.py`: clone → scan → analysis success, the missing-key path keeping the scan,
+  clone errors, and the no-findings path skipping the model.
+- `tests/test_api.py`: the Agent Steps payload, the one controlled POST, job polling, 404s for
+  unknown jobs, and the removal of the scripted generator label.
+- `tests/test_agents.py` and `tests/test_baseline_integration.py`: the test-only
+  `FakeChatModel` is injected through `run_agents(..., model=...)`; production has no mock model.
+
+### Limits and observations
+
+- **Live DeepInfra is verified.** The run used `deepseek-ai/DeepSeek-V4.1-Flash-1017` on a real
+  stored NodeGoat run: 10 accepted, 1 rejected attempt, 0 blocked, 13 tool calls. The rejected
+  attempt was `F-007`, which mentioned `CVE-2023-42282` although that advisory is not attached
+  to the finding; the gate refused it. A previously accepted explanation for `F-007` from the
+  first live run remains the accepted one. This is the gate working as designed, not a model
+  failure.
+- **The scan still works without a key.** The key-gated analysis is the only part that needs
+  DeepInfra; deterministic discovery, detection and scoring complete and are stored. The job
+  reports the missing key instead of inventing an explanation.
+- Legacy `scripted` explanation rows and the three artefact files were deleted from the existing
+  runs, so no mock output can surface in the UI. The `/api/agent-steps` endpoint also ignores any
+  trace whose provider is `scripted`.
+- The dynamic repository path supports npm lockfiles v2/v3 only; a repo without one is rejected
+  before scanning. A dynamic target has no base commit, so the diff-only anomaly rules and the
+  cached-image scan are skipped when they do not apply.
+- The first live run's final message said `gate result: FAIL` because of the single rejected
+  attempt; the stored accepted set is still complete (10 findings). The UI shows the accepted and
+  rejected counts separately.

@@ -1,7 +1,9 @@
-"""Read-only API: endpoints, filters, graph elements, UI serving and security properties."""
+"""API: endpoints, filters, graph elements, agent steps, the repo-input job and security."""
 
+import json
 import shutil
 import sqlite3
+import time
 
 import pytest
 from fastapi.testclient import TestClient
@@ -99,6 +101,29 @@ def sample():
     return FindingSet(evidence=evidence, findings=findings), graph
 
 
+def fake_job_runner(job, repo, db):
+    job.update(
+        status="done",
+        step="Complete",
+        run_id=RUN,
+        findings=2,
+        accepted=1,
+        rejected=0,
+        blocked=0,
+        steps=[
+            {
+                "n": 1,
+                "agent": "orchestrator",
+                "subagent": "analysis",
+                "tool": "task",
+                "args": {"subagent_type": "analysis"},
+                "result_chars": 10,
+            }
+        ],
+        finished="2026-11-23T00:00:00+00:00",
+    )
+
+
 @pytest.fixture(scope="module")
 def client():
     shutil.rmtree(DIR, ignore_errors=True)
@@ -107,6 +132,36 @@ def client():
     (ui / "assets").mkdir(parents=True)
     (ui / "index.html").write_text("<!doctype html><div id=root></div>")
     (ui / "assets" / "app.js").write_text("console.log(1)")
+    (DIR / "run").mkdir(parents=True, exist_ok=True)
+    (DIR / "run" / "agent-trace.json").write_text(
+        json.dumps(
+            {
+                "provider": "deepinfra",
+                "model": "test-model",
+                "generator": "language model",
+                "tool_calls": [
+                    {"tool": "task", "args": {"subagent_type": "analysis"}, "result_chars": 10},
+                    {"tool": "list_findings", "args": {"limit": 10}, "result_chars": 20},
+                    {"tool": "get_finding", "args": {"finding_id": "F-001"}, "result_chars": 30},
+                    {"tool": "submit_explanations", "args": {"count": 1}, "result_chars": 40},
+                ],
+                "blocked_tool_calls": [],
+                "final_message": "done",
+            }
+        )
+    )
+    (DIR / "run" / "explanations.json").write_text(
+        json.dumps(
+            {
+                "provider": "deepinfra",
+                "model": "test-model",
+                "accepted": [{"finding_id": "F-001"}],
+                "rejected": [],
+                "blocked_tool_calls": [],
+                "final_message": "done",
+            }
+        )
+    )
     fs, graph = sample()
     conn = connect(DB)
     save_run(
@@ -120,10 +175,11 @@ def client():
         fs,
         graph,
     )
-    save_explanation(conn, RUN, "F-001", "rejected", "scripted", "s", {"x": 1}, ["bad"])
-    save_explanation(conn, RUN, "F-001", "accepted", "scripted", "s", {"why_it_matters": "w"}, [])
+    save_explanation(conn, RUN, "F-001", "rejected", "deepinfra", "test-model", {"x": 1}, ["bad"])
+    save_explanation(conn, RUN, "F-001", "accepted", "deepinfra", "test-model",
+                     {"why_it_matters": "w"}, [])  # fmt: skip
     conn.close()
-    yield TestClient(create_app(DB, ui))
+    yield TestClient(create_app(DB, ui, job_runner=fake_job_runner))
     shutil.rmtree(DIR, ignore_errors=True)
 
 
@@ -153,8 +209,28 @@ def test_finding_detail_returns_ordered_evidence_and_explanation(client):
     d = client.get("/api/findings/F-001", params={"run": RUN}).json()
     assert [e["id"] for e in d["evidence"]] == ["E-001", "E-002"]
     assert d["evidence"][0]["excerpt"] == "<script>alert(1)</script>"  # data, escaped by the UI
-    assert d["explanation"]["generator"] == "offline scripted template (not an LLM)"
+    assert d["explanation"]["generator"] == "language model"
     assert d["rejected_explanations"] == 1
+
+
+def test_agent_steps_are_exposed_for_the_view(client):
+    j = client.get("/api/agent-steps", params={"run": RUN}).json()
+    assert j["provider"] == "deepinfra" and j["generator"] == "language model"
+    assert [s["tool"] for s in j["steps"]] == [
+        "task",
+        "list_findings",
+        "get_finding",
+        "submit_explanations",
+    ]
+    assert [s["agent"] for s in j["steps"]] == [
+        "orchestrator",
+        "analysis",
+        "analysis",
+        "analysis",
+    ]
+    assert j["steps"][0]["subagent"] == "analysis"
+    assert j["counts"] == {"tool_calls": 4, "accepted": 1, "rejected": 0, "blocked": 0}
+    assert j["final_message"] == "done"
 
 
 def test_graph_from_dependency_graph(client):
@@ -179,7 +255,14 @@ def test_graph_from_recorded_image_path(client):
 
 @pytest.mark.parametrize(
     "path",
-    ["/api/findings", "/api/summary", "/api/checklist", "/api/findings/F-001", "/api/graph/F-001"],
+    [
+        "/api/findings",
+        "/api/summary",
+        "/api/checklist",
+        "/api/findings/F-001",
+        "/api/graph/F-001",
+        "/api/agent-steps",
+    ],
 )
 def test_unknown_run_is_404(client, path):
     assert client.get(path, params={"run": "../../etc"}).status_code == 404
@@ -189,9 +272,28 @@ def test_unknown_finding_is_404(client):
     assert client.get("/api/findings/F-999", params={"run": RUN}).status_code == 404
 
 
-@pytest.mark.parametrize("method", ["post", "put", "delete", "patch"])
-def test_only_reads_are_allowed(client, method):
+@pytest.mark.parametrize("method", ["put", "delete", "patch"])
+def test_only_the_controlled_post_is_allowed(client, method):
     assert getattr(client, method)("/api/runs").status_code == 405
+    assert client.post("/api/summary").status_code == 405
+
+
+def test_start_run_validates_and_queues_a_job(client):
+    assert client.post("/api/runs", json={"repo": "http://github.com/a/b"}).status_code == 400
+    assert client.post("/api/runs", json={"repo": "https://gitlab.com/a/b"}).status_code == 400
+    assert client.post("/api/runs", json={}).status_code == 422
+    started = client.post("/api/runs", json={"repo": "https://github.com/OWASP/NodeGoat"})
+    assert started.status_code == 202
+    job = started.json()
+    assert job["status"] == "queued" and job["repo"] == "https://github.com/OWASP/NodeGoat"
+    for _ in range(100):
+        current = client.get(f"/api/jobs/{job['id']}").json()
+        if current["status"] in {"done", "error"}:
+            break
+        time.sleep(0.02)
+    assert current["status"] == "done" and current["run_id"] == RUN
+    assert current["findings"] == 2 and current["accepted"] == 1
+    assert client.get("/api/jobs/does-not-exist").status_code == 404
 
 
 def test_security_headers_and_ui(client):

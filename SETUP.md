@@ -17,10 +17,12 @@ uv run --locked ruff format --check .
 
 ## Resolved dependencies (uv.lock, 2026-11-23)
 
-Since D1.S8 the lock has 64 packages, including deepagents 0.7.38, langchain 1.5.0,
+Since D1.S9 the lock has 73 packages. It includes deepagents 0.7.38, langchain 1.5.0,
 langchain-core 1.8.1, langgraph 1.2.22, langchain-anthropic 1.7.10, langchain-google-genai
-4.5.0 and langsmith 0.14.17, all resolved with `exclude-newer = 2026-11-16`. That cutoff moved
-pydantic to 2.14.3 and ruff to 0.17.5. The table below is the original D0/D1.S1 set.
+4.5.0, langsmith 0.14.17, fastapi 0.163.1, uvicorn 0.54.0, and the optional `llm-openai` extra
+(`langchain-openai` 1.8.0, `openai` 3.51.0, `tiktoken`, `regex`) used by DeepInfra. Everything is
+resolved with `exclude-newer = 2026-11-16`. That cutoff moved pydantic to 2.14.3 and ruff to
+0.17.5. The table below is the original D0/D1.S1 set.
 
 | Package | Version | Role |
 |---|---|---|
@@ -33,9 +35,8 @@ pydantic to 2.14.3 and ruff to 0.17.5. The table below is the original D0/D1.S1 
 | iniconfig, packaging, pluggy, pygments | 2.3.1, 26.3, 1.7.0, 2.21.0 | pytest dependencies (dev) |
 | ruff | 0.17.6 | Lint and format (dev) |
 
-No Python dependencies were added in D1.S2 or D1.S3. Deep Agents, LangChain, FastAPI and model
-SDKs are not installed yet; each is added in its approved step. Scanner binaries are listed
-below.
+Install the DeepInfra/OpenAI-compatible client with `uv sync --locked --extra llm-openai` (the
+default `uv sync --locked` leaves it out). Scanner binaries are listed below.
 
 ## Secrets
 
@@ -132,16 +133,22 @@ sqlite3 runs/guardian.db "SELECT id, risk_score, risk_level, weight_coverage, co
 `baseline(..., db=None)` skips the store (the tests use this or their own database). The store
 needs only Python's stdlib `sqlite3`; the `sqlite3` command line tool is optional.
 
-## Agents (D1.S8)
+## Agents (D1.S8) and the evidence view (D1.S9)
 
 ```bash
-uv sync --locked     # now includes deepagents 0.7.38 and LangChain (exclude-newer 2026-11-16)
-uv run --locked python -m guardian.agents analyze --run runs/d1s7 --limit 10
-uv run --locked python -m guardian.agents run --target nodegoat --out runs/d1s8
+uv sync --locked --extra llm-openai   # deepagents, LangChain, FastAPI, DeepInfra client
+export GUARDIAN_ALLOW_EXTERNAL_MODELS=1 DEEPINFRA_API_KEY=...
+uv run --locked python -m guardian.agents analyze --run runs/demo --limit 10
+uv run --locked python -m guardian.agents run --target nodegoat --out runs/demo
+uv run --locked python -m guardian.api --port 8000
 ```
 
-The default provider is the offline scripted model, with no network. Real providers and the
-opt-in are described in `LLM_PROVIDERS.md`.
+Every run uses a live model; there is no offline/scripted model. DeepInfra is the provider
+(`--provider deepinfra`, `DEEPINFRA_API_KEY`, default model
+`deepseek-ai/DeepSeek-V4.1-Flash-1017`); the opt-in and data-handling policy are in
+`LLM_PROVIDERS.md`. The API serves `ui/dist`, refuses non-loopback hosts and exposes one write
+endpoint (`POST /api/runs`) for the GitHub repository box. Rebuild the UI with
+`cd ui && npm ci && npm run build`.
 
 ## Not yet set up
 

@@ -12,6 +12,7 @@ from guardian.sbom.cyclonedx import cross_check, load_bom
 from guardian.sbom.npm_lock import build_graph, parse_lockfile
 from guardian.schemas.graph import EdgeKind
 from guardian.schemas.sbom import DependencyScope
+from guardian.targets import DYNAMIC_TARGETS_FILE
 from guardian.tools.runner import WORKSPACE, jail, run_tool, tool_version, workspace_relative
 
 TARGETS_FILE = WORKSPACE / "targets" / "targets.json"
@@ -29,9 +30,18 @@ class TargetError(ValueError):
 
 def load_target(name: str) -> dict:
     targets = {t["name"]: t for t in json.loads(TARGETS_FILE.read_text())["targets"]}
+    if DYNAMIC_TARGETS_FILE.exists():
+        dynamic = json.loads(DYNAMIC_TARGETS_FILE.read_text()).get("targets", [])
+        targets.update({t["name"]: t for t in dynamic})
     if name not in targets:
         raise TargetError(f"unknown target {name!r}; registered: {sorted(targets)}")
     target = targets[name]
+    if target.get("dynamic"):
+        # The commit was resolved and recorded when the repository was cloned; Git metadata is
+        # removed afterwards, so there is no .git/HEAD to compare against.
+        if not jail(target["path"]).is_dir():
+            raise TargetError(f"{name}: dynamic target directory is missing")
+        return target
     root = jail(target["path"])
     head = (root / ".git" / "HEAD").read_text().strip()
     if head != target["commit"]:

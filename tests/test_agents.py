@@ -1,6 +1,7 @@
-"""D1.S8 agents: explanation gate, tools, orchestrator safety, scripted model runs, providers.
+"""D1.S8 agents: explanation gate, tools, orchestrator safety, tool protocol, providers.
 
-Everything runs in-process with the offline scripted model, so there are no network calls.
+Agent-protocol tests inject the test-only FakeChatModel; no network call is made. Production
+always builds a live provider model through guardian.agents.models.build_model.
 """
 
 import json
@@ -11,7 +12,7 @@ from types import SimpleNamespace
 import pytest
 
 from guardian.agents.gate import gate
-from guardian.agents.models import ModelConfig, ModelDisabledError, ScriptedModel, build_model
+from guardian.agents.models import ModelConfig, ModelDisabledError, build_model, default_model
 from guardian.agents.orchestrator import MAIN_TOOLS, ToolAllowList, build_guardian_agent, run_agents
 from guardian.agents.tools import MAX_ATTEMPTS, AgentContext, analysis_tools
 from guardian.schemas import (
@@ -31,6 +32,7 @@ from guardian.schemas.risk import Exposure, Reachability
 from guardian.scoring import score_risk
 from guardian.store import accepted_explanations, connect, save_run
 from guardian.tools.runner import WORKSPACE
+from tests.fake_model import FakeChatModel
 
 DIR = WORKSPACE / "runs" / "pytest-agents"
 DB = "runs/pytest-agents/guardian.db"
@@ -121,7 +123,7 @@ def stored():
 
 def ctx(**kw) -> AgentContext:
     return AgentContext(
-        target="t", out_dir=RUN, db=DB, provider="scripted", model="scripted-v1", run_id=RUN, **kw
+        target="t", out_dir=RUN, db=DB, provider="deepinfra", model="test-fixture", run_id=RUN, **kw
     )
 
 
@@ -222,7 +224,7 @@ def test_submit_records_accepted_and_rejected_with_attempt_cap(stored):
 
 
 def test_main_agent_exposes_only_task_and_read_file(stored):
-    agent = build_guardian_agent(ScriptedModel(), ctx(), [])
+    agent = build_guardian_agent(FakeChatModel(), ctx(), [])
     assert set(agent.nodes["tools"].bound.tools_by_name) == MAIN_TOOLS
 
 
@@ -237,9 +239,9 @@ def test_allow_list_middleware_blocks_unknown_tools():
     assert mw.wrap_tool_call(ok, lambda r: "ran") == "ran"
 
 
-def test_scripted_analyze_run_end_to_end(stored):
+def test_analyze_run_end_to_end(stored):
     c = ctx()
-    outcome = run_agents(c, ModelConfig(), "analyze")
+    outcome = run_agents(c, ModelConfig(), "analyze", model=FakeChatModel())
     assert outcome["blocked_tool_calls"] == []
     assert "analysis finished" in outcome["final"]
     conn = connect(DB)
@@ -247,11 +249,12 @@ def test_scripted_analyze_run_end_to_end(stored):
     conn.close()
     assert set(accepted) == {"F-001", "F-002"}
     assert "dev" in accepted["F-002"]["reachability"].lower()
-    assert c.log[0]["tool"] == "list_findings"
+    assert c.log[0]["tool"] == "task"  # orchestrator delegates to analysis
+    assert c.log[1]["tool"] == "list_findings"
 
 
 def test_hallucinating_model_is_fully_rejected(stored):
-    run_agents(ctx(), ModelConfig(provider="scripted-hallucinating"), "analyze")
+    run_agents(ctx(), ModelConfig(), "analyze", model=FakeChatModel(mode="hallucinate"))
     conn = connect(DB)
     assert accepted_explanations(conn, RUN) == {}
     reasons = [json.loads(r[0]) for r in conn.execute("SELECT reasons_json FROM explanations")]
@@ -269,7 +272,7 @@ def test_full_mode_calls_discovery_then_detection(stored):
         detect=lambda t, o, d: calls.append("detect") or {"store": {"run_id": RUN}},
     )
     c.run_id = None
-    outcome = run_agents(c, ModelConfig(), "full")
+    outcome = run_agents(c, ModelConfig(), "full", model=FakeChatModel())
     assert calls == ["discover", "detect"]
     assert "discovery, detection, analysis" in outcome["final"]
     assert c.run_id == RUN
@@ -301,13 +304,30 @@ def test_external_providers_need_explicit_opt_in(monkeypatch):
         build_model(ModelConfig(provider="anthropic", model="any"))
     monkeypatch.setenv("GUARDIAN_ALLOW_EXTERNAL_MODELS", "1")
     with pytest.raises(ModelDisabledError, match="not installed"):
-        build_model(ModelConfig(provider="openai", model="any"))  # langchain_openai absent
+        build_model(ModelConfig(provider="deepseek", model="any"))  # langchain_deepseek absent
     with pytest.raises(ValueError, match="unknown provider"):
         build_model(ModelConfig(provider="nope", model="any"))
 
 
-def test_scripted_model_reports_its_own_provider():
-    assert ScriptedModel()._get_ls_params()["ls_provider"] == "guardian"
+def test_deepinfra_requires_its_own_key(monkeypatch):
+    monkeypatch.setenv("GUARDIAN_ALLOW_EXTERNAL_MODELS", "1")
+    monkeypatch.delenv("DEEPINFRA_API_KEY", raising=False)
+    try:
+        import langchain_openai  # noqa: F401
+    except ImportError:
+        pytest.skip("langchain-openai is not installed")
+    with pytest.raises(ModelDisabledError, match="DEEPINFRA_API_KEY"):
+        build_model(ModelConfig(provider="deepinfra", model="any"))
+
+
+def test_test_fixture_reports_its_own_provider():
+    assert FakeChatModel()._get_ls_params()["ls_provider"] == "guardian-test"
+
+
+def test_default_model_per_provider():
+    assert default_model("deepinfra") == "deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    with pytest.raises(ValueError, match="--model is required"):
+        default_model("openai")
 
 
 # --- store migration -------------------------------------------------------------------------

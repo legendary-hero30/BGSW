@@ -1,8 +1,10 @@
 """CLI:
-  uv run --locked python -m guardian.agents analyze --run runs/d1s7 [--limit 10]
-  uv run --locked python -m guardian.agents run --target nodegoat --out runs/d1s8
-Both default to the offline scripted model. Real providers: --provider/--model, and only with
-GUARDIAN_ALLOW_EXTERNAL_MODELS=1 (see LLM_PROVIDERS.md).
+  uv run --locked python -m guardian.agents analyze --run runs/demo [--limit 10]
+  uv run --locked python -m guardian.agents run --target nodegoat --out runs/demo
+
+Every run uses a live model. DeepInfra is the configured provider and has a default tool-calling
+model, so ``--provider deepinfra`` is usually enough. External calls require
+``GUARDIAN_ALLOW_EXTERNAL_MODELS=1`` and ``DEEPINFRA_API_KEY`` (see LLM_PROVIDERS.md).
 """
 
 from __future__ import annotations
@@ -11,90 +13,12 @@ import argparse
 import json
 import sys
 
-from guardian.agents.gate import Explanation
-from guardian.agents.models import ModelConfig, ModelDisabledError
+from guardian.agents.models import ModelConfig, ModelDisabledError, default_model
 from guardian.agents.orchestrator import run_agents
-from guardian.agents.tools import AgentContext, write_trace
-from guardian.store import DEFAULT_DB, accepted_explanations, connect, load_findings
+from guardian.agents.report import export
+from guardian.agents.tools import AgentContext
+from guardian.store import DEFAULT_DB
 from guardian.tools.runner import jail, workspace_relative
-
-
-def export(ctx: AgentContext, cfg: ModelConfig, outcome: dict) -> dict:
-    """Write explanations.json/.md for the run. Every rationale is re-validated on Finding."""
-    out = jail(ctx.out_dir)
-    conn = connect(ctx.db)
-    try:
-        fs = load_findings(conn, ctx.run_id)
-        accepted = accepted_explanations(conn, ctx.run_id)
-        rejected = conn.execute(
-            "SELECT finding_id, attempt, reasons_json FROM explanations "
-            "WHERE run_id = ? AND status = 'rejected' ORDER BY finding_id, attempt",
-            (ctx.run_id,),
-        ).fetchall()
-    finally:
-        conn.close()
-    by_id = {f.id: f for f in fs.findings}
-    items = []
-    for fid in sorted(accepted, key=lambda i: [f.id for f in fs.findings].index(i)):
-        exp = Explanation.model_validate(accepted[fid])
-        f = by_id[fid]
-        explained = type(f).model_validate({**f.model_dump(), "rationale": exp.rationale()})
-        items.append(
-            {
-                "finding_id": fid,
-                "risk": f.risk.model_dump(mode="json") if f.risk else None,
-                "explanation": exp.model_dump(mode="json"),
-                "rationale": explained.rationale,
-            }
-        )
-    scripted = cfg.provider.startswith("scripted")
-    doc = {
-        "run_id": ctx.run_id,
-        "provider": cfg.provider,
-        "model": cfg.model,
-        "generator": "offline scripted template (not an LLM)" if scripted else "language model",
-        "accepted": items,
-        "rejected": [
-            {"finding_id": r[0], "attempt": r[1], "reasons": json.loads(r[2])} for r in rejected
-        ],
-        "blocked_tool_calls": outcome["blocked_tool_calls"],
-        "final_message": outcome["final"],
-    }
-    (out / "explanations.json").write_text(json.dumps(doc, indent=2) + "\n")
-    (out / "explanations.md").write_text(render(doc, by_id))
-    write_trace(ctx, out / "agent-trace.json", {"provider": cfg.provider, "model": cfg.model})
-    return doc
-
-
-def render(doc: dict, by_id: dict) -> str:
-    lines = [
-        f"# AI explanations: {doc['run_id']}",
-        "",
-        f"Generator: **{doc['generator']}** ({doc['provider']}:{doc['model']}). Each "
-        "explanation passed the deterministic gate; rejected ones are listed, never shown "
-        "as explanations.",
-        "",
-    ]
-    for item in doc["accepted"]:
-        f, e, r = by_id[item["finding_id"]], item["explanation"], item["risk"] or {}
-        lines += [
-            f"## {f.id} {f.title}",
-            "",
-            f"- Risk: {r.get('score')} {r.get('level')} (coverage {r.get('weight_coverage')})",
-            f"- Path: {' > '.join(f.dependency_path) or 'n/a'}",
-            f"- Why it matters: {e['why_it_matters']}",
-            f"- Reachability: {e['reachability']}",
-            f"- Confidence: {e['confidence']} ({e['confidence_reason']})",
-            f"- Evidence: {', '.join(e['cited_evidence'])}",
-            "",
-        ]
-    if doc["rejected"]:
-        lines += ["## Rejected by the gate", ""]
-        lines += [
-            f"- {r['finding_id']} attempt {r['attempt']}: {'; '.join(r['reasons'])}"
-            for r in doc["rejected"]
-        ]
-    return "\n".join(lines) + "\n"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -103,17 +27,21 @@ def main(argv: list[str] | None = None) -> int:
     for name in ("analyze", "run"):
         s = sub.add_parser(name)
         s.add_argument("--db", default=DEFAULT_DB)
-        s.add_argument("--provider", default="scripted")
-        s.add_argument("--model", default="scripted-v1")
+        s.add_argument("--provider", default="deepinfra")
+        s.add_argument("--model", help="model id (defaults per provider, e.g. DeepInfra DeepSeek)")
         s.add_argument("--base-url")
         s.add_argument("--limit", type=int, default=10)
         if name == "analyze":
-            s.add_argument("--run", required=True, help="stored run id, e.g. runs/d1s7")
+            s.add_argument("--run", required=True, help="stored run id, e.g. runs/demo")
         else:
             s.add_argument("--target", required=True)
             s.add_argument("--out", required=True)
     a = p.parse_args(argv)
-    cfg = ModelConfig(provider=a.provider, model=a.model, base_url=a.base_url)
+    try:
+        model = a.model or default_model(a.provider)
+    except ValueError as exc:
+        p.error(str(exc))
+    cfg = ModelConfig(provider=a.provider, model=model, base_url=a.base_url)
 
     if a.cmd == "analyze":
         run_id = workspace_relative(jail(a.run))

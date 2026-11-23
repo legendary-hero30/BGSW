@@ -10,6 +10,11 @@ dependencies = [
     "uvicorn>=0.30,<1",
 ]
 
+[project.optional-dependencies]
+# External model providers are opt-in (LLM_PROVIDERS.md). The OpenAI-compatible client also
+# serves local endpoints and DeepInfra, and is the only provider extra installed for the demo.
+llm-openai = ["langchain-openai>=1.8,<2"]
+
 [dependency-groups]
 dev = [
     "pytest>=8.3,<10",

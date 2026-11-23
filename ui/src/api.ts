@@ -1,4 +1,4 @@
-// Typed client for the read-only Guardian API (src/guardian/api/app.py). Same-origin only.
+// Typed client for the Guardian API (src/guardian/api/app.py). Same-origin only.
 
 export type RiskLevel = "Critical" | "High" | "Medium" | "Low" | "Unknown";
 
@@ -103,16 +103,41 @@ export interface GraphElements {
   other_parents?: number;
 }
 
-export interface ChecklistItem {
+export interface AgentStep {
   n: number;
-  text: string;
-  status: "pass" | "fail" | "n/a";
-  evidence: string;
+  agent: string;
+  subagent: string | null;
+  tool: string;
+  args: Record<string, unknown>;
+  result_chars: number;
 }
 
-export interface Checklist {
-  counts: Record<string, number>;
-  items: ChecklistItem[];
+export interface AgentSteps {
+  run_id: string;
+  provider: string | null;
+  model: string | null;
+  generator: string | null;
+  steps: AgentStep[];
+  counts: { tool_calls: number; accepted: number; rejected: number; blocked: number };
+  final_message: string | null;
+}
+
+export type JobStatus = "queued" | "cloning" | "scanning" | "analyzing" | "done" | "error";
+
+export interface Job {
+  id: string;
+  repo: string;
+  status: JobStatus;
+  step: string;
+  run_id: string | null;
+  error: string | null;
+  steps: AgentStep[];
+  accepted: number;
+  rejected: number;
+  blocked: number;
+  findings: number | null;
+  created: string;
+  finished: string | null;
 }
 
 async function get<T>(path: string, params: Record<string, string | number | undefined>): Promise<T> {
@@ -123,13 +148,34 @@ async function get<T>(path: string, params: Record<string, string | number | und
   return (await response.json()) as T;
 }
 
+async function post<T>(path: string, body: unknown): Promise<T> {
+  const response = await fetch(path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) {
+    let detail = `HTTP ${response.status}`;
+    try {
+      const parsed = (await response.json()) as { detail?: unknown };
+      if (typeof parsed.detail === "string") detail = parsed.detail;
+    } catch {
+      /* keep the status text */
+    }
+    throw new Error(`${path}: ${detail}`);
+  }
+  return (await response.json()) as T;
+}
+
 export const api = {
   runs: () => get<RunInfo[]>("/api/runs", {}),
   findings: (run: string, filters: { type?: string; level?: string; q?: string; limit?: number }) =>
     get<{ total: number; items: FindingRow[] }>("/api/findings", { run, ...filters }),
   finding: (run: string, id: string) => get<FindingDetail>(`/api/findings/${encodeURIComponent(id)}`, { run }),
   graph: (run: string, id: string) => get<GraphElements>(`/api/graph/${encodeURIComponent(id)}`, { run }),
-  checklist: (run: string) => get<Checklist>("/api/checklist", { run }),
+  agentSteps: (run: string) => get<AgentSteps>("/api/agent-steps", { run }),
+  startRun: (repo: string) => post<Job>("/api/runs", { repo }),
+  job: (id: string) => get<Job>(`/api/jobs/${encodeURIComponent(id)}`, {}),
 };
 
 // Links are built only from recognised advisory ID shapes, never from repository text.

@@ -261,17 +261,27 @@ def run_posture_tools(target_root: Path, out: Path, image: dict | None) -> dict[
         "zizmor": out / "zizmor.json",
     }
     dockerfile = target_root / "Dockerfile"
-    run = run_tool("hadolint", ["--format", "json", "--disable-ignore-pragma",
-                                str(jail(dockerfile))], offline=True,
-                   ok_codes=frozenset({0, 1}))  # fmt: skip
-    files["hadolint"].write_bytes(run.stdout)
+    if dockerfile.is_file():
+        run = run_tool("hadolint", ["--format", "json", "--disable-ignore-pragma",
+                                    str(jail(dockerfile))], offline=True,
+                       ok_codes=frozenset({0, 1}))  # fmt: skip
+        files["hadolint"].write_bytes(run.stdout)
+    else:
+        files["hadolint"].write_text("[]")  # no Dockerfile: nothing to lint
     run_tool("trivy", ["config", "--skip-check-update", "--cache-dir", str(CACHE / "trivy"),
                        "--quiet", "-f", "json", "-o", str(jail(files["trivy-config"])),
                        str(jail(target_root))], offline=True)  # fmt: skip
-    run = run_tool("zizmor", ["--offline", "--no-config", "--format", "json",
-                              str(jail(target_root))], offline=True,
-                   ok_codes=frozenset({0, *range(10, 15)}))  # fmt: skip
-    files["zizmor"].write_bytes(run.stdout)
+    workflows = target_root / ".github" / "workflows"
+    has_workflows = workflows.is_dir() and any(
+        p.is_file() and p.suffix in {".yml", ".yaml"} for p in workflows.iterdir()
+    )
+    if has_workflows:
+        run = run_tool("zizmor", ["--offline", "--no-config", "--format", "json",
+                                  str(jail(target_root))], offline=True,
+                       ok_codes=frozenset({0, *range(10, 15)}))  # fmt: skip
+        files["zizmor"].write_bytes(run.stdout)
+    else:
+        files["zizmor"].write_text("[]")  # no workflows: nothing to analyse
 
     if image is not None:
         layout = jail(image["oci_layout"])

@@ -41,7 +41,7 @@ Day 1 checkpoint: *"Show us what is in the application, what changed, and what a
 | D1.S5 | Container image and CI workflow inspection | Complete (base image scanned without Docker) |
 | D1.S6 | Anomaly rules plus a seeded fork branch (inert, labeled synthetic) | Complete |
 | D1.S7 | Apply risk score v1; persistent evidence store | Complete (SQLite) |
-| D1.S8 | Deep Agents orchestrator and specialists, citation verifier, provider config (paid calls off) | Complete (offline scripted model; no external calls) |
-| D1.S9 | FastAPI, evidence cards, graph view, Day 1 self-checklist run | Planned |
+| D1.S8 | Deep Agents orchestrator and specialists, citation verifier, provider config (paid calls off) | Complete (the original offline fixture was removed in the S9 revision; live model only) |
+| D1.S9 | FastAPI, evidence cards, graph view, Agent Steps and a GitHub repository input | Complete (live DeepInfra-only model path; scan/agent UI; dynamic clone; live call pending key) |
 
 Day 2 (remediation, approval gate, rebuild, rescan, report) is out of scope until approved.

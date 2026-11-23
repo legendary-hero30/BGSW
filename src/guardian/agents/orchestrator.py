@@ -23,7 +23,7 @@ from deepagents import (
 )
 from langchain.agents.middleware import AgentMiddleware
 from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_core.messages import ToolMessage
+from langchain_core.messages import AIMessage, ToolMessage
 
 from guardian.agents.models import ModelConfig, build_model, provider_key
 from guardian.agents.tools import (
@@ -123,11 +123,21 @@ def build_guardian_agent(model: BaseChatModel, ctx: AgentContext, blocked: list[
     return agent
 
 
-def run_agents(ctx: AgentContext, cfg: ModelConfig, mode: str) -> dict:
-    """mode: 'full' (discovery, detection, analysis) or 'analyze' (existing stored run)."""
+def run_agents(
+    ctx: AgentContext,
+    cfg: ModelConfig,
+    mode: str,
+    *,
+    model: BaseChatModel | None = None,
+) -> dict:
+    """mode: 'full' (discovery, detection, analysis) or 'analyze' (existing stored run).
+
+    ``model`` lets tests inject a fixture; production always passes None and builds the live
+    provider model from ``cfg``.
+    """
     os.environ.setdefault("LANGSMITH_TRACING", "false")  # no tracing upload unless opted in
     os.environ.setdefault("LANGCHAIN_TRACING_V2", "false")
-    model = build_model(cfg)
+    model = model or build_model(cfg)
     blocked: list[str] = []
     agent = build_guardian_agent(model, ctx, blocked)
     result = agent.invoke(
@@ -135,5 +145,16 @@ def run_agents(ctx: AgentContext, cfg: ModelConfig, mode: str) -> dict:
         config={"recursion_limit": RECURSION_LIMIT},
     )
     final = result["messages"][-1].content
+    # The orchestrator's task delegations are not subagent tool calls; record them first so the
+    # Agent Steps view shows the handoff as well as the tools that ran inside each subagent.
+    task_calls = [
+        {"tool": "task", "args": call.get("args") or {}, "result_chars": 0}
+        for message in result["messages"]
+        if isinstance(message, AIMessage)
+        for call in message.tool_calls
+        if call.get("name") == "task"
+    ]
+    if task_calls:
+        ctx.log[:0] = task_calls
     return {"final": final if isinstance(final, str) else json.dumps(final),
             "blocked_tool_calls": blocked, "tool_calls": len(ctx.log)}  # fmt: skip

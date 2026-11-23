@@ -1,6 +1,7 @@
-"""D1.S9: read-only HTTP API over the SQLite evidence store, plus the built UI.
+"""D1.S9: HTTP API over the SQLite evidence store, plus the built UI.
 
-* GET only, no CORS, served on loopback. The store is opened read-only (SQLite mode=ro).
+* Reads only, except one controlled POST that starts a scan of a user-supplied GitHub repo.
+* No CORS, served on loopback. The store is opened read-only (SQLite mode=ro).
 * Runs must exist in the store before any of their files are read (no path from the client).
 * Strict security headers. Repository-derived text is returned as data; the UI escapes it.
 """
@@ -8,30 +9,44 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import asynccontextmanager
+from datetime import UTC, datetime
 from functools import lru_cache
 from itertools import pairwise
 from pathlib import Path
+from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, Field
 
+from guardian.agents.trace import build_steps
+from guardian.api.jobs import run_repo_job
 from guardian.checklist import as_dict, evaluate
 from guardian.schemas.evidence import EvidenceKind
 from guardian.schemas.finding import Finding
 from guardian.schemas.graph import DependencyGraph, EdgeKind, GraphEdge
 from guardian.schemas.sbom import Component, DependencyScope, SbomComponent
 from guardian.store import DEFAULT_DB, connect_readonly
-from guardian.tools.runner import WORKSPACE
+from guardian.targets import DynamicTargetError, parse_repo
+from guardian.tools.runner import WORKSPACE, jail
 
 UI_DIST = WORKSPACE / "ui" / "dist"
 MAX_LIMIT = 500
+MAX_JOBS = 50
 CONTEXT_PARENTS = 10
 CSP = (
     "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; "
     "img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; "
     "frame-ancestors 'none'; form-action 'none'"
 )
+
+
+class StartRun(BaseModel):
+    repo: str = Field(min_length=1, max_length=200)
 
 
 # Constant SQL only: optional filters use "? IS NULL OR ..." so no query text is built at runtime.
@@ -58,18 +73,34 @@ GRAPH_NODE_OF_FINDING = (
 )
 
 
-def create_app(db: str = DEFAULT_DB, ui_dir: Path = UI_DIST) -> FastAPI:
+def create_app(
+    db: str = DEFAULT_DB,
+    ui_dir: Path = UI_DIST,
+    job_runner: Callable[[dict, str, str], None] | None = None,
+) -> FastAPI:
+    executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="guardian-job")
+    jobs: dict[str, dict] = {}
+    runner = job_runner or run_repo_job
+
+    @asynccontextmanager
+    async def lifespan(_app: FastAPI):
+        yield
+        executor.shutdown(wait=False, cancel_futures=True)
+
     app = FastAPI(
-        title="Supply Chain Guardian (read-only)",
+        title="Supply Chain Guardian",
+        description="Read-only evidence API; POST /api/runs starts one scanned GitHub repo.",
         docs_url="/api/docs",
         redoc_url=None,
         openapi_url="/api/openapi.json",
+        lifespan=lifespan,
     )
     conn = connect_readonly(db)
 
     @app.middleware("http")
     async def headers(request: Request, call_next):
-        if request.method not in {"GET", "HEAD"}:
+        allowed_post = request.method == "POST" and request.url.path == "/api/runs"
+        if request.method not in {"GET", "HEAD"} and not allowed_post:
             return JSONResponse({"detail": "read-only API"}, status_code=405)
         response = await call_next(request)
         response.headers["Content-Security-Policy"] = CSP
@@ -139,6 +170,42 @@ def create_app(db: str = DEFAULT_DB, ui_dir: Path = UI_DIST) -> FastAPI:
             )
         return out
 
+    @app.post("/api/runs", status_code=202)
+    def start_run(body: StartRun) -> dict:
+        """Queue one scan of a user-supplied GitHub npm repository (the only write endpoint)."""
+        try:
+            parse_repo(body.repo)
+        except DynamicTargetError as exc:
+            raise HTTPException(400, str(exc)) from exc
+        job = {
+            "id": uuid4().hex,
+            "repo": body.repo.strip(),
+            "status": "queued",
+            "step": "Queued",
+            "run_id": None,
+            "error": None,
+            "steps": [],
+            "accepted": 0,
+            "rejected": 0,
+            "blocked": 0,
+            "findings": None,
+            "created": datetime.now(UTC).isoformat(timespec="seconds"),
+            "finished": None,
+        }
+        jobs[job["id"]] = job
+        while len(jobs) > MAX_JOBS:
+            jobs.pop(next(iter(jobs)), None)
+        snapshot = dict(job)  # the worker may finish before this response is serialised
+        executor.submit(runner, job, job["repo"], db)
+        return snapshot
+
+    @app.get("/api/jobs/{job_id}")
+    def job_status(job_id: str) -> dict:
+        job = jobs.get(job_id)
+        if job is None:
+            raise HTTPException(404, "unknown job")
+        return dict(job)
+
     @app.get("/api/summary")
     def summary(run: str) -> dict:
         row = conn.execute(
@@ -204,9 +271,7 @@ def create_app(db: str = DEFAULT_DB, ui_dir: Path = UI_DIST) -> FastAPI:
                 **json.loads(exp_row[0]),
                 "provider": provider,
                 "model": exp_row[2],
-                "generator": "offline scripted template (not an LLM)"
-                if provider.startswith("scripted")
-                else "language model",
+                "generator": "language model",
             }
         return {
             "finding": json.loads(f.model_dump_json()),
@@ -298,6 +363,47 @@ def create_app(db: str = DEFAULT_DB, ui_dir: Path = UI_DIST) -> FastAPI:
             "edges": edges,
             "source": "dependency graph",
             "other_parents": max(0, len(parents) - CONTEXT_PARENTS),
+        }
+
+    @app.get("/api/agent-steps")
+    def agent_steps(run: str) -> dict:
+        """The recorded agent tool calls for a run, grouped for the Agent Steps view."""
+        run = known_run(run)
+        trace: dict = {}
+        trace_path = jail(run) / "agent-trace.json"
+        if trace_path.exists():
+            try:
+                trace = json.loads(trace_path.read_text())
+            except json.JSONDecodeError:
+                trace = {}
+        doc: dict = {}
+        doc_path = jail(run) / "explanations.json"
+        if doc_path.exists():
+            try:
+                doc = json.loads(doc_path.read_text())
+            except json.JSONDecodeError:
+                doc = {}
+        provider = trace.get("provider") or doc.get("provider")
+        if provider in {"scripted", "scripted-hallucinating"}:
+            # Legacy offline fixtures are not part of the product; never show them as agent work.
+            trace, doc = {}, {}
+        calls = trace.get("tool_calls") if isinstance(trace.get("tool_calls"), list) else []
+        accepted = doc.get("accepted") if isinstance(doc.get("accepted"), list) else []
+        rejected = doc.get("rejected") if isinstance(doc.get("rejected"), list) else []
+        blocked = trace.get("blocked_tool_calls") or doc.get("blocked_tool_calls") or []
+        return {
+            "run_id": run,
+            "provider": trace.get("provider") or doc.get("provider"),
+            "model": trace.get("model") or doc.get("model"),
+            "generator": "language model" if calls else None,
+            "steps": build_steps(calls),
+            "counts": {
+                "tool_calls": len(calls),
+                "accepted": len(accepted),
+                "rejected": len(rejected),
+                "blocked": len(blocked),
+            },
+            "final_message": trace.get("final_message") or doc.get("final_message"),
         }
 
     @app.get("/api/checklist")

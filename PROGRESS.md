@@ -22,6 +22,8 @@
 | 2026-11-23 | "start execution of Day 1, Step 6 use a)" | D1.S6 with a downloaded popular-package list. The exact source was then chosen by the user in a follow-up question: npm-high-impact 1.13.0 from registry.npmjs.org, SHA-512 verified. |
 | 2026-11-23 | "start execution of Day 1, Step 7 use SQLite" | D1.S7 with SQLite (stdlib `sqlite3`, no new dependency) as the evidence store. |
 | 2026-11-23 | "start execution of Day 1, Step 8" | D1.S8 as proposed, including the deepagents/LangChain dependencies. No provider was named, so only the offline scripted model was used, with no external calls. Unknown-factor rescaling was kept (the recommended default). |
+| 2026-11-23 | "Implement Step 9 and deliver a fully runnable demo" + "use deepsinfra provider for llm" | D1.S9 completion (read-only API, evidence-card UI, dependency-path highlight, Day-1 self-checklist), README/RUN/Makefile/demo runner, the optional `llm-openai` extra and the DeepInfra provider path with a default tool-calling model. Also authorizes the external call to DeepInfra when its key is supplied. |
+| 2026-11-23 | "instead of Day 1 checklist give it as agent steps ... drop all the scriptable scripted model ... give an input box where they can input a github repo" | D1.S9 revision: Agent Steps tab (replaces the checklist tab), the scripted/mock model removed from the product (DeepInfra-only, test-only fake in tests), and the GitHub repository input with a controlled `POST /api/runs` job. |
 
 ## Steps
 
@@ -208,6 +210,10 @@ Outstanding:
 
 ### D1.S8: Deep Agents orchestrator, subagents and explanation gate (complete)
 
+> **Superseded in the D1.S9 revision:** the offline scripted model named below was removed from
+> the product. Every run now uses the live DeepInfra model; the test-only fake lives in
+> `tests/fake_model.py`.
+
 - **Dependencies:** `deepagents==0.7.38` plus LangChain 1.5.0, LangGraph 1.2.22 and the
   provider SDKs it requires (64 locked packages in total). A project-wide uv `exclude-newer`
   of 2026-11-16 keeps every package at least 7 days old.
@@ -239,8 +245,71 @@ Outstanding:
 - **Outputs:** `explanations.json`, `explanations.md` and `agent-trace.json` in each run
   directory. Scripted output is labelled "offline scripted template (not an LLM)".
 
-### Next proposed: D1.S9 (not approved)
+### D1.S9: API, evidence cards, agent steps and a GitHub repository input (complete)
 
-FastAPI read-only API over the SQLite store, an evidence-card view with dependency-path
-highlight, and the Day 1 self-checklist run. Separately: approval of a real LLM provider for
-live explanations.
+- **API** (`guardian.api`):
+  - Reads: `/api/runs`, `/api/summary`, `/api/findings` (type/level/search filters, bounded
+    pagination), `/api/findings/{id}`, `/api/graph/{id}`, `/api/agent-steps`, `/api/checklist`,
+    `/api/docs`.
+  - One controlled write: `POST /api/runs` validates
+    `https://github.com/<owner>/<repo>`, queues a background scan and returns a job; `GET
+    /api/jobs/{id}` reports phase, live tool calls, run id and errors.
+  - Loopback-only CLI; every other non-GET returns 405; the store is opened with SQLite
+    `mode=ro`; strict CSP and security headers; no CORS; unknown runs/jobs are 404.
+  - The finding card joins the stored evidence order and the latest accepted explanation.
+  - The graph endpoint returns Cytoscape elements: the runtime dependency path plus other
+    parents of the affected package; image/config findings use their recorded path.
+- **UI** (`ui/`): React 19 + TypeScript + Tailwind + Cytoscape.
+  - **GitHub repository box** at the top: submits a repo, polls the job and shows clone → scan →
+    DeepInfra analysis with the live tool calls.
+  - **Findings** tab: run selector, risk-ranked list, filters, evidence card, factor
+    contributions, gated explanation and the highlighted dependency graph.
+  - **Agent steps** tab (replaces the Day-1 checklist tab): orchestrator/subagent badges, every
+    tool call with its arguments and result size, accepted/rejected/blocked counts and the final
+    message.
+  - `npm run build` (`tsc --noEmit` + Vite) succeeds and the API serves `ui/dist`.
+- **Checklist** (`guardian.checklist`): the PDF section-10 self-checklist is still computed and
+  exposed at `/api/checklist` for audits. It is no longer a UI tab; the UI shows agent steps.
+- **Dynamic GitHub targets** (`guardian.targets`):
+  - HTTPS GitHub URLs only; owner/repo pattern; no credentials, query, fragment or extra path.
+  - Clone with fixed argv: depth 1, no tags, no hooks, no LFS smudge, no submodules, symlinks
+    disabled, 5-minute timeout, 1 GiB working-tree cap.
+  - The resolved commit is recorded, `.git` is removed, the tree is made read-only and the target
+    is registered in `targets/dynamic.json` (git-ignored).
+  - Only npm projects with `package.json` and `package-lock.json` v2/v3 are accepted.
+- **Model layer:** the offline `ScriptedModel` and the `scripted`/`scripted-hallucinating`
+  providers are **removed from the product**. `ModelConfig` defaults to DeepInfra and
+  `deepseek-ai/DeepSeek-V4.1-Flash-1017`; `--model` is optional. Tests inject a test-only
+  `FakeChatModel` into `run_agents(..., model=...)`; production never sees it.
+- **Demo surface:** `README.md`, `RUN.md`, `Makefile` (`make demo`, `make deepinfra`, `make api`,
+  `make test`, `make ui`, ...), `scripts/demo.sh` (DeepInfra-only; refuses without a key) and
+  `scripts/deepinfra_demo.sh`.
+- **Verified runs:**
+  - `baseline --target nodegoat --out runs/demo`: 415 findings, 1,471 evidence records,
+    **10,127/10,127 cited facts resolve (100%)**, 0 unmapped.
+  - Dynamic clone through the API: `https://github.com/isaacs/node-lru-cache` cloned, scanned
+    and stored **74 findings**; the job then reported the missing DeepInfra key instead of
+    faking an analysis.
+  - **Full UI flow with DeepInfra:** the same repository through `POST /api/runs` completed
+    cloning → scanning → analyzing → done with **74 findings, 10 accepted, 1 rejected, 0 blocked
+    and 14 tool calls**; the live job steps advanced as the model called its tools.
+  - Dynamic clone of `https://github.com/OWASP/NodeGoat` pinned at
+    `c5cb68a7...`; scan reproduced 415 findings and 100% citation verification.
+  - `POST /api/runs` rejects `http://`, non-GitHub and malformed URLs with 400; `GET
+    /api/jobs/{id}` returns the phase and final state.
+- **Tests:** **267 unit/contract/API/job tests** pass; 4 real offline integration tests pass
+  (197 s). `ruff check` and `ruff format --check` are clean. The UI typechecks and builds.
+- **Live DeepInfra verified:** `deepinfra:deepseek-ai/DeepSeek-V4.1-Flash-1017` on
+  `runs/OWASP__NodeGoat-20261123T125015Z` produced **10 accepted, 1 rejected attempt, 0 blocked,
+  13 tool calls**; the Agent Steps view shows `task(analysis)` + `list_findings` + 10×
+  `get_finding` + `submit_explanations`. The rejected attempt mentioned an advisory that was not
+  attached to the finding, which is exactly what the gate is for.
+- **Remaining:** Day 2 is still out of scope. The dynamic repository path supports npm lockfiles
+  v2/v3 only.
+
+### Next proposed: Day 2 (not approved)
+
+Day 2 (remediation recommendation, human approval, rebuild/rescan, before-after report) remains a
+separate approved step. A live DeepInfra analysis is already verified on the dynamic NodeGoat run;
+re-run it any time with `make deepinfra` or the UI repository box.
+

@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   api,
-  type Checklist,
+  type AgentSteps,
   type FindingDetail,
   type FindingRow,
   type GraphElements,
+  type Job,
   type RunInfo,
 } from "./api";
 import { EvidenceCard, LevelBadge } from "./EvidenceCard";
@@ -15,11 +16,28 @@ const TYPES = [
   "unpinned_ci", "misconfiguration",
 ];
 const LEVELS = ["", "Critical", "High", "Medium", "Low"];
-const STATUS_STYLE: Record<string, string> = {
-  pass: "bg-green-100 text-green-800",
-  fail: "bg-red-100 text-red-800",
-  "n/a": "bg-slate-100 text-slate-600",
+const AGENT_STYLE: Record<string, string> = {
+  orchestrator: "bg-slate-800 text-white",
+  discovery: "bg-sky-100 text-sky-900",
+  detection: "bg-violet-100 text-violet-900",
+  analysis: "bg-emerald-100 text-emerald-900",
 };
+const STATUS_STYLE: Record<string, string> = {
+  queued: "bg-slate-100 text-slate-700",
+  cloning: "bg-sky-100 text-sky-800",
+  scanning: "bg-violet-100 text-violet-800",
+  analyzing: "bg-amber-100 text-amber-900",
+  done: "bg-emerald-100 text-emerald-800",
+  error: "bg-red-100 text-red-800",
+};
+
+function describe(step: { tool: string; args: Record<string, unknown>; subagent: string | null }): string {
+  if (step.tool === "task") return `delegate → ${String(step.subagent ?? step.args.subagent_type ?? "subagent")}`;
+  if (step.tool === "list_findings") return `limit ${String(step.args.limit ?? "")}`;
+  if (step.tool === "get_finding") return String(step.args.finding_id ?? "");
+  if (step.tool === "submit_explanations") return `${String(step.args.count ?? 0)} explanation(s)`;
+  return Object.keys(step.args).length ? JSON.stringify(step.args).slice(0, 120) : "";
+}
 
 export default function App() {
   const [runs, setRuns] = useState<RunInfo[]>([]);
@@ -29,15 +47,26 @@ export default function App() {
   const [selected, setSelected] = useState("");
   const [detail, setDetail] = useState<FindingDetail | null>(null);
   const [graph, setGraph] = useState<GraphElements | null>(null);
-  const [checklist, setChecklist] = useState<Checklist | null>(null);
-  const [tab, setTab] = useState<"findings" | "checklist">("findings");
+  const [steps, setSteps] = useState<AgentSteps | null>(null);
+  const [tab, setTab] = useState<"findings" | "steps">("findings");
+  const [repo, setRepo] = useState("");
+  const [job, setJob] = useState<Job | null>(null);
+  const [starting, setStarting] = useState(false);
   const [error, setError] = useState("");
 
+  async function refreshRuns() {
+    const r = await api.runs();
+    setRuns(r);
+    return r;
+  }
+
   useEffect(() => {
-    api.runs().then((r) => {
-      setRuns(r);
-      if (r[0]) setRun(r[0].run_id);
-    }).catch((e: Error) => setError(e.message));
+    refreshRuns()
+      .then((r) => {
+        const first = r[0];
+        if (first) setRun((current) => current || first.run_id);
+      })
+      .catch((e: Error) => setError(e.message));
   }, []);
 
   useEffect(() => {
@@ -49,9 +78,12 @@ export default function App() {
   }, [run, filters]);
 
   useEffect(() => {
-    if (!run) return;
-    setChecklist(null);
-    api.checklist(run).then(setChecklist).catch((e: Error) => setError(e.message));
+    if (!run) {
+      setSteps(null);
+      return;
+    }
+    setSteps(null);
+    api.agentSteps(run).then(setSteps).catch((e: Error) => setError(e.message));
   }, [run]);
 
   useEffect(() => {
@@ -64,6 +96,39 @@ export default function App() {
     api.graph(run, selected).then(setGraph).catch((e: Error) => setError(e.message));
   }, [run, selected]);
 
+  useEffect(() => {
+    if (!job || job.status === "done" || job.status === "error") return;
+    const timer = setInterval(() => {
+      api.job(job.id)
+        .then(async (next) => {
+          setJob(next);
+          if (next.status === "done" || next.status === "error") {
+            const r = await refreshRuns();
+            if (next.run_id && r.some((x) => x.run_id === next.run_id)) setRun(next.run_id);
+            if (next.steps.length > 0) setTab("steps");
+          }
+        })
+        .catch((e: Error) => setError(e.message));
+    }, 2000);
+    return () => clearInterval(timer);
+  }, [job?.id, job?.status]);
+
+  async function startScan(event: FormEvent) {
+    event.preventDefault();
+    const url = repo.trim();
+    if (!url) return;
+    setError("");
+    setStarting(true);
+    try {
+      const started = await api.startRun(url);
+      setJob(started);
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setStarting(false);
+    }
+  }
+
   const current = runs.find((r) => r.run_id === run);
   return (
     <div className="mx-auto max-w-7xl p-4">
@@ -71,7 +136,7 @@ export default function App() {
         <div>
           <h1 className="text-xl font-bold">Software Supply Chain Guardian</h1>
           <p className="text-xs text-slate-500">
-            Read-only evidence view. Every value comes from tool output stored in runs/guardian.db.
+            Scanner facts, gated DeepInfra explanations and the agent steps behind them.
           </p>
         </div>
         <div className="flex items-center gap-2 text-sm">
@@ -86,7 +151,32 @@ export default function App() {
           </select>
         </div>
       </header>
+
+      <form onSubmit={startScan} className="mb-4 rounded-lg border border-slate-200 bg-white p-3">
+        <div className="mb-1 text-sm font-medium">Scan a GitHub repository</div>
+        <div className="flex flex-wrap gap-2">
+          <input
+            aria-label="GitHub repository URL"
+            className="min-w-[22rem] flex-1 rounded border border-slate-300 px-2 py-1 text-sm"
+            placeholder="https://github.com/owner/repository"
+            value={repo}
+            onChange={(e) => setRepo(e.target.value)}
+            maxLength={200}
+          />
+          <button type="submit" disabled={starting || !repo.trim()}
+                  className="rounded bg-slate-800 px-3 py-1 text-sm text-white disabled:opacity-50">
+            {starting ? "Starting…" : "Scan repository"}
+          </button>
+        </div>
+        <p className="mt-1 text-xs text-slate-500">
+          Public npm repositories with package.json and package-lock.json (v2/v3). The clone is
+          depth-1 and read-only; nothing from it is executed.
+        </p>
+      </form>
+
+      {job && <JobBanner job={job} onShowSteps={() => setTab("steps")} />}
       {error && <div className="mb-3 rounded bg-red-50 p-2 text-sm text-red-800">{error}</div>}
+
       {current && (
         <section className="mb-4 flex flex-wrap gap-4 text-sm">
           <div className="rounded border border-slate-200 bg-white px-3 py-2">
@@ -105,24 +195,24 @@ export default function App() {
               ))}
             </div>
           </div>
-          {checklist && (
-            <div className="rounded border border-slate-200 bg-white px-3 py-2">
-              <div className="text-xs text-slate-500">Day 1 checklist</div>
-              {checklist.counts.pass} pass · {checklist.counts.fail} fail · {checklist.counts["n/a"]} n/a
-            </div>
-          )}
+          <div className="rounded border border-slate-200 bg-white px-3 py-2">
+            <div className="text-xs text-slate-500">Agent steps</div>
+            {steps ? `${steps.counts.tool_calls} tool calls · ${steps.counts.accepted} accepted` : "—"}
+          </div>
         </section>
       )}
+
       <nav className="mb-3 flex gap-2 text-sm">
-        {(["findings", "checklist"] as const).map((t) => (
+        {(["findings", "steps"] as const).map((t) => (
           <button key={t} type="button" onClick={() => setTab(t)}
                   className={`rounded px-3 py-1 ${tab === t ? "bg-slate-800 text-white" : "bg-white border border-slate-300"}`}>
-            {t === "findings" ? "Findings" : "Day 1 checklist"}
+            {t === "findings" ? "Findings" : "Agent steps"}
           </button>
         ))}
       </nav>
-      {tab === "checklist" ? (
-        <ChecklistView checklist={checklist} />
+
+      {tab === "steps" ? (
+        <AgentStepsView data={steps} run={run} />
       ) : (
         <div className="grid gap-4 lg:grid-cols-[22rem_1fr]">
           <aside>
@@ -167,24 +257,112 @@ export default function App() {
   );
 }
 
-function ChecklistView({ checklist }: { checklist: Checklist | null }) {
-  if (!checklist) return <p className="text-sm text-slate-500">Evaluating checklist…</p>;
+function JobBanner({ job, onShowSteps }: { job: Job; onShowSteps: () => void }) {
+  const active = !["done", "error"].includes(job.status);
   return (
-    <table className="w-full rounded border border-slate-200 bg-white text-sm">
-      <tbody>
-        {checklist.items.map((i) => (
-          <tr key={i.n} className="border-t border-slate-100 align-top">
-            <td className="w-8 p-2 text-slate-500">{i.n}</td>
-            <td className="w-20 p-2">
-              <span className={`rounded px-1.5 py-0.5 text-xs font-semibold ${STATUS_STYLE[i.status] ?? ""}`}>{i.status}</span>
-            </td>
-            <td className="p-2">
-              <div className="font-medium">{i.text}</div>
-              <div className="text-xs text-slate-500">{i.evidence}</div>
-            </td>
-          </tr>
+    <section className="mb-4 rounded-lg border border-slate-200 bg-white p-3 text-sm">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className={`rounded px-2 py-0.5 text-xs font-semibold ${STATUS_STYLE[job.status] ?? ""}`}>
+          {job.status}
+        </span>
+        <span className="font-mono text-xs text-slate-500">{job.repo}</span>
+        {active && <span className="animate-pulse text-xs text-slate-500">working…</span>}
+      </div>
+      <div className="mt-1 text-slate-700">{job.step}</div>
+      {job.error && <div className="mt-1 rounded bg-amber-50 p-2 text-xs text-amber-900">{job.error}</div>}
+      <div className="mt-1 flex flex-wrap gap-3 text-xs text-slate-600">
+        {job.findings !== null && <span>findings {job.findings}</span>}
+        <span>tool calls {job.steps.length}</span>
+        <span>accepted {job.accepted}</span>
+        <span>rejected {job.rejected}</span>
+        <span>blocked {job.blocked}</span>
+        {job.run_id && (
+          <button type="button" onClick={onShowSteps} className="underline">
+            view agent steps for {job.run_id}
+          </button>
+        )}
+      </div>
+      {job.steps.length > 0 && (
+        <ol className="mt-2 max-h-32 overflow-y-auto border-t border-slate-100 pt-1 font-mono text-xs">
+          {job.steps.slice(-8).map((s) => (
+            <li key={`${job.id}-${s.n}`} className="flex gap-2">
+              <span className="w-6 text-slate-400">{s.n}</span>
+              <span className="w-20 truncate text-slate-500">{s.agent}</span>
+              <span className="w-40 truncate">{s.tool}</span>
+              <span className="truncate text-slate-500">{describe(s)}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+    </section>
+  );
+}
+
+function AgentStepsView({ data, run }: { data: AgentSteps | null; run: string }) {
+  if (!run) return <p className="text-sm text-slate-500">Select a run.</p>;
+  if (!data) return <p className="text-sm text-slate-500">Loading agent steps…</p>;
+  if (data.steps.length === 0) {
+    return (
+      <div className="rounded border border-slate-200 bg-white p-4 text-sm text-slate-600">
+        No agent steps recorded for {run}. Run the DeepInfra analysis for this run.
+      </div>
+    );
+  }
+  const phases = [...new Set(data.steps.filter((s) => s.agent !== "orchestrator").map((s) => s.agent))];
+  return (
+    <section className="rounded-lg border border-slate-200 bg-white p-4">
+      <header className="mb-3 flex flex-wrap items-center gap-4 text-sm">
+        <div>
+          <div className="text-xs text-slate-500">Model</div>
+          <code>{data.provider}:{data.model}</code>
+        </div>
+        <div>
+          <div className="text-xs text-slate-500">Tool calls</div>
+          {data.counts.tool_calls}
+        </div>
+        <div>
+          <div className="text-xs text-slate-500">Accepted / rejected</div>
+          {data.counts.accepted} / {data.counts.rejected}
+        </div>
+        <div>
+          <div className="text-xs text-slate-500">Blocked</div>
+          {data.counts.blocked}
+        </div>
+        {phases.length > 0 && (
+          <div>
+            <div className="text-xs text-slate-500">Phases</div>
+            <div className="flex flex-wrap items-center gap-1">
+              {phases.map((p, i) => (
+                <span key={p}>
+                  <span className={`rounded px-1.5 py-0.5 text-xs ${AGENT_STYLE[p] ?? "bg-slate-100"}`}>{p}</span>
+                  {i < phases.length - 1 ? <span className="px-1 text-slate-400">→</span> : null}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </header>
+      <ol className="border-l border-slate-200">
+        {data.steps.map((s) => (
+          <li key={s.n} className="relative mb-2 ml-3 pl-4">
+            <span className="absolute -left-[7px] top-1.5 h-3 w-3 rounded-full border-2 border-white bg-slate-400" />
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="w-7 font-mono text-xs text-slate-400">{s.n}</span>
+              <span className={`rounded px-1.5 py-0.5 text-xs font-semibold ${AGENT_STYLE[s.agent] ?? "bg-slate-100"}`}>
+                {s.agent}
+              </span>
+              <code className="text-xs">{s.tool}</code>
+              <span className="text-xs text-slate-500">{describe(s)}</span>
+              <span className="text-xs text-slate-400">{s.result_chars} chars</span>
+            </div>
+          </li>
         ))}
-      </tbody>
-    </table>
+      </ol>
+      {data.final_message && (
+        <p className="mt-3 border-t border-slate-100 pt-2 text-xs text-slate-600">
+          Final: {data.final_message}
+        </p>
+      )}
+    </section>
   );
 }

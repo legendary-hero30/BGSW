@@ -1,38 +1,46 @@
-"""Provider-independent model construction, and the offline scripted model.
+"""Provider-independent construction of live language models.
 
-* `scripted` (default): a deterministic, template-driven chat model in this file. It is NOT an
-  LLM. It drives the real tool-calling protocol (task -> tools -> submit) with no network, so
-  the agent graph, tools and gate are exercised end to end in tests and offline demos.
-* Real providers go through LangChain's `init_chat_model` only when the environment variable
-  GUARDIAN_ALLOW_EXTERNAL_MODELS=1 is set (D8-02). API keys are read by the provider SDKs from
-  their usual environment variables, which are kept outside the workspace and never logged. No
-  provider package is installed by this module.
+The product path uses a real model only. Deterministic scanners produce the facts; the model
+explains them through tool calls, and a deterministic gate validates every claim. There is no
+offline/template model in this module.
+
+External calls stay off unless ``GUARDIAN_ALLOW_EXTERNAL_MODELS=1`` is set for the run (D8-02).
+DeepInfra is the configured provider. API keys are read by each provider SDK from its usual
+environment variable, which is kept outside the workspace and never logged.
 """
 
 from __future__ import annotations
 
-import json
 import os
 from dataclasses import dataclass
 from typing import Any
 
 from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, ToolMessage
-from langchain_core.outputs import ChatGeneration, ChatResult
-
-from guardian.agents.gate import REACH_WORDS
-from guardian.schemas.risk import Reachability
 
 ALLOW_ENV = "GUARDIAN_ALLOW_EXTERNAL_MODELS"
 # provider -> (init_chat_model provider id, Python package needed)
 PROVIDERS = {
+    "deepinfra": ("openai", "langchain_openai"),
+    "openai": ("openai", "langchain_openai"),
+    "openai_compatible": ("openai", "langchain_openai"),  # custom base_url
     "anthropic": ("anthropic", "langchain_anthropic"),
     "google_genai": ("google_genai", "langchain_google_genai"),
-    "openai": ("openai", "langchain_openai"),
     "deepseek": ("deepseek", "langchain_deepseek"),
     "ollama": ("ollama", "langchain_ollama"),
-    "openai_compatible": ("openai", "langchain_openai"),  # custom base_url
 }
+# OpenAI-compatible providers with a known default endpoint.
+COMPATIBLE_BASE_URLS = {"deepinfra": "https://api.deepinfra.com/v1/openai"}
+# Tool-calling models used when --model is omitted. Providers without an entry need --model.
+DEFAULT_MODELS = {
+    "deepinfra": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+}
+DEFAULT_PROVIDER = "deepinfra"
+
+
+def default_model(provider: str) -> str:
+    if provider in DEFAULT_MODELS:
+        return DEFAULT_MODELS[provider]
+    raise ValueError(f"--model is required for provider {provider!r}")
 
 
 class ModelDisabledError(RuntimeError):
@@ -41,35 +49,42 @@ class ModelDisabledError(RuntimeError):
 
 @dataclass(frozen=True)
 class ModelConfig:
-    provider: str = "scripted"
-    model: str = "scripted-v1"
+    provider: str = DEFAULT_PROVIDER
+    model: str = DEFAULT_MODELS[DEFAULT_PROVIDER]
     base_url: str | None = None  # openai_compatible / ollama only
     temperature: float = 0.0
 
 
 def build_model(cfg: ModelConfig) -> BaseChatModel:
-    if cfg.provider == "scripted":
-        return ScriptedModel(model_name=cfg.model, mode="faithful")
-    if cfg.provider == "scripted-hallucinating":
-        return ScriptedModel(model_name=cfg.model, mode="hallucinate")
     if cfg.provider not in PROVIDERS:
-        raise ValueError(f"unknown provider {cfg.provider!r}; known: scripted, {sorted(PROVIDERS)}")
+        raise ValueError(f"unknown provider {cfg.provider!r}; known: {sorted(PROVIDERS)}")
+
     if os.environ.get(ALLOW_ENV) != "1":
         raise ModelDisabledError(
             f"external model calls are disabled; set {ALLOW_ENV}=1 after authorizing the "
             f"provider '{cfg.provider}' and the data it will receive (see LLM_PROVIDERS.md)"
         )
+
     provider_id, package = PROVIDERS[cfg.provider]
     try:
         __import__(package)
     except ImportError as exc:
-        raise ModelDisabledError(f"provider package {package} is not installed; adding it "
-                                 "needs approval (LLM_PROVIDERS.md)") from exc  # fmt: skip
+        raise ModelDisabledError(
+            f"provider package {package} is not installed; install the matching extra "
+            f"(see LLM_PROVIDERS.md) after approval"
+        ) from exc
+
     from langchain.chat_models import init_chat_model
 
     kwargs: dict[str, Any] = {"temperature": cfg.temperature}
-    if cfg.base_url:
-        kwargs["base_url"] = cfg.base_url
+    base_url = cfg.base_url or COMPATIBLE_BASE_URLS.get(cfg.provider)
+    if base_url:
+        kwargs["base_url"] = base_url
+    if cfg.provider == "deepinfra":
+        key = os.environ.get("DEEPINFRA_API_KEY")
+        if not key:
+            raise ModelDisabledError("DEEPINFRA_API_KEY is not set")
+        kwargs["api_key"] = key
     return init_chat_model(cfg.model, model_provider=provider_id, **kwargs)
 
 
@@ -80,134 +95,3 @@ def provider_key(model: BaseChatModel) -> str | None:
     except Exception:
         return None
     return params.get("ls_provider") if isinstance(params, dict) else None
-
-
-# --- scripted model ------------------------------------------------------------------------
-
-TYPE_WORDS = {
-    "vulnerable_direct": "A known vulnerability in a direct dependency",
-    "vulnerable_transitive": "A known vulnerability in a transitive dependency",
-    "malicious_package": "package advisory",
-    "vulnerable_image_package": "A known vulnerability in a container image package",
-}
-SCANNERS = {"grype", "trivy", "osv-scanner"}
-
-
-def _tool_results(messages: list[BaseMessage], name: str) -> list[str]:
-    calls = {c["id"]: c["name"] for m in messages if isinstance(m, AIMessage)
-             for c in m.tool_calls}  # fmt: skip
-    return [m.content for m in messages if isinstance(m, ToolMessage)
-            and calls.get(m.tool_call_id) == name and isinstance(m.content, str)]  # fmt: skip
-
-
-def _call(name: str, args: dict, n: int) -> dict:
-    return {"name": name, "args": args, "id": f"call_{name}_{n}", "type": "tool_call"}
-
-
-class ScriptedModel(BaseChatModel):
-    """Deterministic offline policy. Chooses the next step from the bound tools and history."""
-
-    model_name: str = "scripted-v1"
-    mode: str = "faithful"  # or "hallucinate": invents an advisory and a citation (gate test)
-    bound: tuple[str, ...] = ()
-
-    @property
-    def _llm_type(self) -> str:
-        return "guardian-scripted"
-
-    def _get_ls_params(self, **kwargs: Any) -> dict:
-        return {"ls_provider": "guardian", "ls_model_name": self.model_name,
-                "ls_model_type": "chat"}  # fmt: skip
-
-    def bind_tools(self, tools: Any, **kwargs: Any) -> ScriptedModel:
-        names = []
-        for t in tools:
-            names.append(getattr(t, "name", None) or (t.get("name") if isinstance(t, dict)
-                                                       else None) or "")  # fmt: skip
-        return self.model_copy(update={"bound": tuple(names)})
-
-    def _generate(self, messages: list[BaseMessage], stop: Any = None, run_manager: Any = None,
-                  **kwargs: Any) -> ChatResult:  # fmt: skip
-        return ChatResult(generations=[ChatGeneration(message=self._next(messages))])
-
-    def _next(self, messages: list[BaseMessage]) -> AIMessage:
-        n = sum(isinstance(m, AIMessage) for m in messages)
-        tools = set(self.bound)
-        if "task" in tools:
-            return self._orchestrate(messages, n)
-        if "submit_explanations" in tools:
-            return self._analyze(messages, n)
-        for name in ("run_discovery", "run_detection"):
-            if name in tools:
-                done = _tool_results(messages, name)
-                if not done:
-                    return AIMessage(content="", tool_calls=[_call(name, {}, n)])
-                return AIMessage(content=f"{name} finished: {done[-1][:1500]}")
-        return AIMessage(content="No applicable tools.")
-
-    def _orchestrate(self, messages: list[BaseMessage], n: int) -> AIMessage:
-        first = next((m.content for m in messages if isinstance(m, HumanMessage)), "")
-        plan = ["analysis"] if "MODE=analyze" in str(first) else ["discovery", "detection",
-                                                                    "analysis"]  # fmt: skip
-        done = len(_tool_results(messages, "task"))
-        if done < len(plan):
-            step = plan[done]
-            return AIMessage(content="", tool_calls=[_call("task", {
-                "subagent_type": step,
-                "description": f"Run the {step} stage for the configured target and report.",
-            }, n)])  # fmt: skip
-        return AIMessage(content=f"Guardian run complete: {', '.join(plan)} finished.")
-
-    def _analyze(self, messages: list[BaseMessage], n: int) -> AIMessage:
-        listed = _tool_results(messages, "list_findings")
-        if not listed:
-            return AIMessage(content="", tool_calls=[_call("list_findings", {"limit": 10}, n)])
-        ids = [x["id"] for x in json.loads(listed[-1])]
-        details = [
-            json.loads(x) for x in _tool_results(messages, "get_finding") if x.startswith("{")
-        ]
-        missing = [i for i in ids if i not in {d["id"] for d in details}]
-        if missing:
-            return AIMessage(content="", tool_calls=[
-                _call("get_finding", {"finding_id": i}, n * 100 + k) for k, i in enumerate(missing)
-            ])  # fmt: skip
-        submitted = _tool_results(messages, "submit_explanations")
-        if not submitted:
-            return AIMessage(content="", tool_calls=[_call("submit_explanations", {
-                "explanations": [self._explain(d) for d in details]}, n)])  # fmt: skip
-        return AIMessage(content=f"Analysis complete. Gate result: {submitted[-1]}")
-
-    def _explain(self, d: dict) -> dict:
-        c, fx, risk = d["component"], d["factors"], d["risk"] or {}
-        label = f"{c['name']}@{c['version']}" if c.get("version") else c["name"]
-        what = TYPE_WORDS.get(d["type"], f"A {d['type'].replace('_', ' ')} finding")
-        ids = ", ".join(d["advisory_ids"][:2])
-        why = (f"{what} affects {label}" + (f" ({ids})" if ids else "")
-               + f"; risk score {risk.get('score')} ({risk.get('level')}), "
-                 f"severity {d['severity']}.")  # fmt: skip
-        reach = Reachability(fx["reachability"])
-        reach_text = {
-            Reachability.IMPORTED: "The app's server code imported this exact installed copy",
-            Reachability.PRESENT_ONLY: "The package is present in the runtime tree but no "
-                                       "direct import by the app was found",
-            Reachability.DEV_ONLY_UNUSED: "The package is dev-only, so production does not load it",
-            Reachability.UNKNOWN: "Reachability is unknown for this kind of finding",
-            Reachability.CALLED: "The vulnerable code is called by the app",
-        }[reach]  # fmt: skip
-        if REACH_WORDS[reach] not in reach_text.lower():  # keep templates consistent with the gate
-            raise ValueError(f"template for {reach} must contain {REACH_WORDS[reach]!r}")
-        tools = {e["tool"] for e in d["evidence"]} & SCANNERS
-        confidence = "high" if len(tools) >= 2 else "medium"
-        cited = [e["id"] for e in d["evidence"]][:4]
-        out = {
-            "finding_id": d["id"], "why_it_matters": why,
-            "reachability": f"{reach_text}; exposure is {fx['exposure'].replace('_', ' ')}.",
-            "confidence": confidence,
-            "confidence_reason": (f"{len(tools)} independent scanners reported it" if tools
-                                  else "deterministic rule evidence"),
-            "cited_evidence": cited,
-        }  # fmt: skip
-        if self.mode == "hallucinate":
-            out["why_it_matters"] += " It is also tracked as CVE-2099-0001."
-            out["cited_evidence"] = [*cited, "E-9999"]
-        return out

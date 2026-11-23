@@ -513,6 +513,9 @@ Each entry records the decision, its source, and its approval.
 
 ## D8-02 External model calls are opt-in, per run
 
+> **Superseded in part by D9-03:** the scripted default was removed. The opt-in rule and the
+> no-auto-install rule still apply; the only product model path is now a live provider.
+
 - **Default:** the scripted model.
 - **Real providers:** need `GUARDIAN_ALLOW_EXTERNAL_MODELS=1` *and* prior user authorization of
   the provider and the data it receives (LLM_PROVIDERS.md).
@@ -563,3 +566,74 @@ Each entry records the decision, its source, and its approval.
 - **Not covered:** the orchestrator cannot apply patches, publish, or reach the network itself.
   Scanners keep their own `unshare -rn` sandbox. A real LLM provider would make network calls
   only from the model client, after opt-in.
+
+## D9-01 Read-only evidence API, built UI and a computed checklist
+
+- **Decision:** Step 9 is a read-only HTTP API over the existing SQLite store plus a static React
+  build. It adds no new source of truth.
+- **Read-only enforcement:**
+  - GET/HEAD only (405 otherwise), no CORS, loopback-only CLI.
+  - SQLite opened with URI `mode=ro`.
+  - Strict CSP, `nosniff`, `no-referrer`, `frame-ancestors 'none'`.
+- **Runs are an allow-list:** a run must already exist in `runs`; no path is taken from the
+  client, so `../../etc` is a 404.
+- **Graph view:** the API reuses the stored `DependencyGraph` and returns Cytoscape elements.
+  - The runtime path (`exclude_dev=True`) is highlighted plus up to 10 other parents for context.
+  - Image/config findings have no graph node, so their recorded `dependency_path` is drawn as a
+    chain.
+- **Checklist:** `guardian.checklist` evaluates the PDF section-10 items from the run files and
+  the store. It reports pass/fail/`n/a` with the evidence used, and never assumes a pass. The two
+  Day-2 items are `n/a` because Day 1 makes no changes.
+- **UI text is data:** React escapes all scanner and repository text; links are built only from
+  recognised advisory ID shapes.
+- **Approval:** 2026-11-23, "Implement Step 9 and deliver a fully runnable demo".
+
+## D9-02 DeepInfra as the selected external provider
+
+- **Decision:** use DeepInfra through its OpenAI-compatible endpoint.
+  - Base URL `https://api.deepinfra.com/v1/openai`, key `DEEPINFRA_API_KEY`.
+  - Default model `meta-llama/Llama-3.3-70B-Instruct-Turbo` (tool calling). `--model` overrides
+    it.
+- **Packaging:** `langchain-openai` is an optional extra (`llm-openai`) in `pyproject.toml` and is
+  in `uv.lock`, so `uv sync --locked --extra llm-openai` reproduces the provider client. It is
+  not installed into the default environment and the core scanner path has no dependence on it.
+- **Why an extra, not a core dependency:** the project starts with external models disabled
+  (D8-02). Keeping the client out of the default sync preserves that default while making the
+  chosen provider reproducible.
+- **Key handling:** the key is read from the environment for the run only. It is never written to
+  the store, run artifacts, reports or logs; the trace records only provider and model names.
+- **No heuristic fallback:** the provider choice and model come from the CLI, never from code
+  guessing. A missing key raises `DEEPINFRA_API_KEY is not set`; a missing package raises a
+  provider-package error; both exit 2.
+- **Approval:** 2026-11-23, "use deepsinfra provider for llm". The user supplies the key and
+  authorizes the finding data (facts and quoted evidence excerpts) sent to DeepInfra.
+
+## D9-03 Live model only, Agent Steps view and a controlled GitHub input
+
+- **No offline model in the product.** `ScriptedModel`, `scripted` and `scripted-hallucinating`
+  are removed. `ModelConfig` defaults to DeepInfra and `deepseek-ai/DeepSeek-V4.1-Flash-1017`.
+  Tests inject a test-only `FakeChatModel` through `run_agents(..., model=...)` so the graph,
+  tools and gate stay covered without network. A missing key is an explicit error, never a
+  silent template.
+- **Agent Steps instead of the checklist tab.** The UI reads a new `GET /api/agent-steps`
+  endpoint built from `agent-trace.json` and `explanations.json`. It shows the orchestrator's
+  `task` delegation, every tool call with arguments and result size, and accepted/rejected/blocked
+  counts. The deterministic `guardian.checklist` is still computed and exposed at
+  `/api/checklist` for audits, but it is no longer a UI tab.
+- **One controlled write endpoint.** `POST /api/runs` is the only non-GET route. Everything else
+  remains read-only. The job runs in a single-worker executor, so repositories are scanned one at
+  a time.
+- **Dynamic targets** (`guardian.targets`):
+  - Only `https://github.com/<owner>/<repo>` is accepted; no credentials, query, fragment or
+    extra path, and no `file://`/SSH URLs.
+  - Clone with fixed argv and a fixed environment: depth 1, no tags, no hooks, no LFS smudge, no
+    submodules, symlinks disabled, 5-minute timeout, 1 GiB working-tree cap.
+  - The resolved commit is recorded, Git metadata is removed, the tree is made read-only and the
+    target is registered in `targets/dynamic.json` (git-ignored).
+  - Only npm projects with `package.json` and `package-lock.json` v2/v3 are accepted. A dynamic
+    target has no base commit, so the diff-only anomaly rules are skipped; its base image is
+    scanned only when it is already in the local OCI cache. Posture tools skip a missing
+    Dockerfile/workflow set instead of failing the scan.
+- **Why:** the user asked for a live DeepInfra-only path, the agent's actual steps rather than a
+  static checklist, and the ability to point the guardian at an arbitrary GitHub repository.
+- **Approval:** 2026-11-23, the revision instruction quoted in `PROGRESS.md`.

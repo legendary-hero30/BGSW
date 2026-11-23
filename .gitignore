@@ -23,6 +23,8 @@ build/
 
 # Cloned sample apps (pinned by SHA in targets/targets.json)
 /targets/*/
+# User-supplied repositories cloned from the UI
+/targets/dynamic.json
 
 # UI: dependencies are reproduced from ui/package-lock.json; dist is rebuilt by npm run build
 /ui/node_modules/

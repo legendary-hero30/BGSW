@@ -67,23 +67,24 @@ def test_nodegoat_offline_baseline():
     assert load_findings(conn, s["store"]["run_id"]) == fs
     conn.close()
 
-    # D1.S8: the scripted agents explain the top findings of this real run through the gate.
+    # D1.S8/D1.S9: the agents explain the top findings of this real run through the gate.
     from guardian.agents.models import ModelConfig
     from guardian.agents.orchestrator import run_agents
     from guardian.agents.tools import AgentContext
     from guardian.store import accepted_explanations
+    from tests.fake_model import FakeChatModel
 
     run_id = s["store"]["run_id"]
     actx = AgentContext(
         target="nodegoat",
         out_dir=run_id,
         db="runs/pytest-d1s4/guardian.db",
-        provider="scripted",
-        model="scripted-v1",
+        provider="deepinfra",
+        model="test-fixture",
         run_id=run_id,
         max_findings=8,
     )
-    outcome = run_agents(actx, ModelConfig(), "analyze")
+    outcome = run_agents(actx, ModelConfig(), "analyze", model=FakeChatModel())
     assert outcome["blocked_tool_calls"] == []
     conn = connect("runs/pytest-d1s4/guardian.db")
     assert len(accepted_explanations(conn, run_id)) == 8
@@ -97,6 +98,7 @@ def test_nodegoat_offline_baseline():
         (i.n, i.evidence) for i in items.values() if i.status == "fail"
     ]
     assert items[10].status == items[11].status == "n/a"
+    assert items[12].status == "pass"  # README documents setup, dependencies and tools
 
     v = verify_run(out)
     assert v.failures == []

@@ -38,6 +38,7 @@ class AgentContext:
     discover: Callable[[str, str], dict] | None = None  # (target, out) -> summary
     detect: Callable[[str, str, str], dict] | None = None  # (target, out, db) -> summary
     log: list[dict] = field(default_factory=list)  # every tool call, for the run trace
+    on_step: Callable[[dict], None] | None = None  # live progress callback (UI job runner)
     _set: FindingSet | None = None
 
     def finding_set(self) -> FindingSet:
@@ -56,7 +57,10 @@ class AgentContext:
 
 
 def _record(ctx: AgentContext, tool: str, args: dict, result: str) -> str:
-    ctx.log.append({"tool": tool, "args": args, "result_chars": len(result)})
+    entry = {"tool": tool, "args": args, "result_chars": len(result)}
+    ctx.log.append(entry)
+    if ctx.on_step is not None:
+        ctx.on_step(entry)
     return result
 
 
