@@ -1,0 +1,12 @@
+{
+  "repo": "https://github.com/suthekshan/vulnerable-node",
+  "base_commit": "c35fa32337e5a7d7493bd80fef66823dcce5fce3",
+  "branch": "guardian/fix-f-005",
+  "title": "guardian: Upgrade lodash 4.17.15 -> 4.18.0 (direct); resolves 6 finding(s), highest Medium.",
+  "proposal": "R-004",
+  "verdict": "verified",
+  "approved_by": "suthekshan",
+  "approved_at": "2026-11-24T10:11:17+00:00",
+  "lockfile_origin": "repository",
+  "patch_sha256": "f2e9b19bcf2a7aa0789e351e2c4b148254f0d1c209213a82bd9b519d4a98cd2e"
+}

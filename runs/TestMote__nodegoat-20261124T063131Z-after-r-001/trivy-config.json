@@ -1,0 +1,61 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.76.2"
+  },
+  "ReportID": "01a20c48-9afd-79ec-8395-f52ad4cf0d91",
+  "CreatedAt": "2026-11-24T06:40:14.589652885Z",
+  "ArtifactID": "sha256:98936be77e118f5a69cc3c40f0ca8f1db32c352a4716dbe75d4a0e38a557ec07",
+  "ArtifactName": "/home/suthekshan/bosch/targets/work/testmote__nodegoat-20261124t063131z-r-001",
+  "ArtifactType": "repository",
+  "Metadata": {
+    "Branch": "guardian/fix-F-011",
+    "Commit": "7164e7567a19ddeea394020b32c407b554f2ca0f",
+    "CommitMsg": "guardian: Upgrade underscore 1.9.1 -\u003e 1.13.8 (direct); resolves 2 finding(s), highest Medium.",
+    "Author": "guardian \u003cguardian@localhost\u003e",
+    "Committer": "guardian \u003cguardian@localhost\u003e"
+  },
+  "Results": [
+    {
+      "Target": "Dockerfile",
+      "Class": "config",
+      "Type": "dockerfile",
+      "MisconfSummary": {
+        "Successes": 26,
+        "Failures": 1
+      },
+      "Misconfigurations": [
+        {
+          "Type": "Dockerfile Security Check",
+          "ID": "DS-0026",
+          "Title": "No HEALTHCHECK defined",
+          "Description": "You should add HEALTHCHECK instruction in your docker container images to perform the health check on running containers.",
+          "Message": "Add HEALTHCHECK instruction in your Dockerfile",
+          "Namespace": "builtin.dockerfile.DS026",
+          "Query": "data.builtin.dockerfile.DS026.deny",
+          "Resolution": "Add HEALTHCHECK instruction in Dockerfile",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ds-0026",
+          "References": [
+            "https://blog.aquasec.com/docker-security-best-practices",
+            "https://avd.aquasec.com/misconfig/ds-0026"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Provider": "Dockerfile",
+            "Service": "general"
+          }
+        }
+      ]
+    },
+    {
+      "Target": "catalog-info.yaml",
+      "Class": "config",
+      "Type": "kubernetes",
+      "MisconfSummary": {
+        "Successes": 61,
+        "Failures": 0
+      }
+    }
+  ]
+}

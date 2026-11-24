@@ -146,7 +146,9 @@ function Detail({ run, id, onChange, mode, onRescan }: { run: string; id: string
 
   if (!p) return <Empty title="Loading…" hint={error} />;
   const last = p.approvals[p.approvals.length - 1];
+  // Live while validating; afterwards the saved list from the latest report.
   const report = [...p.validations].reverse().find((v) => v.steps) as ValidationReport | undefined;
+  const steps = running ? (p.validating?.log ?? []) : (report?.progress ?? p.validating?.log ?? []);
   return (
     <div className="space-y-3">
       <Card title={`${p.id}: ${p.action.replaceAll("_", " ")}`} right={<span className="flex gap-1"><Chip tone={STATUS_TONE[p.status]}>{p.status}</Chip><Chip>confidence {p.confidence}</Chip></span>}>
@@ -201,7 +203,21 @@ function Detail({ run, id, onChange, mode, onRescan }: { run: string; id: string
           </div>
         ) : <div className="text-sm text-slate-600">This proposal changes no file, so there is nothing to approve for application. It records a recommendation for a human reviewer.</div>}
         {caps?.validation.ready === false && <div className="mt-2 rounded bg-amber-50 p-2 text-xs text-amber-900">Validate is disabled: {caps.validation.detail}.</div>}
-        {running && <div className="mt-2 text-sm text-sky-800">{p.validating?.step}</div>}
+        {running && <div className="mt-2 text-sm text-sky-800" role="status" aria-live="polite">{p.validating?.step}</div>}
+        {steps.length > 0 && (
+          <details className="mt-2 rounded border border-slate-200 p-2 text-sm" open={running}>
+            <summary className="cursor-pointer font-semibold text-slate-700">Steps after approval ({steps.length}){running ? " · running" : ""}</summary>
+            <ol className="mt-2 space-y-1 border-l-2 border-slate-200 pl-3">
+              {steps.map((s, i) => (
+                <li key={i} className="text-xs">
+                  <span className="mr-2 font-mono text-slate-400">{s.at.slice(11, 19)}</span>
+                  <span className={running && i === steps.length - 1 ? "font-semibold text-sky-800" : "text-slate-700"}>{s.msg}</span>
+                  {running && i === steps.length - 1 && <span className="ml-1 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-sky-500" />}
+                </li>
+              ))}
+            </ol>
+          </details>
+        )}
         {p.validating?.error && <div className="mt-2 rounded bg-red-50 p-2 text-sm text-red-800">{p.validating.error}</div>}
         {error && <div className="mt-2 rounded bg-red-50 p-2 text-sm text-red-800">{error}</div>}
         <p className="mt-2 text-xs text-slate-500">Agents cannot approve. Nothing is merged: validation works on an isolated copy and branch. Build and tests run only in a sandbox container; when none is configured they are reported as “not run” and the verdict cannot be “verified”.</p>

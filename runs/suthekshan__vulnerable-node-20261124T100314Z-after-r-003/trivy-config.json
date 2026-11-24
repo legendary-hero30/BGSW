@@ -1,0 +1,183 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.76.2"
+  },
+  "ReportID": "01a20d16-6726-77ec-b379-73c5840bfce0",
+  "CreatedAt": "2026-11-24T10:25:01.734521495Z",
+  "ArtifactID": "sha256:f9d89322a87387bcc2a013ebfafe556ac7ef52c94a3d735f615ef0d3cbe23b66",
+  "ArtifactName": "/home/suthekshan/bosch/targets/work/suthekshan__vulnerable-node-20261124t100314z-r-003",
+  "ArtifactType": "repository",
+  "Metadata": {
+    "Branch": "guardian/fix-F-003",
+    "Commit": "ca16da639e393eb699c8307c4f570e5b221d25c9",
+    "CommitMsg": "guardian: Upgrade underscore 1.9.2 -\u003e 1.13.8 (direct); resolves 2 finding(s), highest Medium.",
+    "Author": "guardian \u003cguardian@localhost\u003e",
+    "Committer": "guardian \u003cguardian@localhost\u003e"
+  },
+  "Results": [
+    {
+      "Target": "Dockerfile",
+      "Class": "config",
+      "Type": "dockerfile",
+      "MisconfSummary": {
+        "Successes": 22,
+        "Failures": 5
+      },
+      "Misconfigurations": [
+        {
+          "Type": "Dockerfile Security Check",
+          "ID": "DS-0002",
+          "Title": "Image user should not be 'root'",
+          "Description": "Running containers with 'root' user can lead to a container escape situation. It is a best practice to run containers as non-root users, which can be done by adding a 'USER' statement to the Dockerfile.",
+          "Message": "Specify at least 1 USER command in Dockerfile with non-root user as argument",
+          "Namespace": "builtin.dockerfile.DS002",
+          "Query": "data.builtin.dockerfile.DS002.deny",
+          "Resolution": "Add 'USER \u003cnon root user name\u003e' line to the Dockerfile",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ds-0002",
+          "References": [
+            "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/",
+            "https://avd.aquasec.com/misconfig/ds-0002"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Provider": "Dockerfile",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Dockerfile Security Check",
+          "ID": "DS-0004",
+          "Title": "Port 22 exposed",
+          "Description": "Exposing port 22 might allow users to SSH into the container.",
+          "Message": "Port 22 should not be exposed in Dockerfile",
+          "Namespace": "builtin.dockerfile.DS004",
+          "Query": "data.builtin.dockerfile.DS004.deny",
+          "Resolution": "Remove 'EXPOSE 22' statement from the Dockerfile",
+          "Severity": "MEDIUM",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ds-0004",
+          "References": [
+            "https://avd.aquasec.com/misconfig/ds-0004"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Provider": "Dockerfile",
+            "Service": "general",
+            "StartLine": 10,
+            "EndLine": 10,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 10,
+                  "Content": "EXPOSE 22 3000",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;64mEXPOSE\u001b[0m\u001b[38;5;37m 22 3000\u001b[0m",
+                  "FirstCause": true,
+                  "LastCause": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Dockerfile Security Check",
+          "ID": "DS-0026",
+          "Title": "No HEALTHCHECK defined",
+          "Description": "You should add HEALTHCHECK instruction in your docker container images to perform the health check on running containers.",
+          "Message": "Add HEALTHCHECK instruction in your Dockerfile",
+          "Namespace": "builtin.dockerfile.DS026",
+          "Query": "data.builtin.dockerfile.DS026.deny",
+          "Resolution": "Add HEALTHCHECK instruction in Dockerfile",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ds-0026",
+          "References": [
+            "https://blog.aquasec.com/docker-security-best-practices",
+            "https://avd.aquasec.com/misconfig/ds-0026"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Provider": "Dockerfile",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Dockerfile Security Check",
+          "ID": "DS-0029",
+          "Title": "'apt-get' missing '--no-install-recommends'",
+          "Description": "'apt-get' install should use '--no-install-recommends' to minimize image size.",
+          "Message": "'--no-install-recommends' flag is missed: 'apt-get update \u0026\u0026 apt-get install -y curl wget'",
+          "Namespace": "builtin.dockerfile.DS029",
+          "Query": "data.builtin.dockerfile.DS029.deny",
+          "Resolution": "Add '--no-install-recommends' flag to 'apt-get'",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ds-0029",
+          "References": [
+            "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/",
+            "https://avd.aquasec.com/misconfig/ds-0029"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Provider": "Dockerfile",
+            "Service": "general",
+            "StartLine": 6,
+            "EndLine": 6,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 6,
+                  "Content": "RUN apt-get update \u0026\u0026 apt-get install -y curl wget",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;64mRUN\u001b[0m apt-get update \u001b[38;5;245m\u0026\u0026\u001b[0m apt-get install -y curl wget",
+                  "FirstCause": true,
+                  "LastCause": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Dockerfile Security Check",
+          "ID": "DS-0031",
+          "Title": "Secrets passed via `build-args` or envs or copied secret files",
+          "Description": "Passing secrets via `build-args` or envs or copying secret files can leak them out",
+          "Message": "Possible exposure of secret env \"API_TOKEN\" in ENV",
+          "Namespace": "builtin.dockerfile.DS031",
+          "Query": "data.builtin.dockerfile.DS031.deny",
+          "Resolution": "Use secret mount if secrets are needed during image build. Use volume mount if secret files are needed during container runtime.",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ds-0031",
+          "References": [
+            "https://docs.docker.com/build/building/secrets/",
+            "https://avd.aquasec.com/misconfig/ds-0031"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Provider": "Dockerfile",
+            "Service": "general",
+            "StartLine": 4,
+            "EndLine": 4,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 4,
+                  "Content": "ENV API_TOKEN=demo-not-a-real-token",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;64mENV\u001b[0m \u001b[38;5;33mAPI_TOKEN\u001b[0m\u001b[38;5;245m=\u001b[0mdemo-not-a-real-token",
+                  "FirstCause": true,
+                  "LastCause": true
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -6,7 +6,7 @@ import { AgentBadge, Card, Chip, Empty, Meter, agentStyle, fmtDuration, fmtTime 
 
 const ISSUE_KINDS = new Set([
   "gate_rejection", "gate_attempt_limit", "tool_error", "blocked", "step_limit", "budget_notice",
-  "budget_exhausted", "injection_suspected", "run_error", "findings_rebuilt",
+  "budget_exhausted", "duplicate_call", "tool_retry", "injection_suspected", "run_error", "findings_rebuilt",
 ]);
 
 const PLAN_TONE: Record<PlanItem["status"], "neutral" | "info" | "good" | "bad" | "warn"> = {
@@ -156,6 +156,10 @@ function EventBody({ e }: { e: AgentEvent }) {
       return <div className="text-sm"><Chip tone="bad">blocked</Chip> tool <code>{e.name}</code> is not on {e.agent}'s roster</div>;
     case "step_limit":
       return <div className="text-sm"><Chip tone="warn">step limit</Chip> {e.agent} reached its limit of {str(p.limit)} model calls for this task and was stopped</div>;
+    case "duplicate_call":
+      return <div className="text-sm"><Chip tone="warn">repeat skipped</Chip> {e.agent} asked <code>{e.name}</code> the same thing {str(p.count)} times; it was told to use the earlier result</div>;
+    case "tool_retry":
+      return <div className="text-sm"><Chip tone="info">retry</Chip> <code>{e.name}</code> failed transiently; trying again (attempt {str(p.attempt)})</div>;
     case "budget_notice":
       return <div className="rounded bg-amber-50 px-2 py-1 text-sm text-amber-900">{str(p.text)}</div>;
     case "budget_exhausted":

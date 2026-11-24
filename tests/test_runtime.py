@@ -283,3 +283,74 @@ def test_the_builtin_read_file_says_it_cannot_read_the_repository(S, monkeypatch
     agent = build_supervisor(build_model(ModelConfig()), S, [])
     description = agent.nodes["tools"].bound.tools_by_name["read_file"].description
     assert "ONLY" in description and "read_repo_file" in description
+
+
+# --- harness: transient retries and duplicate read-only calls --------------------------------
+
+
+def ok_handler(calls):
+    def handler(req):
+        calls.append(1)
+        return ToolMessage(content='{"ok": true}', tool_call_id=req.tool_call["id"])
+
+    return handler
+
+
+def test_transient_failures_are_retried_then_succeed(S, monkeypatch):
+    monkeypatch.setattr("guardian.agents.runtime.time.sleep", lambda s: None)
+    mw, _ = runtime(S)
+    tries = []
+
+    def flaky(req):
+        tries.append(1)
+        if len(tries) < 3:
+            raise TimeoutError("slow")
+        return ToolMessage(content='{"ok": true}', tool_call_id="c1")
+
+    out = mw.wrap_tool_call(request(), flaky)
+    assert out.content == '{"ok": true}' and len(tries) == 3
+    assert len(S.ledger.events(("tool_retry",))) == 2
+
+
+def test_a_persistent_transient_failure_becomes_a_tool_error(S, monkeypatch):
+    monkeypatch.setattr("guardian.agents.runtime.time.sleep", lambda s: None)
+    mw, _ = runtime(S)
+
+    def down(req):
+        raise ConnectionError("down")
+
+    out = mw.wrap_tool_call(request(), down)
+    assert out.status == "error" and "ConnectionError" in out.content
+
+
+def test_other_errors_are_not_retried(S):
+    mw, _ = runtime(S)
+    tries = []
+
+    def bad(req):
+        tries.append(1)
+        raise ValueError("bad input")
+
+    assert mw.wrap_tool_call(request(), bad).status == "error" and len(tries) == 1
+
+
+def test_identical_read_only_calls_are_cut_off_after_two(S):
+    mw, _ = runtime(S, allowed=("read_repo_file", "task", "list_findings"))
+    calls: list[int] = []
+    req = lambda: request("list_findings", {"limit": 5})  # noqa: E731
+    for _ in range(2):
+        assert "ok" in mw.wrap_tool_call(req(), ok_handler(calls)).content
+    third = mw.wrap_tool_call(req(), ok_handler(calls))
+    assert "notice" in third.content and len(calls) == 2  # the tool was not run a third time
+    assert S.ledger.events(("duplicate_call",))[0]["payload"]["count"] == 2
+    different = mw.wrap_tool_call(request("list_findings", {"limit": 6}), ok_handler(calls))
+    assert "ok" in different.content
+
+
+def test_a_state_change_resets_the_duplicate_guard(S):
+    mw, _ = runtime(S, allowed=("list_findings", "build_findings"))
+    calls: list[int] = []
+    for _ in range(2):
+        mw.wrap_tool_call(request("list_findings", {}), ok_handler(calls))
+    mw.wrap_tool_call(request("build_findings", {}), ok_handler(calls))  # may change the answer
+    assert "ok" in mw.wrap_tool_call(request("list_findings", {}), ok_handler(calls)).content

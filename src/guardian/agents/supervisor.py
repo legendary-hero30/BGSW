@@ -34,14 +34,46 @@ READ_FILE_NOTE = {
 }
 BUILTIN_FS = ("read_file",)  # cannot be removed; reads only the in-state virtual filesystem
 SPECIALISTS = {
-    "inventory": "What the application is made of: files, SBOM, dependency graph, paths.",
-    "vulnerability": "Runs offline dependency vulnerability scanners and exploitability lookups.",
-    "forensics": "Non-CVE supply-chain risk: typosquats, install scripts, odd sources, lockfile.",
-    "container_ci": "Dockerfile, base image and CI/CD workflow risk.",
-    "remediation": "Proposes safe fixes (upgrade, pin, escalate) for findings; never applies them.",
-    "validation": "Validates a human-approved proposal on an isolated branch: rescan and diffs.",
-    "risk": "Builds scored findings, explains them through a gate, records hypotheses.",
-    "verifier": "Independently checks hypotheses and citations; rejects unsupported claims.",
+    "inventory": (
+        "What the application is made of: discovers files, builds the SBOM and dependency graph, "
+        "answers questions about components and the path from the app to a package. Start here "
+        "when you need to understand the project or a dependency path."
+    ),
+    "vulnerability": (
+        "Runs the offline dependency scanners (grype, trivy, osv-scanner) and exploitability "
+        "lookups (EPSS, KEV), compares the scanners and reports where they disagree. Ask for two "
+        "or three scanners to cross-check. It does not create findings."
+    ),
+    "forensics": (
+        "Non-CVE supply-chain risk: typosquats, install scripts, odd package sources, lockfile "
+        "integrity and lockfile diffs. Use it for anything suspicious that no CVE explains. "
+        "Untrusted content is only ever opened in the sandbox."
+    ),
+    "container_ci": (
+        "Dockerfile, base image and CI/CD workflow risk: unpinned images and actions, root "
+        "users, risky triggers, excessive permissions, script injection. Says plainly when "
+        "there is no Dockerfile or workflow, or an image was not scanned."
+    ),
+    "remediation": (
+        "Proposes safe, minimal fixes for scored findings from tool-reported fix versions, with "
+        "expected risk reduction, compatibility impact and rollback. Never applies or approves "
+        "anything. Use after findings exist."
+    ),
+    "validation": (
+        "Validates a proposal a human has ALREADY approved: isolated branch, rescan, SBOM and "
+        "findings diff, sandboxed build and tests; relays the verdict exactly. Call it only for "
+        "approved proposals."
+    ),
+    "risk": (
+        "Builds scored, stored findings from scan results, ranks them, explains them through a "
+        "deterministic gate and records hypotheses for the verifier. Run it once scanning is "
+        "complete."
+    ),
+    "verifier": (
+        "Independent critic: checks hypotheses and stored citations against the evidence and "
+        "rejects or narrows anything unsupported. Ask it to review every hypothesis before the "
+        "report."
+    ),
 }
 
 

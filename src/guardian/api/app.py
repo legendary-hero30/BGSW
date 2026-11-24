@@ -644,13 +644,18 @@ def create_app(
             raise HTTPException(404, "unknown proposal") from exc
         finally:
             gate.close()
-        state = {"state": "running", "step": "Starting", "error": None}
+        state: dict = {"state": "running", "step": "Starting", "error": None, "log": []}
         validating[key] = state
+
+        def on_step(msg: str) -> None:  # the running list the UI shows under "Steps"
+            state["step"] = msg
+            stamp = datetime.now(UTC).isoformat(timespec="seconds")
+            state["log"] = [*state["log"], {"at": stamp, "msg": msg}]
 
         def work() -> None:
             try:
                 report = remediation.validate_for_run(
-                    db, run, pid, on_step=lambda m: state.update(step=m)
+                    db, run, pid, on_step=on_step
                 )
                 state.update(state="done", step=f"Verdict: {report['verdict']}")
             except Exception as exc:

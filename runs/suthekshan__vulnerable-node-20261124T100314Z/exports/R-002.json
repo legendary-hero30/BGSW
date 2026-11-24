@@ -1,0 +1,12 @@
+{
+  "repo": "https://github.com/suthekshan/vulnerable-node",
+  "base_commit": "c35fa32337e5a7d7493bd80fef66823dcce5fce3",
+  "branch": "guardian/fix-f-004",
+  "title": "guardian: Upgrade axios 0.21.1 -> 0.33.0 (direct); resolves 24 finding(s), highest Medium.",
+  "proposal": "R-002",
+  "verdict": "partially_verified",
+  "approved_by": "suthekshan",
+  "approved_at": "2026-11-24T10:21:19+00:00",
+  "lockfile_origin": "repository",
+  "patch_sha256": "da7d3e723be236cf3a56f28012ab6768084a08885b6fc1fa5f4f8ab4529178e2"
+}

@@ -1,0 +1,196 @@
+{
+  "generated_at": "2026-11-24T09:14:41+00:00",
+  "target": {
+    "name": "TestMote__nodegoat-20261124T091202Z",
+    "repo": "https://github.com/TestMote/nodegoat",
+    "commit": "b5105b50495636112cb43e2eb8512294d3605a2b",
+    "license": "unknown",
+    "path": "targets/dynamic/TestMote__nodegoat-20261124T091202Z"
+  },
+  "tools": {
+    "syft": "syft 1.57.2",
+    "zizmor": "zizmor 1.32.0",
+    "trivy": "Version: 0.76.2",
+    "hadolint": "Haskell Dockerfile Linter 2.15.1",
+    "grype": "grype 0.121.3",
+    "osv-scanner": "osv-scanner version: 2.7.1"
+  },
+  "databases": {
+    "grype_db": {
+      "schema": "v6.1.10",
+      "built": "2026-11-23T06:28:32Z"
+    },
+    "trivy_db": {
+      "version": 2,
+      "updated_at": "2026-11-23T07:04:04.632673631Z"
+    },
+    "osv_npm_db": {
+      "file": "cache/osv/osv-scalibr/npm/all.zip",
+      "downloaded_at": "2026-11-23T08:54:31+00:00"
+    },
+    "feeds": {
+      "epss": {
+        "url": "https://epss.empiricalsecurity.com/epss_scores-current.csv.gz",
+        "file": "cache/feeds/epss_scores-current.csv.gz",
+        "sha256": "cd8fb93ef86b3feecd46ea79ceee9c9073353c841115bf294a30e7ed68d9a1db",
+        "fetched_at": "2026-11-23T08:55:02Z"
+      },
+      "kev": {
+        "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+        "file": "cache/feeds/known_exploited_vulnerabilities.json",
+        "sha256": "12c9ca4c5350ecacdf22bdce91b4ffcf06b8c8dc9c69b8bfb4c1a21be7a5fe50",
+        "fetched_at": "2026-11-23T08:55:03Z"
+      }
+    }
+  },
+  "outputs": {
+    "zizmor": "runs/TestMote__nodegoat-20261124T091202Z/zizmor.json",
+    "trivy": "runs/TestMote__nodegoat-20261124T091202Z/trivy.json",
+    "hadolint": "runs/TestMote__nodegoat-20261124T091202Z/hadolint.json",
+    "trivy-config": "runs/TestMote__nodegoat-20261124T091202Z/trivy-config.json",
+    "trivy-image": "runs/TestMote__nodegoat-20261124T091202Z/trivy-image.json",
+    "grype-image": "runs/TestMote__nodegoat-20261124T091202Z/grype-image.json",
+    "grype": "runs/TestMote__nodegoat-20261124T091202Z/grype.json",
+    "osv-scanner": "runs/TestMote__nodegoat-20261124T091202Z/osv.json"
+  },
+  "raw_matches": {
+    "grype": 340,
+    "trivy": 325,
+    "osv-scanner": 313
+  },
+  "groups": 324,
+  "groups_by_tool_count": {
+    "1_tools": 13,
+    "2_tools": 1,
+    "3_tools": 310
+  },
+  "findings": 418,
+  "evidence_records": 1475,
+  "unmapped": [],
+  "by_type": {
+    "malicious_package": 1,
+    "vulnerable_image_package": 70,
+    "vulnerable_direct": 20,
+    "vulnerable_transitive": 303,
+    "untrusted_image": 3,
+    "misconfiguration": 2,
+    "typosquat": 4,
+    "install_script": 3,
+    "unpinned_ci": 11,
+    "lockfile_change": 1
+  },
+  "by_severity": {
+    "critical": 39,
+    "medium": 131,
+    "high": 217,
+    "low": 31
+  },
+  "dependency_findings": 324,
+  "runtime_findings": 93,
+  "dev_only_findings": 231,
+  "kev_findings": 0,
+  "with_fix": 379,
+  "vulnerable_packages": 133,
+  "image": {
+    "image": "docker.io/library/node:12-alpine",
+    "manifest_digest": "sha256:4517380049fc3c9aacceae7764fcf3500354b0ac8a47e4afb35b5bbeb75b9498",
+    "trivy_matches": 72,
+    "grype_matches": 217,
+    "grype_cpe_only_excluded": 144,
+    "groups": 70,
+    "groups_by_tool_count": {
+      "1_tools": 1,
+      "2_tools": 69
+    }
+  },
+  "posture_hits": {
+    "guardian-rules:GR-CI-001": 7,
+    "zizmor:artipacked": 1,
+    "zizmor:excessive-permissions": 3,
+    "zizmor:unpinned-uses": 7,
+    "guardian-rules:GR-IMG-001": 2,
+    "hadolint:DL3066": 1,
+    "trivy:DS-0026": 1,
+    "trivy:EOSL": 1
+  },
+  "anomaly_hits": {
+    "GR-INST-001": 3,
+    "GR-TYPO-001": 4,
+    "GR-LOCK-001": 1
+  },
+  "base_target": null,
+  "synthetic": false,
+  "by_risk_level": {
+    "Critical": 1,
+    "Medium": 97,
+    "Low": 320
+  },
+  "by_reachability": {
+    "present_only": 79,
+    "unknown": 86,
+    "imported": 16,
+    "dev_only_unused": 237
+  },
+  "by_exposure": {
+    "runtime_internal": 154,
+    "runtime_network": 16,
+    "build_or_dev": 248
+  },
+  "coverage": {
+    "scanners_run": [
+      "grype",
+      "trivy",
+      "osv-scanner"
+    ],
+    "scanners_not_run": [],
+    "dockerfile_scanned": true,
+    "workflows_scanned": true,
+    "image_scanned": true,
+    "anomaly_rules_run": true,
+    "stages": {
+      "discover_files": "7 files",
+      "sbom": "424 components",
+      "scan_workflows": "18 rule hits",
+      "scan:trivy": "325 matches",
+      "scan_dockerfile": "4 rule hits",
+      "anomaly_rules": "8 rule hits",
+      "scan:grype": "340 matches",
+      "scan_image": "145 package matches",
+      "scan:osv-scanner": "313 matches"
+    }
+  },
+  "app_context": {
+    "runtime_imports": [
+      "bcrypt-nodejs",
+      "body-parser",
+      "consolidate",
+      "express",
+      "express-session",
+      "marked",
+      "mongodb",
+      "needle",
+      "node-esapi",
+      "serve-favicon",
+      "swig",
+      "underscore"
+    ],
+    "dev_imports": [
+      "async",
+      "chromedriver",
+      "mongodb",
+      "selenium-webdriver",
+      "should",
+      "zaproxy"
+    ],
+    "network_facts": [
+      "targets/dynamic/TestMote__nodegoat-20261124T091202Z/server.js:145",
+      "targets/dynamic/TestMote__nodegoat-20261124T091202Z/server.js:152",
+      "targets/dynamic/TestMote__nodegoat-20261124T091202Z/Dockerfile:18"
+    ],
+    "dynamic_requires": 2
+  },
+  "store": {
+    "db": "runs/guardian.db",
+    "run_id": "runs/TestMote__nodegoat-20261124T091202Z"
+  }
+}

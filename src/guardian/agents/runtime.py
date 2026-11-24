@@ -24,6 +24,18 @@ from guardian.log import short
 from guardian.redact import redact, redact_obj
 
 log = logging.getLogger("guardian.agent")
+# Tools that only read state. An identical repeated call returns the same thing, so after
+# DUPLICATE_AT of them the agent is told to use what it has instead of looping.
+READ_ONLY = frozenset({
+    "plan_list", "budget_status", "discover_files", "read_repo_file", "search_repo", "query_graph",
+    "scan_details", "list_install_scripts", "inspect_lockfile_entry", "manifest", "list_findings",
+    "get_finding", "list_hypotheses", "get_evidence", "list_proposals", "get_proposal",
+})  # fmt: skip
+DUPLICATE_AT = 2  # the third identical read-only call is answered with a notice
+# Failures worth one more try: the tool did not give an answer, as opposed to giving a bad one.
+TRANSIENT = (TimeoutError, ConnectionError)
+MAX_RETRIES = 2
+RETRY_BACKOFF_S = 0.5
 PREVIEW_CHARS = 400
 TEXT_CHARS = 3000
 
@@ -104,6 +116,7 @@ class AgentRuntime(AgentMiddleware):
         self.S, self.agent, self.allowed, self.blocked = session, agent, allowed, blocked
         self.warns_on_budget = warns_on_budget
         self.step_limit = step_limit
+        self._seen: dict[str, int] = {}  # identical read-only calls since the last state change
 
     @property
     def name(self) -> str:
@@ -182,6 +195,20 @@ class AgentRuntime(AgentMiddleware):
         return None
 
     # -- tool calls ------------------------------------------------------------------------------
+    def _call_with_retry(self, handler: Callable, request: Any, tool: str) -> Any:
+        """Run a tool; retry a transient failure (timeout, dropped connection) a couple of times.
+        Anything else, including a budget stop, is raised at once."""
+        for attempt in range(MAX_RETRIES + 1):
+            try:
+                return handler(request)
+            except TRANSIENT as exc:
+                if attempt == MAX_RETRIES:
+                    raise
+                log.warning("retrying %s:%s after %s", self.agent, tool, type(exc).__name__)
+                self.S.ledger.log(self.agent, "tool_retry", tool, {"attempt": attempt + 1})
+                time.sleep(RETRY_BACKOFF_S * (attempt + 1))
+        raise AssertionError("unreachable")  # pragma: no cover
+
     def wrap_tool_call(self, request: Any, handler: Callable) -> Any:
         call = request.tool_call
         tool, args, call_id = call["name"], redact_obj(call.get("args") or {}), call["id"]
@@ -194,6 +221,18 @@ class AgentRuntime(AgentMiddleware):
                 tool_call_id=call_id,
                 status="error",
             )
+        sig = f"{tool}:{json.dumps(call.get('args') or {}, sort_keys=True, default=str)}"
+        if tool in READ_ONLY and self._seen.get(sig, 0) >= DUPLICATE_AT:
+            n = self._seen[sig]
+            log.warning("duplicate call skipped %s:%s (%d identical calls)", self.agent, tool, n)
+            self.S.ledger.log(self.agent, "duplicate_call", tool, {"args": args, "count": n})
+            return ToolMessage(
+                content=json.dumps({"notice": (
+                    f"You already made this exact {tool} call {n} times and the result has not "
+                    "changed. Use the earlier result, or call something different."
+                )}),
+                tool_call_id=call_id,
+            )
         self.S.budget.start_tool_call()
         kind = "delegate" if tool == "task" else "tool_call"
         if kind == "delegate":
@@ -202,7 +241,7 @@ class AgentRuntime(AgentMiddleware):
             )
         started = time.monotonic()
         try:
-            result = handler(request)
+            result = self._call_with_retry(handler, request, tool)
         except BudgetExhausted:
             log.warning("budget exhausted at %s:%s", self.agent, tool)
             self.S.ledger.log(self.agent, "budget_exhausted", tool, {"args": args})
@@ -217,6 +256,10 @@ class AgentRuntime(AgentMiddleware):
                 content=json.dumps({"error": message[:500]}), tool_call_id=call_id, status="error"
             )
         content = _result_text(result)
+        if tool in READ_ONLY:
+            self._seen[sig] = self._seen.get(sig, 0) + 1
+        elif tool != "task":
+            self._seen.clear()  # something may have changed, so earlier reads are no longer repeats
         event = {
             "args": args,
             "result_chars": len(content),

@@ -1,0 +1,1166 @@
+[
+  {
+    "ident": "artipacked",
+    "desc": "credential persistence through GitHub Actions artifacts",
+    "url": "https://docs.zizmor.sh/audits/#artipacked",
+    "determinations": {
+      "confidence": "Low",
+      "severity": "Medium",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/ci.yml"
+            }
+          },
+          "annotation": "does not set persist-credentials: false",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 13,
+              "column": 8
+            },
+            "end_point": {
+              "row": 13,
+              "column": 33
+            },
+            "offset_span": {
+              "start": 180,
+              "end": 205
+            }
+          },
+          "feature": "uses: actions/checkout@v4",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": [
+      {
+        "title": "set persist-credentials: false",
+        "key": {
+          "Local": {
+            "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/ci.yml"
+          }
+        },
+        "disposition": "unsafe"
+      }
+    ]
+  },
+  {
+    "ident": "excessive-permissions",
+    "desc": "overly broad permissions",
+    "url": "https://docs.zizmor.sh/audits/#excessive-permissions",
+    "determinations": {
+      "confidence": "Medium",
+      "severity": "Medium",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/ci.yml"
+            }
+          },
+          "annotation": "this job",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Related"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 10,
+              "column": 2
+            },
+            "end_point": {
+              "row": 22,
+              "column": 0
+            },
+            "offset_span": {
+              "start": 127,
+              "end": 398
+            }
+          },
+          "feature": "  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - name: Resolve manifest\n        run: |\n          echo \"ecosystem: npm\"\n          ls -la\n      - name: Build\n        run: echo \"build ok\"\n      - name: Test\n        run: echo \"tests ok\"\n",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/ci.yml"
+            }
+          },
+          "annotation": "default permissions used due to no permissions: block",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 10,
+              "column": 2
+            },
+            "end_point": {
+              "row": 22,
+              "column": 0
+            },
+            "offset_span": {
+              "start": 127,
+              "end": 398
+            }
+          },
+          "feature": "  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - name: Resolve manifest\n        run: |\n          echo \"ecosystem: npm\"\n          ls -la\n      - name: Build\n        run: echo \"build ok\"\n      - name: Test\n        run: echo \"tests ok\"\n",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/ci.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 13,
+              "column": 8
+            },
+            "end_point": {
+              "row": 13,
+              "column": 33
+            },
+            "offset_span": {
+              "start": 180,
+              "end": 205
+            }
+          },
+          "feature": "uses: actions/checkout@v4",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/ci.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "build"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/checkout@v4"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 13,
+              "column": 14
+            },
+            "end_point": {
+              "row": 13,
+              "column": 33
+            },
+            "offset_span": {
+              "start": 186,
+              "end": 205
+            }
+          },
+          "feature": "actions/checkout@v4",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "excessive-permissions",
+    "desc": "overly broad permissions",
+    "url": "https://docs.zizmor.sh/audits/#excessive-permissions",
+    "determinations": {
+      "confidence": "Medium",
+      "severity": "Medium",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/e2e-test.yml"
+            }
+          },
+          "annotation": "this job",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "e2e-test"
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Related"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 4,
+              "column": 2
+            },
+            "end_point": {
+              "row": 61,
+              "column": 0
+            },
+            "offset_span": {
+              "start": 49,
+              "end": 1820
+            }
+          },
+          "feature": "  e2e-test:\n    name: Node.js\n    runs-on: ubuntu-latest\n\n    strategy:\n      fail-fast: false\n      matrix:\n        node-version: [\"10.x\", \"12.x\", \"14.x\"]\n\n    steps:\n      - name: Checkout https://github.com/${{ github.repository }}@${{ github.ref }}\n        uses: actions/checkout@v2\n        with:\n          persist-credentials: false\n\n      - name: Set up Node.js ${{ matrix.node-version }}\n        uses: actions/setup-node@v1\n        with:\n          node-version: ${{ matrix.node-version }}\n\n      - name: Use cache\n        uses: actions/cache@v2\n        with:\n          path: |\n            ~/.npm\n            ~/.cache\n          key: ${{ runner.os }}-node${{ matrix.node-version }}-E2E-${{ hashFiles('package-lock.json') }}\n\n      - name: Install dependencies\n        run: |\n          npm ci\n          npm run cy:verify\n\n      - name: Start MongoDB\n        run: |\n          docker run -d -p 27017:27017 mongo:4.0\n          timeout 60s bash -c 'until nc -z -w 2 localhost 27017 && echo MongoDB ready; do sleep 2; done'\n\n      - name: Run E2E test suite\n        id: test-suite\n        run: |\n          NODE_ENV=test npm start -- --silent &\n          npm run test:ci -- --config video=true\n\n      - name: Prepare cypress artifacts\n        if: failure() && (steps.test-suite.outcome == 'failure')\n        working-directory: ./test/e2e\n        run: >\n          mkdir -p \"screenshots\" && find \"screenshots\" -mindepth 1 -maxdepth 1 -type d\n          -exec sh -c 'mv -- \"videos/$(basename \"$1\").mp4\" \"$1\"' _ {} \\;\n\n      - name: Upload cypress artifacts\n        if: failure() && (steps.test-suite.outcome == 'failure')\n        uses: actions/upload-artifact@v2\n        with:\n          name: cypress-artifacts-node${{ matrix.node-version }}\n          path: test/e2e/screenshots\n",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/e2e-test.yml"
+            }
+          },
+          "annotation": "default permissions used due to no permissions: block",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "e2e-test"
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 4,
+              "column": 2
+            },
+            "end_point": {
+              "row": 61,
+              "column": 0
+            },
+            "offset_span": {
+              "start": 49,
+              "end": 1820
+            }
+          },
+          "feature": "  e2e-test:\n    name: Node.js\n    runs-on: ubuntu-latest\n\n    strategy:\n      fail-fast: false\n      matrix:\n        node-version: [\"10.x\", \"12.x\", \"14.x\"]\n\n    steps:\n      - name: Checkout https://github.com/${{ github.repository }}@${{ github.ref }}\n        uses: actions/checkout@v2\n        with:\n          persist-credentials: false\n\n      - name: Set up Node.js ${{ matrix.node-version }}\n        uses: actions/setup-node@v1\n        with:\n          node-version: ${{ matrix.node-version }}\n\n      - name: Use cache\n        uses: actions/cache@v2\n        with:\n          path: |\n            ~/.npm\n            ~/.cache\n          key: ${{ runner.os }}-node${{ matrix.node-version }}-E2E-${{ hashFiles('package-lock.json') }}\n\n      - name: Install dependencies\n        run: |\n          npm ci\n          npm run cy:verify\n\n      - name: Start MongoDB\n        run: |\n          docker run -d -p 27017:27017 mongo:4.0\n          timeout 60s bash -c 'until nc -z -w 2 localhost 27017 && echo MongoDB ready; do sleep 2; done'\n\n      - name: Run E2E test suite\n        id: test-suite\n        run: |\n          NODE_ENV=test npm start -- --silent &\n          npm run test:ci -- --config video=true\n\n      - name: Prepare cypress artifacts\n        if: failure() && (steps.test-suite.outcome == 'failure')\n        working-directory: ./test/e2e\n        run: >\n          mkdir -p \"screenshots\" && find \"screenshots\" -mindepth 1 -maxdepth 1 -type d\n          -exec sh -c 'mv -- \"videos/$(basename \"$1\").mp4\" \"$1\"' _ {} \\;\n\n      - name: Upload cypress artifacts\n        if: failure() && (steps.test-suite.outcome == 'failure')\n        uses: actions/upload-artifact@v2\n        with:\n          name: cypress-artifacts-node${{ matrix.node-version }}\n          path: test/e2e/screenshots\n",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/e2e-test.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "e2e-test"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 14,
+              "column": 8
+            },
+            "end_point": {
+              "row": 17,
+              "column": 36
+            },
+            "offset_span": {
+              "start": 223,
+              "end": 384
+            }
+          },
+          "feature": "name: Checkout https://github.com/${{ github.repository }}@${{ github.ref }}\n        uses: actions/checkout@v2\n        with:\n          persist-credentials: false",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/e2e-test.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "e2e-test"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/checkout@v2"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 15,
+              "column": 14
+            },
+            "end_point": {
+              "row": 15,
+              "column": 33
+            },
+            "offset_span": {
+              "start": 314,
+              "end": 333
+            }
+          },
+          "feature": "actions/checkout@v2",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/e2e-test.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "e2e-test"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 1
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 19,
+              "column": 8
+            },
+            "end_point": {
+              "row": 22,
+              "column": 50
+            },
+            "offset_span": {
+              "start": 394,
+              "end": 542
+            }
+          },
+          "feature": "name: Set up Node.js ${{ matrix.node-version }}\n        uses: actions/setup-node@v1\n        with:\n          node-version: ${{ matrix.node-version }}",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/e2e-test.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "e2e-test"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 1
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/setup-node@v1"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 20,
+              "column": 14
+            },
+            "end_point": {
+              "row": 20,
+              "column": 35
+            },
+            "offset_span": {
+              "start": 456,
+              "end": 477
+            }
+          },
+          "feature": "actions/setup-node@v1",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/e2e-test.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "e2e-test"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 2
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 24,
+              "column": 8
+            },
+            "end_point": {
+              "row": 30,
+              "column": 104
+            },
+            "offset_span": {
+              "start": 552,
+              "end": 775
+            }
+          },
+          "feature": "name: Use cache\n        uses: actions/cache@v2\n        with:\n          path: |\n            ~/.npm\n            ~/.cache\n          key: ${{ runner.os }}-node${{ matrix.node-version }}-E2E-${{ hashFiles('package-lock.json') }}",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/e2e-test.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "e2e-test"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 2
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/cache@v2"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 25,
+              "column": 14
+            },
+            "end_point": {
+              "row": 25,
+              "column": 30
+            },
+            "offset_span": {
+              "start": 582,
+              "end": 598
+            }
+          },
+          "feature": "actions/cache@v2",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/e2e-test.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "e2e-test"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 7
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 55,
+              "column": 8
+            },
+            "end_point": {
+              "row": 61,
+              "column": 0
+            },
+            "offset_span": {
+              "start": 1567,
+              "end": 1820
+            }
+          },
+          "feature": "name: Upload cypress artifacts\n        if: failure() && (steps.test-suite.outcome == 'failure')\n        uses: actions/upload-artifact@v2\n        with:\n          name: cypress-artifacts-node${{ matrix.node-version }}\n          path: test/e2e/screenshots\n",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/e2e-test.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "e2e-test"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 7
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/upload-artifact@v2"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 57,
+              "column": 14
+            },
+            "end_point": {
+              "row": 57,
+              "column": 40
+            },
+            "offset_span": {
+              "start": 1677,
+              "end": 1703
+            }
+          },
+          "feature": "actions/upload-artifact@v2",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "excessive-permissions",
+    "desc": "overly broad permissions",
+    "url": "https://docs.zizmor.sh/audits/#excessive-permissions",
+    "determinations": {
+      "confidence": "Medium",
+      "severity": "Medium",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/lint.yml"
+            }
+          },
+          "annotation": "this job",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "lint"
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Related"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 4,
+              "column": 2
+            },
+            "end_point": {
+              "row": 26,
+              "column": 0
+            },
+            "offset_span": {
+              "start": 45,
+              "end": 591
+            }
+          },
+          "feature": "  lint:\n    name: Node.js\n    runs-on: ubuntu-latest\n\n    strategy:\n      fail-fast: false\n      matrix:\n        node-version: [\"14.x\"]\n\n    steps:\n      - name: Checkout https://github.com/${{ github.repository }}@${{ github.ref }}\n        uses: actions/checkout@v2\n        with:\n          persist-credentials: false\n\n      - name: Set up Node.js ${{ matrix.node-version }}\n        uses: actions/setup-node@v1\n        with:\n          node-version: ${{ matrix.node-version }}\n\n      - name: Run linter\n        run: npx --no-install jshint@2.12.0 .\n",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/lint.yml"
+            }
+          },
+          "annotation": "default permissions used due to no permissions: block",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "lint"
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 4,
+              "column": 2
+            },
+            "end_point": {
+              "row": 26,
+              "column": 0
+            },
+            "offset_span": {
+              "start": 45,
+              "end": 591
+            }
+          },
+          "feature": "  lint:\n    name: Node.js\n    runs-on: ubuntu-latest\n\n    strategy:\n      fail-fast: false\n      matrix:\n        node-version: [\"14.x\"]\n\n    steps:\n      - name: Checkout https://github.com/${{ github.repository }}@${{ github.ref }}\n        uses: actions/checkout@v2\n        with:\n          persist-credentials: false\n\n      - name: Set up Node.js ${{ matrix.node-version }}\n        uses: actions/setup-node@v1\n        with:\n          node-version: ${{ matrix.node-version }}\n\n      - name: Run linter\n        run: npx --no-install jshint@2.12.0 .\n",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/lint.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "lint"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 14,
+              "column": 8
+            },
+            "end_point": {
+              "row": 17,
+              "column": 36
+            },
+            "offset_span": {
+              "start": 199,
+              "end": 360
+            }
+          },
+          "feature": "name: Checkout https://github.com/${{ github.repository }}@${{ github.ref }}\n        uses: actions/checkout@v2\n        with:\n          persist-credentials: false",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/lint.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "lint"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 0
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/checkout@v2"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 15,
+              "column": 14
+            },
+            "end_point": {
+              "row": 15,
+              "column": 33
+            },
+            "offset_span": {
+              "start": 290,
+              "end": 309
+            }
+          },
+          "feature": "actions/checkout@v2",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  },
+  {
+    "ident": "unpinned-uses",
+    "desc": "unpinned action reference",
+    "url": "https://docs.zizmor.sh/audits/#unpinned-uses",
+    "determinations": {
+      "confidence": "High",
+      "severity": "High",
+      "persona": "Regular"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/lint.yml"
+            }
+          },
+          "annotation": "this step",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "lint"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 1
+              }
+            ]
+          },
+          "feature_kind": "Normal",
+          "kind": "Hidden"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 19,
+              "column": 8
+            },
+            "end_point": {
+              "row": 22,
+              "column": 50
+            },
+            "offset_span": {
+              "start": 370,
+              "end": 518
+            }
+          },
+          "feature": "name: Set up Node.js ${{ matrix.node-version }}\n        uses: actions/setup-node@v1\n        with:\n          node-version: ${{ matrix.node-version }}",
+          "comments": []
+        }
+      },
+      {
+        "symbolic": {
+          "key": {
+            "Local": {
+              "verbatim_path": "/home/suthekshan/bosch/targets/dynamic/TestMote__nodegoat-20261124T091202Z/.github/workflows/lint.yml"
+            }
+          },
+          "annotation": "action is not pinned to a hash (required by blanket policy)",
+          "route": {
+            "route": [
+              {
+                "Key": "jobs"
+              },
+              {
+                "Key": "lint"
+              },
+              {
+                "Key": "steps"
+              },
+              {
+                "Index": 1
+              },
+              {
+                "Key": "uses"
+              }
+            ]
+          },
+          "feature_kind": {
+            "Subfeature": {
+              "after": 0,
+              "fragment": {
+                "Raw": "actions/setup-node@v1"
+              }
+            }
+          },
+          "kind": "Primary"
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 20,
+              "column": 14
+            },
+            "end_point": {
+              "row": 20,
+              "column": 35
+            },
+            "offset_span": {
+              "start": 432,
+              "end": 453
+            }
+          },
+          "feature": "actions/setup-node@v1",
+          "comments": []
+        }
+      }
+    ],
+    "ignored": false,
+    "fixes": []
+  }
+]

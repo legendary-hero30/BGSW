@@ -23,6 +23,7 @@ from guardian.remediation.proposals import (
     ApprovalError,
     add_validation,
     get_proposal,
+    now,
     require_approved,
 )
 from guardian.remediation.schemas import Proposal
@@ -193,8 +194,11 @@ def validate(
     from guardian.scan import baseline as bl
     from guardian.scan.pipeline import Pipeline
 
+    trail: list[dict] = []  # what happened and when; stored in the report so it can be replayed
+
     def say(msg: str) -> None:
         log.info("validate %s %s: %s", run_id, proposal_id, msg)
+        trail.append({"at": now(), "msg": msg})
         if on_step:
             on_step(msg)
 
@@ -210,6 +214,7 @@ def validate(
         "proposal": json.loads(p.model_dump_json()),
         "approval": approval,
         "steps": {},
+        "progress": trail,
         "inference_note": "Everything below except 'justification' is tool output or arithmetic.",
     }
 
@@ -222,6 +227,7 @@ def validate(
             c.close()
         return report
 
+    say(f"Approval confirmed: {approval['approver']} approved {proposal_id} (hash matches)")
     say("Creating the isolated work copy and applying the approved edit")
     try:
         ws = workspace.create(base_target, p)

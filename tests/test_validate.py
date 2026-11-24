@@ -153,3 +153,33 @@ def test_path_named_findings_do_not_change_identity_between_copies(fs):
     after = renamed("targets/work/app-1-r-001/Dockerfile")
     d = v.findings_diff(before, after, prop(fs))
     assert d["new"] == [] and len(d["resolved"]) == 0
+
+
+def test_report_keeps_the_steps_taken_after_approval(monkeypatch):
+    from guardian.remediation.proposals import decide
+
+    session = build_session(monkeypatch)
+    try:
+        conn = connect(DB)
+        p = add_proposal(
+            conn,
+            prop(sample_findings()[0]).model_copy(update={"run_id": session.pipeline.run_id}),
+            "t",
+        )
+        decide(conn, session.pipeline.run_id, p.id, "approved", "Human")
+        conn.close()
+
+        def boom(*a, **k):
+            raise workspace.WorkspaceError("no copy")
+
+        monkeypatch.setattr(workspace, "create", boom)
+        seen: list[str] = []
+        report = v.validate(
+            DB, session.pipeline.run_id, p.id, "fixture", OUT, on_step=seen.append
+        )
+        assert report["verdict"] == "blocked"
+        msgs = [s["msg"] for s in report["progress"]]
+        assert msgs == seen and "Approval confirmed: Human approved" in msgs[0]
+        assert all("at" in s for s in report["progress"])
+    finally:
+        cleanup()
