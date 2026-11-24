@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import re
 
 from guardian.remediation import proposals as props
@@ -18,10 +19,12 @@ from guardian.sbom.build import load_target
 from guardian.store import connect
 from guardian.tools.runner import WORKSPACE, jail
 
+log = logging.getLogger("guardian.export")
 GITHUB = re.compile(r"^https://github\.com/[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9._-]{1,100}$")
 PUSHABLE = {"verified", "partially_verified"}
 
 
+# Write the approved, validated patch and metadata; pushing is a separate step.
 def export_fix(db: str, run_id: str, proposal_id: str) -> dict:
     conn = connect(db)
     try:
@@ -63,4 +66,5 @@ def export_fix(db: str, run_id: str, proposal_id: str) -> dict:
     }
     (out / f"{stem}.json").write_text(json.dumps(meta, indent=2) + "\n")
     rel = str((out / f"{stem}.json").relative_to(WORKSPACE))
+    log.info("exported %s %s -> %s", run_id, proposal.id, meta["branch"])
     return {**meta, "metadata_file": rel, "command": f"scripts/push_fix.sh {rel}"}

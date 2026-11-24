@@ -10,6 +10,7 @@ force, and never merges or opens a pull request: a person does that.
 from __future__ import annotations
 
 import json
+import logging
 import os
 import re
 import shutil
@@ -22,6 +23,7 @@ from guardian.remediation.export import export_fix
 from guardian.remediation.proposals import ApprovalError
 from guardian.tools.runner import WORKSPACE, jail
 
+log = logging.getLogger("guardian.push")
 GIT = shutil.which("git") or "/usr/bin/git"
 BRANCH = re.compile(r"^guardian/fix-[a-z0-9._-]+$")
 
@@ -30,12 +32,14 @@ class PushError(RuntimeError):
     pass
 
 
+# Push is on only with GUARDIAN_ALLOW_PUSH=1 and a token in the environment.
 def allowed() -> bool:
     return os.environ.get("GUARDIAN_ALLOW_PUSH") == "1" and bool(
         os.environ.get("GUARDIAN_GITHUB_TOKEN")
     )
 
 
+# Run git with the token available only to the child, via a temporary askpass helper.
 def _git(cwd: Path, home: Path, token: str, *args: str) -> str:
     env = {
         "PATH": "/usr/bin:/bin",
@@ -54,10 +58,12 @@ def _git(cwd: Path, home: Path, token: str, *args: str) -> str:
     )  # fmt: skip
     if done.returncode:
         text = (done.stderr or done.stdout).replace(token, "***").strip()[-400:]
+        log.warning("git %s failed: %s", args[0], text[:120])
         raise PushError(f"git {args[0]} failed: {text}")
     return done.stdout
 
 
+# Re-check approval, clone fresh, apply the patch on a new branch and push it.
 def push_fix(db: str, run_id: str, proposal_id: str, confirm_repo: str) -> dict:
     if not allowed():
         raise PushError(
@@ -92,9 +98,11 @@ def push_fix(db: str, run_id: str, proposal_id: str, confirm_repo: str) -> dict:
         _git(repo, work, token, "commit", "--quiet", "-m", meta["title"], "-m",
              f"Prepared by Software Supply Chain Guardian; approved by {meta['approved_by']}. "
              "Review before merging.")  # fmt: skip
+        log.info("pushing %s to %s", meta["branch"], meta["repo"])  # never the token
         _git(repo, work, token, "push", "--set-upstream", "origin", meta["branch"])
     finally:
         shutil.rmtree(work, ignore_errors=True)
+    log.info("pushed %s", meta["branch"])
     result = {
         "pushed": True,
         "repo": meta["repo"],

@@ -12,6 +12,7 @@ Verdicts (AGENTS.md section 8: "verified" needs all of the following):
 from __future__ import annotations
 
 import json
+import logging
 import re
 from collections import Counter
 from collections.abc import Callable
@@ -42,6 +43,7 @@ def component_set(sbom_path: Path) -> dict[str, str]:
     }
 
 
+# Components added, removed or changed between two SBOMs.
 def sbom_diff(before: Path, after: Path) -> dict:
     b, a = component_set(before), component_set(after)
     names_b, names_a = {k.rsplit("@", 1)[0] for k in b}, {k.rsplit("@", 1)[0] for k in a}
@@ -60,6 +62,8 @@ def sbom_diff(before: Path, after: Path) -> dict:
     }
 
 
+log = logging.getLogger("guardian.validate")
+
 WORK_PREFIX = re.compile(r"^targets/(?:work|dynamic)/[^/]+/")
 
 
@@ -73,16 +77,19 @@ def key(f: Finding) -> tuple:
     return (f.type.value, cname(f), tuple(sorted(f.advisory_ids)))
 
 
+# Count findings by risk level, in severity order.
 def levels(fs: FindingSet) -> dict[str, int]:
     c = Counter((f.risk.level.value if f.risk else "Unknown") for f in fs.findings)
     return {lvl: c[lvl] for lvl in ORDER if c[lvl]}
 
 
+# Highest risk score in a finding set.
 def top_score(fs: FindingSet) -> float | None:
     scores = [f.risk.score for f in fs.findings if f.risk and f.risk.score is not None]
     return max(scores) if scores else None
 
 
+# Compare scans before and after: resolved, remaining and new findings.
 def findings_diff(before: FindingSet, after: FindingSet, proposal: Proposal) -> dict:
     after_adv = {a for f in after.findings for a in f.advisory_ids}
     after_keys = {key(f) for f in after.findings}
@@ -120,6 +127,7 @@ def findings_diff(before: FindingSet, after: FindingSet, proposal: Proposal) -> 
     }
 
 
+# Conservative verdict: verified only if every AGENTS.md criterion held.
 def verdict_for(d: dict, steps: dict, sbom: dict, proposal: Proposal) -> tuple[str, list[str]]:
     why: list[str] = []
     if d["targeted_remaining"]:
@@ -151,6 +159,7 @@ def verdict_for(d: dict, steps: dict, sbom: dict, proposal: Proposal) -> tuple[s
     return "verified", ["every AGENTS.md verification criterion held"]
 
 
+# Build and test in the sandbox, on the fix and on an unmodified copy for attribution.
 def build_test_steps(after_dir: Path, base_dir: Path | None) -> dict:
     """Build and tests execute untrusted code, so they run only in the namespace sandbox. The
     same steps run on an unmodified copy so a failure can be attributed to the fix or not."""
@@ -170,6 +179,7 @@ def build_test_steps(after_dir: Path, base_dir: Path | None) -> dict:
     return out
 
 
+# Apply an approved fix on a branch, rescan offline, diff, and record a verdict.
 def validate(
     db: str,
     run_id: str,
@@ -183,7 +193,11 @@ def validate(
     from guardian.scan import baseline as bl
     from guardian.scan.pipeline import Pipeline
 
-    say = on_step or (lambda _s: None)
+    def say(msg: str) -> None:
+        log.info("validate %s %s: %s", run_id, proposal_id, msg)
+        if on_step:
+            on_step(msg)
+
     conn = connect(db)
     try:
         approval = require_approved(conn, run_id, proposal_id)
@@ -266,6 +280,7 @@ def validate(
                   "findings": len(after.findings)},
     }  # fmt: skip
     report["verdict"], report["reasons"] = verdict_for(diff, report["steps"], sbom, p)
+    log.info("validate %s %s verdict=%s", run_id, proposal_id, report["verdict"])
     report["final_confidence"] = (
         "high" if report["verdict"] == "verified" else
         "medium" if report["verdict"] == "partially_verified" else "low"

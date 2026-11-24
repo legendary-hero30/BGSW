@@ -7,12 +7,14 @@ no user config, no tokens, a temporary HOME.
 
 from __future__ import annotations
 
+import logging
 import os
 import shutil
 import subprocess
 import tempfile
 from pathlib import Path
 
+log = logging.getLogger("guardian.lockfile")
 REGISTRY = "https://registry.npmjs.org/"
 
 
@@ -30,6 +32,7 @@ def regenerate(work: Path, timeout: int = 300) -> dict:
             "regenerating the lockfile needs the npm registry. Set "
             "GUARDIAN_ALLOW_REGISTRY_ACCESS=1 to allow this one networked step."
         )
+    log.info("regenerating package-lock.json in %s (network: registry.npmjs.org)", work.name)
     npm = shutil.which("npm")
     if npm is None:
         raise RegistryAccessError("npm is not installed")

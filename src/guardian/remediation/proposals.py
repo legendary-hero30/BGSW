@@ -10,10 +10,13 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import sqlite3
 from datetime import UTC, datetime
 
 from guardian.remediation.schemas import Proposal, ProposalStatus
+
+log = logging.getLogger("guardian.approval")
 
 
 class ApprovalError(Exception):
@@ -24,6 +27,7 @@ def now() -> str:
     return datetime.now(UTC).isoformat(timespec="seconds")
 
 
+# Hash of the proposal's content (not its id): approval is bound to this.
 def proposal_sha(p: Proposal) -> str:
     return hashlib.sha256(p.model_copy(update={"id": ""}).model_dump_json().encode()).hexdigest()
 
@@ -66,6 +70,7 @@ def _key(run_id: str, proposal_id: str) -> str:
     return proposal_id if ":" in proposal_id else f"{run_id}:{proposal_id}"
 
 
+# Load one stored proposal or raise KeyError.
 def get_proposal(conn: sqlite3.Connection, key: str) -> Proposal:
     row = conn.execute("SELECT proposal_json FROM proposals WHERE id = ?", (key,)).fetchone()
     if row is None:
@@ -80,6 +85,7 @@ def list_proposals(conn: sqlite3.Connection, run_id: str) -> list[Proposal]:
     return [Proposal.model_validate_json(r[0]) for r in rows]
 
 
+# The full, ordered approval log for a proposal.
 def approvals(conn: sqlite3.Connection, run_id: str, proposal_id: str) -> list[dict]:
     rows = conn.execute(
         "SELECT decision, approver, at, note, proposal_sha FROM approvals WHERE proposal_id = ? "
@@ -120,6 +126,7 @@ def decide(
             "VALUES (?, ?, ?, ?, ?, ?)",
             (key, decision, approver, now(), note[:500], sha),
         )
+    log.info("decision %s %s by %s", proposal_id, decision, approver)
     return approvals(conn, run_id, proposal_id)[-1]
 
 
@@ -138,6 +145,7 @@ def require_approved(conn: sqlite3.Connection, run_id: str, proposal_id: str) ->
     return last
 
 
+# Append a validation report; rows are never updated.
 def add_validation(conn: sqlite3.Connection, run_id: str, proposal_id: str, report: dict) -> None:
     with conn:
         conn.execute(
@@ -150,6 +158,7 @@ def _dump(obj: dict) -> str:
     return json.dumps(obj, sort_keys=True, default=str)
 
 
+# All validation reports for a proposal, oldest first.
 def validations(conn: sqlite3.Connection, run_id: str, proposal_id: str) -> list[dict]:
     rows = conn.execute(
         "SELECT at, report_json FROM validations WHERE proposal_id = ? ORDER BY seq",
@@ -158,6 +167,7 @@ def validations(conn: sqlite3.Connection, run_id: str, proposal_id: str) -> list
     return [{**json.loads(r[1]), "at": r[0]} for r in rows]
 
 
+# Derive the proposal's status from its approvals and validations.
 def status(conn: sqlite3.Connection, run_id: str, proposal_id: str) -> ProposalStatus:
     log = approvals(conn, run_id, proposal_id)
     val = validations(conn, run_id, proposal_id)
