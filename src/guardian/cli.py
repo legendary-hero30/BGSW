@@ -20,6 +20,7 @@ from guardian.agents.ledger import Ledger
 from guardian.agents.models import ModelConfig, ModelDisabledError, default_model
 from guardian.agents.runner import DEFAULT_GOAL, run_goal
 from guardian.envfile import load_env
+from guardian.log import setup as setup_logging
 from guardian.sandbox import backend_report
 from guardian.store import DEFAULT_DB
 
@@ -175,6 +176,7 @@ def _cmd_approvals(a: argparse.Namespace) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     load_env()  # settings from the git-ignored .env; real environment variables win
     p = argparse.ArgumentParser(prog="guardian")
     sub = p.add_subparsers(dest="cmd", required=True)

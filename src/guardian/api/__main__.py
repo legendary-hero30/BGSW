@@ -12,11 +12,13 @@ import os
 import sys
 
 from guardian.envfile import load_env
+from guardian.log import setup as setup_logging
 
 LOOPBACK = {"127.0.0.1", "localhost", "::1"}
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     load_env()  # settings from the git-ignored .env; real environment variables win
     p = argparse.ArgumentParser(prog="guardian.api")
     p.add_argument("--host", default="127.0.0.1")
