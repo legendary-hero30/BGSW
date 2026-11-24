@@ -85,6 +85,7 @@ def osa_distance(a: str, b: str) -> int:
     return prev[-1]
 
 
+# Check whether two characters are adjacent on a QWERTY keyboard.
 def keyboard_adjacent(x: str, y: str) -> bool:
     if x not in _POS or y not in _POS:
         return False
@@ -92,6 +93,7 @@ def keyboard_adjacent(x: str, y: str) -> bool:
     return abs(r1 - r2) <= 1 and abs(c1 - c2) <= 1 and (x != y)
 
 
+# Identify the type of change between two package names.
 def classify(candidate: str, popular: str) -> str:
     """Name the single edit (for distance 1) or 'multiple edits'."""
     if osa_distance(candidate, popular) > 1:
@@ -121,6 +123,7 @@ def max_distance(name: str) -> int:
     return 1 if len(name) <= 6 else 2
 
 
+# Generate possible package names by removing characters.
 def _deletes(word: str, depth: int) -> set[str]:
     out, frontier = {word}, {word}
     for _ in range(depth):
@@ -137,6 +140,7 @@ class TopList:
 
     @classmethod
     def load(cls, path: Path = TOPLIST) -> TopList:
+        """Load the popular npm package list and assign ranks."""
         names = tuple(json.loads(path.read_text())["names"])
         return cls(
             names,
@@ -145,6 +149,7 @@ class TopList:
         )
 
 
+# Find suspicious package names similar to popular packages.
 def typosquat_matches(candidates: set[str], top: TopList) -> dict[str, tuple[str, int, int]]:
     """candidate -> (closest popular name, rank, distance) for suspicious near-misses."""
     popular = [n for n in top.names[:TOP_N] if len(n) >= 4]
@@ -173,6 +178,7 @@ def typosquat_matches(candidates: set[str], top: TopList) -> dict[str, tuple[str
 # --- lockfile helpers ------------------------------------------------------------------------
 
 
+# Locate specific fields inside a lockfile entry.
 def entry_field_line(lines: list[str], key_line: int | None, field_name: str) -> int | None:
     """Line number of `"field":` inside the lockfile entry starting at key_line."""
     if key_line is None:
@@ -187,12 +193,14 @@ def entry_field_line(lines: list[str], key_line: int | None, field_name: str) ->
     return None
 
 
+# Check whether a package is recently published and rarely downloaded.
 def _recent_and_rare(meta: dict, today: date | None = None) -> bool:
     created = date.fromisoformat(meta["created"][:10])
     age = ((today or datetime.now(UTC).date()) - created).days
     return age < RECENT_DAYS and int(meta["weekly_downloads"]) < LOW_DOWNLOADS
 
 
+# Load package metadata from the mock registry.
 def load_mock_registry(path: Path = MOCK_REGISTRY) -> dict:
     return json.loads(path.read_text())["packages"] if path.exists() else {}
 
@@ -211,6 +219,7 @@ class Cite:
 
 @dataclass
 class AnomalyHit:
+    """Represents a detected supply-chain anomaly."""
     rule: str
     node: str  # graph node (install path) of the affected package
     message: str
@@ -226,6 +235,7 @@ class AnomalyHit:
         return RULES[self.rule][1]
 
 
+# Create evidence citations for lockfile lines.
 def _line_cite(rule: str, file: str, lines: list[str], number: int | None) -> list[Cite]:
     if number is None:
         return []
@@ -244,6 +254,7 @@ def _line_cite(rule: str, file: str, lines: list[str], number: int | None) -> li
 # --- rules -------------------------------------------------------------------------------------
 
 
+# Apply anomaly detection rules to a single lockfile.
 def single_commit_rules(
     lock: NpmLock, top: TopList, registry_path: Path = MOCK_REGISTRY
 ) -> list[AnomalyHit]:
@@ -364,6 +375,7 @@ def single_commit_rules(
     return hits
 
 
+# Extract the major version for dependency comparison.
 def _major(version: str | None) -> str | None:
     if not version:
         return None
@@ -373,6 +385,7 @@ def _major(version: str | None) -> str | None:
     return m.group(1) if m.group(1) != "0" else f"0.{m.group(2)}"
 
 
+# Detect lockfile changes and unexpected dependencies between commits.
 def diff_rules(base: NpmLock, lock: NpmLock, graph: DependencyGraph) -> list[AnomalyHit]:
     """Rules that compare the target lockfile against its base commit's lockfile."""
     lines = jail(lock.file).read_text().splitlines()
@@ -464,9 +477,7 @@ def diff_rules(base: NpmLock, lock: NpmLock, graph: DependencyGraph) -> list[Ano
     return hits
 
 
-# --- drafts --------------------------------------------------------------------------------
-
-
+# Group anomaly findings and create evidence-backed drafts.
 def anomaly_drafts(
     store: EvidenceStore, hits: list[AnomalyHit], graph: DependencyGraph
 ) -> list[Draft]:
