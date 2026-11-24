@@ -43,6 +43,7 @@ REVIEW_TYPES = frozenset(
 RANK = {"Critical": 4, "High": 3, "Medium": 2, "Low": 1}
 
 
+# Fix versions the scanners reported for a finding (never invented).
 def fix_versions(f: Finding) -> list[Version]:
     out: list[Version] = []
     for fixed in f.fixed_in:
@@ -51,6 +52,7 @@ def fix_versions(f: Finding) -> list[Version]:
     return sorted(set(out), key=Version.key)
 
 
+# Smallest fix version that is above the current one: the least risky upgrade.
 def lowest_fix(current: Version, fixes: list[Version]) -> Version | None:
     """The smallest strictly newer fix, preferring the same major line (least breaking)."""
     newer = [v for v in fixes if current < v]
@@ -59,6 +61,7 @@ def lowest_fix(current: Version, fixes: list[Version]) -> Version | None:
     return pool[0] if pool else None
 
 
+# Find which package.json section (dependencies, devDependencies...) holds a package.
 def find_section(manifest: Mapping | None, name: str) -> tuple[str, str] | None:
     if not manifest:
         return None
@@ -69,11 +72,13 @@ def find_section(manifest: Mapping | None, name: str) -> tuple[str, str] | None:
     return None
 
 
+# Version spec for the target, keeping the original range style (^, ~ or exact).
 def new_spec(old: str, target: Version) -> str:
     """Keep a ^ or ~ prefix; otherwise pin exactly."""
     return f"{old[0]}{target}" if old[:1] in {"^", "~"} else str(target)
 
 
+# Estimate compatibility impact from semver alone; build and tests have not run yet.
 def _compat(
     current: Version, target: Version, *, transitive: bool, dev_only: bool
 ) -> Compatibility:
@@ -100,6 +105,7 @@ def _compat(
     return Compatibility(level=level, reasons=tuple(reasons))
 
 
+# Plain-language rollback steps for a proposal.
 def _rollback(branch_hint: str, applicable: bool) -> tuple[str, ...]:
     if not applicable:
         return ("No file is changed by this proposal, so there is nothing to roll back.",)
@@ -110,6 +116,7 @@ def _rollback(branch_hint: str, applicable: bool) -> tuple[str, ...]:
     )
 
 
+# All findings that the same package change would resolve.
 def _group(fs: FindingSet, f: Finding) -> list[Finding]:
     return [
         g
@@ -120,6 +127,7 @@ def _group(fs: FindingSet, f: Finding) -> list[Finding]:
     ]
 
 
+# Build one fix proposal for a finding from tool data. Pure: no files are written.
 def propose(
     fs: FindingSet,
     finding_id: str,

@@ -23,6 +23,7 @@ from guardian.sandbox import BwrapSandbox, ExecSpec, SandboxResult, SandboxUnava
 PLACEHOLDER = "no test specified"
 
 
+# Directory of the node install the sandbox may read.
 def node_root() -> Path:
     node = shutil.which("node")
     if node is None:
@@ -30,6 +31,7 @@ def node_root() -> Path:
     return Path(node).resolve().parents[1]
 
 
+# npm ci --ignore-scripts inside the sandbox: no package code runs during install.
 def install(work: Path, timeout: int = 600) -> dict:
     """npm ci with lifecycle scripts disabled. Needs the registry."""
     if not lockfile.allowed():
@@ -59,11 +61,13 @@ def install(work: Path, timeout: int = 600) -> dict:
     return {"installed": True}
 
 
+# The build/test scripts declared in package.json.
 def scripts_of(work: Path) -> dict[str, str]:
     path = work / "package.json"
     return json.loads(path.read_text()).get("scripts", {}) if path.is_file() else {}
 
 
+# Run one npm script in the sandbox (no network, read-only tree).
 def run_script(work: Path, name: str, timeout_s: int = 300) -> SandboxResult:
     root = node_root()
     spec = ExecSpec(
@@ -75,6 +79,7 @@ def run_script(work: Path, name: str, timeout_s: int = 300) -> SandboxResult:
     return BwrapSandbox().run_spec([str(root / "bin" / "npm"), "run", name, "--silent"], spec)
 
 
+# Run build or test and return a status: passed, failed or not_run with the reason.
 def step(work: Path, name: str) -> dict:
     """One sandboxed npm script: passed / failed / not_run (with the reason)."""
     ok, why = BwrapSandbox().available()
@@ -94,6 +99,7 @@ def step(work: Path, name: str) -> dict:
     }  # fmt: skip
 
 
+# If a step failed, compare with the unmodified copy: only blame the fix if base passed.
 def attribute(after: dict, baseline: dict) -> dict:
     """Decide whether a result is evidence about the fix, using the unmodified copy."""
     if after["status"] != "failed":

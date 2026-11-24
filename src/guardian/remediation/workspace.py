@@ -23,10 +23,12 @@ GIT = shutil.which("git") or "/usr/bin/git"
 SKIP = shutil.ignore_patterns(".git", "node_modules", ".env", ".env.*")
 
 
+# The change could not be applied to the isolated copy.
 class WorkspaceError(RuntimeError):
     pass
 
 
+# Run git with a clean environment: no hooks, no user config, no prompts.
 def git(cwd: Path, *args: str) -> str:
     env = {
         "PATH": "/usr/bin:/bin",
@@ -45,6 +47,7 @@ def git(cwd: Path, *args: str) -> str:
     return done.stdout
 
 
+# Apply one dependency edit to package.json; refuse if it no longer matches the proposal.
 def apply_edit(manifest: dict, edit: Edit) -> dict:
     """Return a copy of package.json with one edit applied; refuse if it does not match."""
     out = json.loads(json.dumps(manifest))
@@ -58,6 +61,7 @@ def apply_edit(manifest: dict, edit: Edit) -> dict:
     return out
 
 
+# Unified diff shown to the human and stored in the report.
 def diff_text(before: str, after: str, name: str) -> str:
     return "".join(
         difflib.unified_diff(
@@ -66,6 +70,7 @@ def diff_text(before: str, after: str, name: str) -> str:
     )
 
 
+# Copy the target, make a guardian/fix-* branch and apply the approved edit there.
 def create(base_target: str, p: Proposal) -> dict:
     """Copy the target, branch, apply the proposal's edits to package.json and commit."""
     if not p.applicable or not p.edits:
@@ -116,12 +121,14 @@ def create(base_target: str, p: Proposal) -> dict:
     }
 
 
+# Read package.json of a registered target, or None.
 def read_manifest(target: str) -> dict | None:
     t = load_target(target)
     path = jail(Path(t["path"]) / "package.json")
     return json.loads(path.read_text()) if path.is_file() else None
 
 
+# Unmodified copy used to tell whether a failing test was already failing.
 def baseline_copy(base_target: str, p: Proposal) -> Path:
     """An unmodified copy of the target (no node_modules), for comparing build/test results."""
     base = load_target(base_target)
