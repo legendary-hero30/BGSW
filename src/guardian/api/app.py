@@ -64,6 +64,7 @@ CSP = (
 )
 
 
+# Read-only SQLite access with one connection per thread (a shared one broke under polling).
 class ThreadLocalReader:
     """One read-only connection per worker thread. A single shared sqlite3 connection used by
     the server's thread pool raised "bad parameter or other API misuse" under concurrent
@@ -80,6 +81,7 @@ class ThreadLocalReader:
         return c.execute(sql, params)
 
 
+# Body of POST /api/runs: a repo URL (or the demo) plus the goal and optional branch.
 class StartRun(BaseModel):
     repo: str = Field(default="", max_length=200)
     demo: bool = False  # the bundled demo app instead of a GitHub repository
@@ -96,19 +98,24 @@ class StartRun(BaseModel):
         return self
 
 
+# Body of approve/reject: who decided, and an optional note that is logged.
 class Decision(BaseModel):
     run: str = Field(min_length=1, max_length=200)
     approver: str = Field(min_length=1, max_length=80)
     note: str = Field(default="", max_length=500)
 
 
+# Body of validate/export/push: just the run (push also carries confirm_repo).
 class RunRef(BaseModel):
     model_config = ConfigDict(extra="allow")  # push carries confirm_repo
     run: str = Field(min_length=1, max_length=200)
 
 
+# Only loopback Host headers are served, so the approval routes are not reachable from the network.
 LOOPBACK_HOST = re.compile(r"^(localhost|127\.0\.0\.1|\[::1\])(:\d{1,5})?$")
+# Proposal ids look like R-001; anything else is a 404.
 PROPOSAL_ID = re.compile(r"^R-\d{3,6}$")
+# The routes that change state; they need the per-server approval token.
 WRITE_PATH = re.compile(r"^/api/proposals/R-\d{3,6}/(approve|reject|validate|export|push)$")
 
 
@@ -136,6 +143,7 @@ GRAPH_NODE_OF_FINDING = (
 )
 
 
+# Build the FastAPI app: read-only views of a run, plus the few gated write routes.
 def create_app(
     db: str = DEFAULT_DB,
     ui_dir: Path = UI_DIST,
@@ -165,6 +173,7 @@ def create_app(
     conn = ThreadLocalReader(db)
     sbom_cache: dict[str, tuple[int, dict]] = {}
 
+    # Reject non-loopback hosts and require the approval token on write routes.
     @app.middleware("http")
     async def headers(request: Request, call_next):
         path = request.url.path
@@ -189,12 +198,14 @@ def create_app(
         response.headers["X-Frame-Options"] = "DENY"
         return response
 
+    # Return the run id only if it is stored, else 404.
     def known_run(run: str) -> str:
         row = conn.execute("SELECT run_id FROM runs WHERE run_id = ?", (run,)).fetchone()
         if row is None:
             raise HTTPException(404, "unknown run")
         return row[0]
 
+    # Load one stored finding by id.
     def finding(run: str, fid: str) -> Finding:
         row = conn.execute(
             "SELECT finding_json FROM findings WHERE run_id = ? AND id = ?", (run, fid)
@@ -204,6 +215,7 @@ def create_app(
         return Finding.model_validate_json(row[0])
 
     @lru_cache(maxsize=8)
+    # Load the dependency graph of a run from its run directory (cached).
     def graph(run: str) -> DependencyGraph:
         nodes = tuple(
             SbomComponent(
@@ -228,6 +240,7 @@ def create_app(
         root = "." if any(n.bom_ref == "." for n in nodes) else nodes[0].bom_ref
         return DependencyGraph(root=root, nodes=nodes, edges=edges)
 
+    # List stored runs, newest first.
     @app.get("/api/runs")
     def runs() -> list[dict]:
         out = []
@@ -250,6 +263,7 @@ def create_app(
             )
         return out
 
+    # Queue a scan job. Only repo URL, demo flag, goal and branch are accepted.
     @app.post("/api/runs", status_code=202)
     def start_run(body: StartRun) -> dict:
         """Queue one scan of a user-supplied GitHub npm repository (the only write endpoint)."""
@@ -284,6 +298,7 @@ def create_app(
         executor.submit(runner, job, job["repo"], db)
         return snapshot
 
+    # Tell the UI what this server can do now (agents, validation, sandbox, push).
     @app.get("/api/capabilities")
     def capabilities() -> dict:
         """What this server can do right now, so the UI can say what is missing."""
@@ -325,6 +340,7 @@ def create_app(
             },
         }
 
+    # Poll one scan job: status, current step, live agent steps.
     @app.get("/api/jobs/{job_id}")
     def job_status(job_id: str) -> dict:
         job = jobs.get(job_id)
@@ -332,6 +348,7 @@ def create_app(
             raise HTTPException(404, "unknown job")
         return dict(job)
 
+    # Counts for the overview tab.
     @app.get("/api/summary")
     def summary(run: str) -> dict:
         row = conn.execute(
@@ -339,6 +356,7 @@ def create_app(
         ).fetchone()
         return json.loads(row[0])
 
+    # Ranked findings with optional type, level and text filters.
     @app.get("/api/findings")
     def findings(
         run: str,
@@ -375,6 +393,7 @@ def create_app(
         items = [{**dict(zip(keys, r, strict=True)), "explained": bool(r[10])} for r in rows]
         return {"total": total, "items": items}
 
+    # One finding with its score breakdown, evidence and accepted explanation.
     @app.get("/api/findings/{fid}")
     def finding_detail(fid: str, run: str) -> dict:
         run = known_run(run)
@@ -407,6 +426,7 @@ def create_app(
             "confidence": dict(zip(("level", "reasons"), finding_confidence(f), strict=True)),
         }
 
+    # The dependency path from the app to this finding's package.
     @app.get("/api/graph/{fid}")
     def finding_graph(fid: str, run: str) -> dict:
         """Cytoscape elements: the finding's path (flagged) plus other parents of the package."""
@@ -492,6 +512,7 @@ def create_app(
             "other_parents": max(0, len(parents) - CONTEXT_PARENTS),
         }
 
+    # Summary of what each agent did in a run.
     @app.get("/api/agent-steps")
     def agent_steps(run: str) -> dict:
         """The recorded agent run for a stored run: plan, steps, hypotheses, budget, status."""
@@ -534,6 +555,7 @@ def create_app(
             raise HTTPException(404, "unknown run")
         return row[0]
 
+    # Fix proposals of a run (empty while the agents are still working).
     @app.get("/api/proposals")
     def proposals(run: str = Query(min_length=1, max_length=200)) -> dict:
         fresh = connect_readonly(db)
@@ -550,6 +572,7 @@ def create_app(
             r["validating"] = validating.get(f"{run}:{r['id']}")
         return {"run_id": run, "proposals": rows}
 
+    # One proposal with full approval and validation history.
     @app.get("/api/proposals/{pid}")
     def proposal(pid: str, run: str = Query(min_length=1, max_length=200)) -> dict:
         if not PROPOSAL_ID.match(pid):
@@ -565,6 +588,7 @@ def create_app(
         out["validating"] = validating.get(f"{run}:{pid}")
         return out
 
+    # approve | reject | validate | export | push. Humans only; agents have no route here.
     @app.post("/api/proposals/{pid}/{decision}")
     def decide_or_validate(pid: str, decision: str, body: Decision | RunRef) -> dict:
         stored_run(body.run)
@@ -603,6 +627,7 @@ def create_app(
             conn.close()
         return record
 
+    # Check the approval gate, then validate on a background thread; poll via the proposal.
     def start_validation(pid: str, run: str) -> dict:
         key = f"{run}:{pid}"
         if (validating.get(key) or {}).get("state") == "running":
@@ -631,6 +656,7 @@ def create_app(
         validator.submit(work)
         return dict(state)
 
+    # The agent timeline for a run, readable while it is still going.
     @app.get("/api/agent-events")
     def agent_events(
         run: str = Query(min_length=1, max_length=200),
@@ -644,6 +670,7 @@ def create_app(
         finally:
             fresh.close()
 
+    # A drawable subgraph for the graph tab.
     @app.get("/api/graph-overview")
     def graph_view(
         run: str,
@@ -669,6 +696,7 @@ def create_app(
             sbom_cache[run] = cached
         return cached[1]
 
+    # The CycloneDX component list, filtered and paged.
     @app.get("/api/sbom")
     def sbom(
         run: str,
@@ -692,6 +720,7 @@ def create_app(
             offset=offset,
         )
 
+    # The raw CycloneDX JSON file.
     @app.get("/api/sbom/download")
     def sbom_download(run: str) -> FileResponse:
         run = known_run(run)
@@ -704,6 +733,7 @@ def create_app(
             filename=f"{Path(run).name}.cdx.json",
         )
 
+    # The supervisor's accepted report.
     @app.get("/api/agent-report")
     def agent_report(run: str) -> dict:
         """The accepted agent report (Markdown), or a labelled partial report."""
@@ -713,6 +743,7 @@ def create_app(
             raise HTTPException(404, "this run has no agent report")
         return {"run_id": run, "markdown": path.read_text()}
 
+    # Requirement checklist with evidence for each item.
     @app.get("/api/checklist")
     def checklist(run: str) -> dict:
         return as_dict(evaluate(known_run(run), db))

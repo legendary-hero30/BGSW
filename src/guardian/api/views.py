@@ -22,6 +22,7 @@ MAX_PAGE = 200
 STALL_SECONDS = 600
 
 
+# Map package label to (finding count, worst score) for graph colouring.
 def findings_by_label(conn: sqlite3.Connection, run: str) -> dict[str, tuple[int, int]]:
     """name@version -> (highest risk rank, number of findings) for a stored run."""
     out: dict[str, tuple[int, int]] = {}
@@ -40,6 +41,7 @@ def findings_by_label(conn: sqlite3.Connection, run: str) -> dict[str, tuple[int
 # --- dependency graph overview ---------------------------------------------------------------
 
 
+# Trim the dependency graph to the nodes worth drawing.
 def graph_overview(
     g: DependencyGraph,
     by_label: dict[str, tuple[int, int]],
@@ -147,6 +149,7 @@ def _licenses(component: dict) -> list[str]:
     return out
 
 
+# Read a CycloneDX file into the shape the UI table needs.
 def load_sbom(path: Path) -> dict:
     """Parse the run's CycloneDX document into display rows and summary counts."""
     doc = json.loads(path.read_text())
@@ -190,6 +193,7 @@ def load_sbom(path: Path) -> dict:
     }
 
 
+# Filter, sort and page the SBOM component list.
 def sbom_view(
     sbom: dict,
     by_label: dict[str, tuple[int, int]],
@@ -236,6 +240,7 @@ def sbom_view(
 # --- agent timeline -----------------------------------------------------------------------
 
 
+# Agent events for the UI, with stall detection for runs that died silently.
 def agent_timeline(conn: sqlite3.Connection, run: str, after: int = 0, limit: int = 300) -> dict:
     """The newest agent run for a run directory: status, budget, plan, hypotheses and events.
 
