@@ -128,6 +128,7 @@ export interface Job {
   rejected: number;
   blocked: number;
   findings: number | null;
+  lockfile_origin?: "repository" | "generated" | "upgraded" | null;
   created: string;
   finished: string | null;
 }

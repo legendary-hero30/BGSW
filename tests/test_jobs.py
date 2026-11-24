@@ -122,3 +122,14 @@ def test_unexpected_errors_fail_the_job_loudly(monkeypatch):
     monkeypatch.setattr(jobs, "run_goal", boom)
     jobs.run_repo_job(job, "https://github.com/a/b", "runs/guardian.db")
     assert job["status"] == "error" and "scanner exploded" in job["error"]
+
+
+def test_job_records_how_the_lockfile_was_obtained(monkeypatch):
+    job = new_job()
+    monkeypatch.setattr(
+        jobs, "prepare_target",
+        lambda repo, progress=None, branch=None: {"name": "a__b-5", "lockfile_origin": "upgraded"},
+    )  # fmt: skip
+    monkeypatch.setattr(jobs, "run_goal", lambda name, **kw: {"status": "completed"})
+    jobs.run_repo_job(job, "https://github.com/a/b", "runs/guardian.db")
+    assert job["lockfile_origin"] == "upgraded"

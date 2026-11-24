@@ -52,6 +52,9 @@ function JobBanner({ job, onWatch }: { job: Job; onWatch: () => void }) {
         </div>
         <span className="font-mono text-xs text-slate-500">{job.repo}</span>
         {job.findings !== null && <Chip>{job.findings} findings</Chip>}
+        {job.lockfile_origin && job.lockfile_origin !== "repository" && (
+          <Chip tone="warn"><span title="The repository had no usable lockfile, so npm made one. Versions are what npm resolves today, not necessarily what the authors tested.">lockfile {job.lockfile_origin} by Guardian</span></Chip>
+        )}
         {job.steps.length > 0 && <Chip tone="info">{job.steps.length} agent steps</Chip>}
         {job.run_id && <button type="button" onClick={onWatch} className="ml-auto rounded bg-slate-900 px-3 py-1 text-xs text-white">Watch the agents</button>}
       </div>
@@ -216,9 +219,14 @@ export default function App() {
 
       <div className="mx-auto max-w-7xl p-4">
         <form onSubmit={(e) => void startScan(e)} className="mb-4 rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
-          <div role="radiogroup" aria-label="Mode" className="mb-2 flex flex-wrap gap-4 text-sm">
-            <label className="flex items-center gap-1"><input type="radio" name="mode" checked={mode === "public"} onChange={() => setMode("public")} /> <b>Public repo</b>: analyse and recommend, no push</label>
-            <label className="flex items-center gap-1"><input type="radio" name="mode" checked={mode === "own"} onChange={() => setMode("own")} /> <b>My repo</b>: analyse, fix, then prepare a push you run yourself</label>
+          <div role="radiogroup" aria-label="Mode" className="mb-3 grid gap-2 sm:grid-cols-2">
+            {([["public", "Public repo", "Analyse and recommend. Nothing is pushed."], ["own", "My repo", "Analyse, fix, then push a new branch and rescan it."]] as const).map(([id, title, hint]) => (
+              <label key={id} className={`cursor-pointer rounded-lg border p-2.5 text-sm transition focus-within:ring-2 focus-within:ring-sky-400 ${mode === id ? "border-slate-900 bg-slate-50" : "border-slate-200 hover:border-slate-400"}`}>
+                <input type="radio" name="mode" className="sr-only" checked={mode === id} onChange={() => setMode(id)} />
+                <span className="font-semibold">{title}</span>
+                <span className="block text-xs text-slate-600">{hint}</span>
+              </label>
+            ))}
           </div>
           <label htmlFor="repo" className="mb-1 block text-sm font-semibold text-slate-800">{mode === "own" ? "Your GitHub repository (must be cloneable without a login)" : "Analyze a public GitHub repository"}</label>
           <div className="flex flex-wrap gap-2">
@@ -262,7 +270,7 @@ export default function App() {
         {job && <JobBanner job={job} onWatch={() => { if (job.run_id) setRun(job.run_id); setTab("agent"); }} />}
         {error && <div className="mb-3 rounded bg-red-50 p-2 text-sm text-red-800">{error}</div>}
 
-        {run && stored && <FlowStepper proposals={proposals} onGo={() => setTab("remediation")} />}
+        {run && stored && <div className="sticky top-0 z-10"><FlowStepper proposals={proposals} onGo={() => setTab("remediation")} /></div>}
 
         <nav className="mb-4 flex flex-wrap gap-1 border-b border-slate-200">
           {TABS.map((t) => (

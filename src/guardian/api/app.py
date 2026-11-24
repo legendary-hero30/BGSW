@@ -278,6 +278,7 @@ def create_app(
             "repo": "bundled demo app" if body.demo else body.repo.strip(),
             "demo": body.demo,
             "branch": body.branch,
+            "lockfile_origin": None,  # repository | generated | upgraded, set after the clone
             "goal_text": goal_text,
             "status": "queued",
             "step": "Queued",
@@ -595,6 +596,8 @@ def create_app(
         if decision == "validate":
             return start_validation(pid, body.run)
         if decision == "push":
+            if not push_allowed():  # a setting, not a server fault
+                raise HTTPException(403, "pushing is off: see GUARDIAN_ALLOW_PUSH in .env.example")
             confirm = (body.model_extra or {}).get("confirm_repo", "")
             try:
                 return push_fix(db, body.run, pid, str(confirm))

@@ -78,7 +78,10 @@ function Detail({ run, id, onChange, mode, onRescan }: { run: string; id: string
   const [caps, setCaps] = useState<Capabilities | null>(null);
   useEffect(() => { api.capabilities().then(setCaps).catch(() => setCaps(null)); }, []);
   const [p, setP] = useState<Proposal | null>(null);
-  const [approver, setApprover] = useState("");
+  // Remember the approver name between sessions (browser storage may be unavailable).
+  const [approver, setApprover] = useState(() => { try { return localStorage.getItem("guardian.approver") ?? ""; } catch { return ""; } });
+  useEffect(() => { try { localStorage.setItem("guardian.approver", approver); } catch { /* storage blocked */ } }, [approver]);
+  const [copied, setCopied] = useState(false);
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -222,7 +225,10 @@ function Detail({ run, id, onChange, mode, onRescan }: { run: string; id: string
           {exported && (
             <div className="mt-2 text-sm">
               <div>Branch <b>{exported.branch}</b> on {exported.repo}{exported.lockfile_origin !== "repository" ? ` (lockfile ${exported.lockfile_origin} by Guardian)` : ""}. Run from the project folder:</div>
-              <pre className="mt-1 overflow-x-auto rounded bg-slate-900 p-2 text-xs text-slate-100">{exported.command}</pre>
+              <div className="mt-1 flex items-start gap-2">
+                <pre className="flex-1 overflow-x-auto rounded bg-slate-900 p-2 text-xs text-slate-100">{exported.command}</pre>
+                <button type="button" onClick={() => { void navigator.clipboard.writeText(exported.command).then(() => setCopied(true)).catch(() => setCopied(false)); }} className="rounded border border-slate-300 px-2 py-1 text-xs">{copied ? "Copied" : "Copy"}</button>
+              </div>
             </div>
           )}
         </Card>

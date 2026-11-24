@@ -41,6 +41,7 @@ def run_repo_job(job: dict, repo: str, db: str) -> None:
             target = prepare_target(
                 repo, progress=lambda msg: job.update(step=msg), branch=job.get("branch")
             )
+        job["lockfile_origin"] = target.get("lockfile_origin")
         run_id = f"runs/{target['name']}"
         job["run_id"] = run_id
 

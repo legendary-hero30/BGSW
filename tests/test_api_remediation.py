@@ -125,3 +125,24 @@ def test_start_run_accepts_demo_and_goal(client):
     r = client.post("/api/runs", json={"demo": True, "goal": "assess"})
     assert r.status_code == 202 and r.json()["repo"] == "bundled demo app"
     assert client.post("/api/runs", json={"demo": True, "goal": "nope"}).status_code == 422
+
+
+def test_export_and_push_need_the_token(client):
+    body = {"run": RUN}
+    for action in ("export", "push"):
+        assert client.post(f"/api/proposals/R-002/{action}", json=body).status_code == 403
+
+
+def test_export_refuses_an_unapproved_proposal(client):
+    r = client.post("/api/proposals/R-002/export", json={"run": RUN}, headers=token(client))
+    assert r.status_code == 409 and "approved" in r.json()["detail"]
+
+
+def test_push_is_off_unless_enabled(client, monkeypatch):
+    monkeypatch.delenv("GUARDIAN_ALLOW_PUSH", raising=False)
+    monkeypatch.delenv("GUARDIAN_GITHUB_TOKEN", raising=False)
+    caps = client.get("/api/capabilities").json()
+    assert caps["push"]["ready"] is False and "GUARDIAN_ALLOW_PUSH" in caps["push"]["detail"]
+    body = {"run": RUN, "confirm_repo": "me/app"}
+    r = client.post("/api/proposals/R-002/push", json=body, headers=token(client))
+    assert r.status_code == 403  # refused before anything is cloned
