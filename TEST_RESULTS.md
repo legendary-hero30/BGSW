@@ -525,3 +525,11 @@ Environment: Python 3.12.16 (uv-managed), pydantic 2.14.4, pytest 9.2.0, ruff 0.
 - The first live run's final message said `gate result: FAIL` because of the single rejected
   attempt; the stored accepted set is still complete (10 findings). The UI shows the accepted and
   rejected counts separately.
+
+
+## Agentic refactor and Day 2 (2026-11-24)
+`uv run --locked --extra llm-openai pytest -q`: 435 passed, 1 skipped (live-model test, opt-in;
+it passed separately earlier in 398 s). `ruff check` and `ruff format --check` clean;
+`uv lock --check` OK. New: engine, proposals/approval gate (append-only triggers), validation
+diff/verdict rules, workspace branch isolation, lockfile compare, remediation tools, API gate
+(token, Host/Origin). Not tested: Docker sandbox runtime, npm lockfile regeneration, build/tests.

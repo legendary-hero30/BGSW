@@ -36,7 +36,10 @@ module-root = "src"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra --strict-markers"
-markers = ["integration: needs pinned tools in tools/bin and cloned targets"]
+markers = [
+    "integration: needs pinned tools in tools/bin and cloned targets",
+    "live: calls a real model and costs money; needs GUARDIAN_LIVE_TESTS=1",
+]
 
 [tool.ruff]
 target-version = "py312"
@@ -47,4 +50,4 @@ src = ["src", "tests"]
 select = ["E", "F", "W", "I", "B", "UP", "N", "S", "SIM", "RUF"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101"]
+"tests/**" = ["S101", "N803"]  # N803: the agent-test fixture is conventionally named S

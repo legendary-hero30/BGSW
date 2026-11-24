@@ -1,0 +1,223 @@
+{
+  "run_id": "runs/pytest-live",
+  "provider": "deepinfra",
+  "model": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+  "generator": "language model",
+  "accepted": [
+    {
+      "finding_id": "F-001",
+      "risk": {
+        "score": 57.0,
+        "level": "Critical",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": 30.0,
+            "effective_weight": 0.4,
+            "contribution": 12.0
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 0.3,
+            "contribution": 15.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 100.0,
+            "effective_weight": 0.3,
+            "contribution": 30.0
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev"
+        ],
+        "weight_coverage": 0.5,
+        "override": "confirmed_malicious"
+      },
+      "explanation": {
+        "finding_id": "F-001",
+        "why_it_matters": "osv-scanner reports MAL-2023-462, a malicious-code advisory, on fsevents@1.2.9; grype independently reports GHSA-xv2f-5jw4-v95m for the same package. Malicious-code packages can run attacker-chosen code at install or import time. It arrives transitively via forever@2.0.0 > forever-monitor@2.0.0 > chokidar@2.1.8, and the lockfile entry has hasInstallScript true. Both scanners give fix 1.2.11.",
+        "reachability": "present",
+        "confidence": "medium",
+        "confidence_reason": "Two scanners agree on package and version; path and install-script flag are in evidence. Not high: advisory text unread, install script not inspectable, score rests on 0.5 weight coverage with cvss and epss/kev unknown.",
+        "cited_evidence": [
+          "E-0305",
+          "E-0306",
+          "E-0303",
+          "E-1288"
+        ]
+      },
+      "rationale": "osv-scanner reports MAL-2023-462, a malicious-code advisory, on fsevents@1.2.9; grype independently reports GHSA-xv2f-5jw4-v95m for the same package. Malicious-code packages can run attacker-chosen code at install or import time. It arrives transitively via forever@2.0.0 > forever-monitor@2.0.0 > chokidar@2.1.8, and the lockfile entry has hasInstallScript true. Both scanners give fix 1.2.11. present. Confidence medium: Two scanners agree on package and version; path and install-script flag are in evidence. Not high: advisory text unread, install script not inspectable, score rests on 0.5 weight coverage with cvss and epss/kev unknown. [E-0305] [E-0306] [E-0303] [E-1288]"
+    },
+    {
+      "finding_id": "F-031",
+      "risk": {
+        "score": 50.0,
+        "level": "Medium",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 50.0,
+            "effective_weight": 1.0,
+            "contribution": 50.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev",
+          "reachability",
+          "provenance"
+        ],
+        "weight_coverage": 0.15,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-031",
+        "why_it_matters": "The container base image node:12-alpine is built on alpine 3.15.4, which trivy reports as end-of-service-life, meaning no further security updates are published for its OS packages. Every OS-level vulnerability in that image therefore has no upstream fix path, and the image scan separately reported 11 critical and 74 high package matches. This risk is independent of the npm dependency CVEs because it lives in the base image layer.",
+        "reachability": "unknown",
+        "confidence": "medium",
+        "confidence_reason": "The EOSL determination comes directly from trivy image metadata. Reachability and provenance are unknown and the score rests on only 0.15 weight coverage, so the numeric score understates the structural problem; the EOSL fact itself is solid.",
+        "cited_evidence": [
+          "E-1281"
+        ]
+      },
+      "rationale": "The container base image node:12-alpine is built on alpine 3.15.4, which trivy reports as end-of-service-life, meaning no further security updates are published for its OS packages. Every OS-level vulnerability in that image therefore has no upstream fix path, and the image scan separately reported 11 critical and 74 high package matches. This risk is independent of the npm dependency CVEs because it lives in the base image layer. unknown. Confidence medium: The EOSL determination comes directly from trivy image metadata. Reachability and provenance are unknown and the score rests on only 0.15 weight coverage, so the numeric score understates the structural problem; the EOSL fact itself is solid. [E-1281]"
+    },
+    {
+      "finding_id": "F-338",
+      "risk": {
+        "score": 24.0,
+        "level": "Low",
+        "contributions": [
+          {
+            "factor": "cvss",
+            "weight": 0.3,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "epss_kev",
+            "weight": 0.2,
+            "value": null,
+            "effective_weight": 0.0,
+            "contribution": null
+          },
+          {
+            "factor": "reachability",
+            "weight": 0.2,
+            "value": 0.0,
+            "effective_weight": 0.4,
+            "contribution": 0.0
+          },
+          {
+            "factor": "exposure",
+            "weight": 0.15,
+            "value": 20.0,
+            "effective_weight": 0.3,
+            "contribution": 6.0
+          },
+          {
+            "factor": "provenance",
+            "weight": 0.15,
+            "value": 60.0,
+            "effective_weight": 0.3,
+            "contribution": 18.0
+          }
+        ],
+        "unknown_factors": [
+          "cvss",
+          "epss_kev"
+        ],
+        "weight_coverage": 0.5,
+        "override": null
+      },
+      "explanation": {
+        "finding_id": "F-338",
+        "why_it_matters": "grunt-if@0.2.0 is a direct devDependency whose lockfile entry resolves to https://github.com/binarymist/grunt-if/tarball/master, a mutable branch ref rather than an immutable commit SHA. The tarball behind that URL can change without any package-lock.json change, so reviewed and installed artifacts can diverge silently. As a build-time dependency, substituted content would run in CI or on a developer machine.",
+        "reachability": "dev_only_unused",
+        "confidence": "high",
+        "confidence_reason": "The resolved URL is recorded verbatim in lockfile evidence and the package is a direct dependency in the graph. The engine scores it Low (24.0) because reachability is dev_only_unused and cvss/epss are unknown, but the mutable-reference fact is directly observed.",
+        "cited_evidence": [
+          "E-1289",
+          "E-1290"
+        ]
+      },
+      "rationale": "grunt-if@0.2.0 is a direct devDependency whose lockfile entry resolves to https://github.com/binarymist/grunt-if/tarball/master, a mutable branch ref rather than an immutable commit SHA. The tarball behind that URL can change without any package-lock.json change, so reviewed and installed artifacts can diverge silently. As a build-time dependency, substituted content would run in CI or on a developer machine. dev_only_unused. Confidence high: The resolved URL is recorded verbatim in lockfile evidence and the package is a direct dependency in the graph. The engine scores it Low (24.0) because reachability is dev_only_unused and cvss/epss are unknown, but the mutable-reference fact is directly observed. [E-1289] [E-1290]"
+    }
+  ],
+  "rejected": [
+    {
+      "finding_id": "F-001",
+      "attempt": 1,
+      "reasons": [
+        "schema: ('why_it_matters',): String should have at most 500 characters",
+        "schema: ('confidence_reason',): String should have at most 300 characters"
+      ]
+    },
+    {
+      "finding_id": "F-338",
+      "attempt": 1,
+      "reasons": [
+        "schema: ('reachability',): String should have at least 5 characters"
+      ]
+    },
+    {
+      "finding_id": "F-338",
+      "attempt": 2,
+      "reasons": [
+        "schema: ('reachability',): String should have at least 5 characters"
+      ]
+    }
+  ],
+  "blocked_tool_calls": [],
+  "final_message": null
+}

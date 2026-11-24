@@ -254,48 +254,77 @@ def load_image(ref: str) -> dict | None:
                 None)  # fmt: skip
 
 
-def run_posture_tools(target_root: Path, out: Path, image: dict | None) -> dict[str, str]:
-    files = {
-        "hadolint": out / "hadolint.json",
-        "trivy-config": out / "trivy-config.json",
-        "zizmor": out / "zizmor.json",
-    }
+def run_dockerfile_tools(target_root: Path, out: Path) -> dict[str, str]:
+    """Hadolint and Trivy misconfiguration on the Dockerfile. Writes hadolint/trivy-config JSON."""
+    files = {"hadolint": out / "hadolint.json", "trivy-config": out / "trivy-config.json"}
     dockerfile = target_root / "Dockerfile"
     if dockerfile.is_file():
-        run = run_tool("hadolint", ["--format", "json", "--disable-ignore-pragma",
-                                    str(jail(dockerfile))], offline=True,
-                       ok_codes=frozenset({0, 1}))  # fmt: skip
+        run = run_tool(
+            "hadolint",
+            ["--format", "json", "--disable-ignore-pragma", str(jail(dockerfile))],
+            offline=True,
+            ok_codes=frozenset({0, 1}),
+        )
         files["hadolint"].write_bytes(run.stdout)
     else:
         files["hadolint"].write_text("[]")  # no Dockerfile: nothing to lint
-    run_tool("trivy", ["config", "--skip-check-update", "--cache-dir", str(CACHE / "trivy"),
-                       "--quiet", "-f", "json", "-o", str(jail(files["trivy-config"])),
-                       str(jail(target_root))], offline=True)  # fmt: skip
+    run_tool(
+        "trivy",
+        ["config", "--skip-check-update", "--cache-dir", str(CACHE / "trivy"), "--quiet",
+         "-f", "json", "-o", str(jail(files["trivy-config"])), str(jail(target_root))],
+        offline=True,
+    )  # fmt: skip
+    return {k: workspace_relative(v) for k, v in files.items()}
+
+
+def has_workflows(target_root: Path) -> bool:
     workflows = target_root / ".github" / "workflows"
-    has_workflows = workflows.is_dir() and any(
+    return workflows.is_dir() and any(
         p.is_file() and p.suffix in {".yml", ".yaml"} for p in workflows.iterdir()
     )
-    if has_workflows:
-        run = run_tool("zizmor", ["--offline", "--no-config", "--format", "json",
-                                  str(jail(target_root))], offline=True,
-                       ok_codes=frozenset({0, *range(10, 15)}))  # fmt: skip
-        files["zizmor"].write_bytes(run.stdout)
-    else:
-        files["zizmor"].write_text("[]")  # no workflows: nothing to analyse
 
-    if image is not None:
-        layout = jail(image["oci_layout"])
-        files["trivy-image"] = out / "trivy-image.json"
-        files["grype-image"] = out / "grype-image.json"
-        run_tool("trivy", ["image", "--input", str(layout), "--skip-db-update",
-                           "--skip-java-db-update", "--offline-scan", "--cache-dir",
-                           str(CACHE / "trivy"), "--scanners", "vuln", "--quiet", "-f", "json",
-                           "-o", str(jail(files["trivy-image"]))], offline=True)  # fmt: skip
-        run_tool("grype", [f"oci-dir:{layout}", "-q", "-o", "json", "--file",
-                           str(jail(files["grype-image"]))],
-                 env={"GRYPE_DB_CACHE_DIR": str(CACHE / "grype"), "GRYPE_DB_AUTO_UPDATE": "false"},
-                 offline=True)  # fmt: skip
+
+def run_workflow_tools(target_root: Path, out: Path) -> dict[str, str]:
+    """zizmor on the CI workflows (offline, repo config ignored). Writes zizmor.json."""
+    path = out / "zizmor.json"
+    if has_workflows(target_root):
+        run = run_tool(
+            "zizmor",
+            ["--offline", "--no-config", "--format", "json", str(jail(target_root))],
+            offline=True,
+            ok_codes=frozenset({0, *range(10, 15)}),
+        )
+        path.write_bytes(run.stdout)
+    else:
+        path.write_text("[]")  # no workflows: nothing to analyse
+    return {"zizmor": workspace_relative(path)}
+
+
+def run_image_tools(image: dict, out: Path) -> dict[str, str]:
+    """Trivy and Grype on a cached, digest-verified OCI image layout."""
+    layout = jail(image["oci_layout"])
+    files = {"trivy-image": out / "trivy-image.json", "grype-image": out / "grype-image.json"}
+    run_tool(
+        "trivy",
+        ["image", "--input", str(layout), "--skip-db-update", "--skip-java-db-update",
+         "--offline-scan", "--cache-dir", str(CACHE / "trivy"), "--scanners", "vuln",
+         "--quiet", "-f", "json", "-o", str(jail(files["trivy-image"]))],
+        offline=True,
+    )  # fmt: skip
+    run_tool(
+        "grype",
+        [f"oci-dir:{layout}", "-q", "-o", "json", "--file", str(jail(files["grype-image"]))],
+        env={"GRYPE_DB_CACHE_DIR": str(CACHE / "grype"), "GRYPE_DB_AUTO_UPDATE": "false"},
+        offline=True,
+    )
     return {k: workspace_relative(v) for k, v in files.items()}
+
+
+def run_posture_tools(target_root: Path, out: Path, image: dict | None) -> dict[str, str]:
+    files = {**run_dockerfile_tools(target_root, out), **run_workflow_tools(target_root, out)}
+    if image is not None:
+        files.update(run_image_tools(image, out))
+    return files
 
 
 # --- drafts --------------------------------------------------------------------------------

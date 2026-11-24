@@ -45,29 +45,23 @@ def test_parse_repo_rejects_anything_but_plain_github_urls(url):
         parse_repo(url)
 
 
-def test_build_steps_maps_tools_to_agents():
+def test_build_steps_attributes_each_step_to_the_agent_that_ran_it():
+    """The agent is recorded by the runtime, never inferred from the tool name."""
     steps = build_steps(
         [
-            {"tool": "task", "args": {"subagent_type": "analysis"}, "result_chars": 1},
-            {"tool": "list_findings", "args": {"limit": 10}, "result_chars": 2},
-            {"tool": "get_finding", "args": {"finding_id": "F-001"}, "result_chars": 3},
-            {"tool": "submit_explanations", "args": {"count": 1}, "result_chars": 4},
-            {"tool": "run_detection", "args": {}, "result_chars": 5},
+            {"agent": "supervisor", "tool": "task", "args": {"subagent_type": "risk"}},
+            {"agent": "risk", "tool": "list_findings", "args": {"limit": 10}, "result_chars": 2},
+            {"agent": "forensics", "tool": "list_findings", "args": {}, "result_chars": 3},
+            {"agent": "risk", "tool": "get_finding", "args": {}, "error": True},
         ]
     )
-    assert [s["agent"] for s in steps] == [
-        "orchestrator",
-        "analysis",
-        "analysis",
-        "analysis",
-        "detection",
-    ]
-    assert steps[0]["subagent"] == "analysis"
-    assert [s["n"] for s in steps] == [1, 2, 3, 4, 5]
+    assert [s["agent"] for s in steps] == ["supervisor", "risk", "forensics", "risk"]
+    assert steps[0]["subagent"] == "risk" and steps[1]["subagent"] is None
+    assert [s["n"] for s in steps] == [1, 2, 3, 4]
+    assert [s["error"] for s in steps] == [False, False, False, True]
 
 
-def test_build_steps_tolerates_missing_args():
+def test_build_steps_tolerates_missing_fields():
     steps = build_steps([{"tool": "task"}, {"tool": "unknown"}])
-    assert steps[0]["subagent"] is None
-    assert steps[1]["agent"] == "orchestrator"
-    assert steps[0]["result_chars"] == 0
+    assert steps[0]["subagent"] is None and steps[1]["agent"] == "supervisor"
+    assert steps[0]["result_chars"] == 0 and steps[0]["args"] == {}

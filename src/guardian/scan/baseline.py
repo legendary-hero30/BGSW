@@ -7,20 +7,10 @@ value comes from tool output or the offline feeds. Scanners run in an empty netw
 from __future__ import annotations
 
 import json
-from collections import Counter
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-from guardian.sbom.build import build as build_sbom
-from guardian.sbom.build import load_target
-from guardian.sbom.npm_lock import parse_lockfile
-from guardian.scan.anomaly import (
-    TopList,
-    anomaly_drafts,
-    diff_rules,
-    single_commit_rules,
-)
 from guardian.scan.common import (
     Draft,
     EvidenceStore,
@@ -33,35 +23,17 @@ from guardian.scan.common import (
     ref_of,
     sort_key,
 )
-from guardian.scan.context import enrich, resolve_top_level, scan_app
-from guardian.scan.feeds import EpssFeed, KevFeed, load_epss, load_kev
+from guardian.scan.feeds import EpssFeed, KevFeed
 from guardian.scan.parsers import (
     VulnGroup,
-    correlate,
-    parse_grype,
-    parse_osv,
-    parse_trivy,
-)
-from guardian.scan.posture import (
-    config_drafts,
-    dockerfile_rules,
-    eosl_hit,
-    image_drafts,
-    load_image,
-    parse_from_lines,
-    parse_hadolint,
-    parse_trivy_config,
-    parse_zizmor,
-    run_posture_tools,
-    workflow_rules,
 )
 from guardian.schemas.evidence import EvidenceKind, EvidenceRef
 from guardian.schemas.finding import FindingSet, FindingType
 from guardian.schemas.graph import DependencyGraph
 from guardian.schemas.risk import Exposure, RiskFactors
 from guardian.schemas.sbom import DependencyScope
-from guardian.store import DEFAULT_DB, connect, save_run
-from guardian.tools.runner import WORKSPACE, jail, run_tool, tool_version, workspace_relative
+from guardian.store import DEFAULT_DB
+from guardian.tools.runner import WORKSPACE, jail, run_tool, workspace_relative
 
 CACHE = WORKSPACE / "cache"
 SCANNERS = ("grype", "trivy", "osv-scanner")
@@ -88,8 +60,8 @@ def image_line(stats: dict | None) -> str:
 # --- running the scanners (offline) --------------------------------------------------------
 
 
-def run_scanners(target_root: Path, lockfile: Path, out: Path) -> dict[str, str]:
-    """Run Grype, Trivy and OSV-Scanner with no network. Returns output files by tool."""
+def run_full_sbom(target_root: Path, out: Path) -> Path:
+    """Syft SBOM that includes dev dependencies (the input Grype scans)."""
     full_sbom = out / "sbom-full.cdx.json"
     run_tool(
         "syft",
@@ -97,29 +69,46 @@ def run_scanners(target_root: Path, lockfile: Path, out: Path) -> dict[str, str]
         env={"SYFT_JAVASCRIPT_INCLUDE_DEV_DEPENDENCIES": "true"},
         offline=True,
     )
-    files = {t: out / f"{t.split('-')[0]}.json" for t in SCANNERS}
-    run_tool(
-        "grype",
-        ["sbom:" + str(jail(full_sbom)), "-q", "-o", "json", "--file", str(jail(files["grype"]))],
-        env={"GRYPE_DB_CACHE_DIR": str(CACHE / "grype"), "GRYPE_DB_AUTO_UPDATE": "false"},
-        offline=True,
-    )
-    run_tool(
-        "trivy",
-        ["fs", "--scanners", "vuln", "--include-dev-deps", "--skip-db-update",
-         "--skip-java-db-update", "--offline-scan", "--cache-dir", str(CACHE / "trivy"),
-         "--quiet", "-f", "json", "-o", str(jail(files["trivy"])), str(jail(target_root))],
-        offline=True,
-    )  # fmt: skip
-    run_tool(
-        "osv-scanner",
-        ["scan", "source", "--offline", "--format", "json",
-         "--output-file", str(jail(files["osv-scanner"])), "-L", str(jail(lockfile))],
-        env={"OSV_SCANNER_LOCAL_DB_CACHE_DIRECTORY": str(CACHE / "osv")},
-        offline=True,
-        ok_codes=frozenset({0, 1}),  # 1 = vulnerabilities found
-    )  # fmt: skip
-    return {t: workspace_relative(p) for t, p in files.items()}
+    return full_sbom
+
+
+def run_one_scanner(scanner: str, target_root: Path, lockfile: Path, out: Path) -> Path:
+    """Run one dependency scanner offline. ``grype`` needs sbom-full.cdx.json in ``out``."""
+    path = out / f"{scanner.split('-')[0]}.json"
+    if scanner == "grype":
+        run_tool(
+            "grype",
+            ["sbom:" + str(jail(out / "sbom-full.cdx.json")), "-q", "-o", "json",
+             "--file", str(jail(path))],
+            env={"GRYPE_DB_CACHE_DIR": str(CACHE / "grype"), "GRYPE_DB_AUTO_UPDATE": "false"},
+            offline=True,
+        )  # fmt: skip
+    elif scanner == "trivy":
+        run_tool(
+            "trivy",
+            ["fs", "--scanners", "vuln", "--include-dev-deps", "--skip-db-update",
+             "--skip-java-db-update", "--offline-scan", "--cache-dir", str(CACHE / "trivy"),
+             "--quiet", "-f", "json", "-o", str(jail(path)), str(jail(target_root))],
+            offline=True,
+        )  # fmt: skip
+    elif scanner == "osv-scanner":
+        run_tool(
+            "osv-scanner",
+            ["scan", "source", "--offline", "--format", "json", "--output-file", str(jail(path)),
+             "-L", str(jail(lockfile))],
+            env={"OSV_SCANNER_LOCAL_DB_CACHE_DIRECTORY": str(CACHE / "osv")},
+            offline=True,
+            ok_codes=frozenset({0, 1}),  # 1 = vulnerabilities found
+        )  # fmt: skip
+    else:
+        raise ValueError(f"unknown scanner {scanner!r}; choose from {SCANNERS}")
+    return path
+
+
+def run_scanners(target_root: Path, lockfile: Path, out: Path) -> dict[str, str]:
+    """Run all three dependency scanners with no network. Returns output files by tool."""
+    run_full_sbom(target_root, out)
+    return {t: workspace_relative(run_one_scanner(t, target_root, lockfile, out)) for t in SCANNERS}
 
 
 # --- mapping scanner results to the graph -------------------------------------------------------
@@ -263,8 +252,12 @@ def vuln_drafts(
 # --- orchestration ------------------------------------------------------------------------
 
 
-def db_metadata(grype_out: Path) -> dict:
-    grype = json.loads(grype_out.read_text()).get("descriptor", {}).get("db", {}).get("status", {})
+def db_metadata(grype_output: str | Path | None) -> dict:
+    """Vulnerability-data provenance. Grype's DB status comes from its own output, if it ran."""
+    grype = {}
+    if grype_output is not None:
+        descriptor = json.loads(jail(grype_output).read_text()).get("descriptor", {})
+        grype = descriptor.get("db", {}).get("status", {})
     trivy = json.loads((CACHE / "trivy" / "db" / "metadata.json").read_text())
     osv_zip = CACHE / "osv" / "osv-scalibr" / "npm" / "all.zip"
     feeds = json.loads((CACHE / "feeds" / "feeds.json").read_text())
@@ -282,132 +275,23 @@ def db_metadata(grype_out: Path) -> dict:
 
 
 def baseline(target_name: str, out_dir: str | Path, db: str | Path | None = DEFAULT_DB) -> dict:
-    target = load_target(target_name)
-    out = jail(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
-    sbom_summary = build_sbom(target_name, out)
+    """The fixed, all-stages sequence. Used for regression, evaluation and the golden path.
 
-    root = jail(target["path"])
-    lockfile = jail(Path(target["path"]) / target["lockfile"])
-    outputs = run_scanners(root, lockfile, out)
-    versions = {t: tool_version(t) for t in ("syft", *SCANNERS)}
+    The agents do not use this: they call the same stages individually and choose their own
+    order (see ``guardian.scan.pipeline.Pipeline``).
+    """
+    from guardian.scan.pipeline import Pipeline
 
-    raw = [
-        *parse_grype(jail(outputs["grype"])),
-        *parse_trivy(jail(outputs["trivy"])),
-        *parse_osv(jail(outputs["osv-scanner"])),
-    ]
-    groups = correlate(raw)
-    graph = DependencyGraph.model_validate_json((out / "graph.json").read_text())
-
-    # D1.S5: container image and CI/CD posture.
-    dockerfile = root / "Dockerfile"
-    froms = parse_from_lines(dockerfile) if dockerfile.exists() else []
-    image = load_image(froms[-1].ref) if froms else None
-    outputs.update(run_posture_tools(root, out, image))
-    versions.update({t: tool_version(t) for t in ("hadolint", "zizmor")})
-    workflows = [jail(p) for p in sbom_summary["discovered_files"]["ci"]]
-    hits = [
-        *(dockerfile_rules(dockerfile) if dockerfile.exists() else []),
-        *(h for w in workflows for h in workflow_rules(w)),
-        *parse_hadolint(jail(outputs["hadolint"])),
-        *parse_trivy_config(jail(outputs["trivy-config"]), root),
-        *parse_zizmor(jail(outputs["zizmor"])),
-    ]
-    dockerfile_rel = workspace_relative(dockerfile)
-    if image is not None:
-        eosl = eosl_hit(outputs, dockerfile_rel, froms[-1])
-        hits.extend([eosl] if eosl else [])
-        image_raw = [*parse_trivy(jail(outputs["trivy-image"])),
-                     *parse_grype(jail(outputs["grype-image"]))]  # fmt: skip
-    else:
-        image_raw = []
-
-    wanted = {c for g in groups for c in g.cves} | {
-        i for m in image_raw for i in m.ids if i.startswith("CVE-")
-    }
-    epss = load_epss(CACHE / "feeds" / "epss_scores-current.csv.gz", wanted)
-    kev = load_kev(CACHE / "feeds" / "known_exploited_vulnerabilities.json")
-
-    store = EvidenceStore()
-    drafts, unmapped = vuln_drafts(
-        store, groups, graph, workspace_relative(lockfile), outputs, versions, epss, kev
-    )
-    drafts += config_drafts(store, hits, outputs, versions)
-
-    # D1.S6: supply-chain anomaly rules (and diff rules against the base commit, if any).
-    lock = parse_lockfile(lockfile, workspace_relative(lockfile))
-    anomalies = single_commit_rules(lock, TopList.load())
-    if target.get("base_target"):
-        base = load_target(target["base_target"])
-        base_lockfile = jail(Path(base["path"]) / base["lockfile"])
-        base_lock = parse_lockfile(base_lockfile, workspace_relative(base_lockfile))
-        anomalies += diff_rules(base_lock, lock, graph)
-    drafts += anomaly_drafts(store, anomalies, graph)
-    image_stats = None
-    if image is not None:
-        image_part, image_stats = image_drafts(
-            store, image, froms[-1], dockerfile_rel, outputs, versions, epss, kev
-        )
-        drafts += image_part
-
-    # D1.S7: reachability, exposure, provenance and risk score v1, then rank by risk.
-    app = scan_app(root, dockerfile if dockerfile.exists() else None)
-    resolve_top_level(app, lock)
-    drafts = enrich(store, drafts, app)
-    finding_set = assemble(store, drafts)
-    (out / "findings.json").write_text(finding_set.model_dump_json(indent=1))
-
-    f = finding_set.findings
-    deps = [x for x in f if x.type in DEPENDENCY_TYPES]
-    tool_count = Counter(len(g.tools) for g in groups)
-    summary = {
-        "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
-        "target": sbom_summary["target"],
-        "tools": versions,
-        "databases": db_metadata(jail(outputs["grype"])),
-        "outputs": outputs,
-        "raw_matches": dict(Counter(m.tool for m in raw)),
-        "groups": len(groups),
-        "groups_by_tool_count": {f"{k}_tools": v for k, v in sorted(tool_count.items())},
-        "findings": len(f),
-        "evidence_records": len(finding_set.evidence),
-        "unmapped": unmapped,
-        "by_type": dict(Counter(x.type.value for x in f)),
-        "by_severity": dict(Counter(x.severity.value for x in f)),
-        "dependency_findings": len(deps),
-        "runtime_findings": sum(1 for x in deps if x.factors.exposure is not Exposure.BUILD_OR_DEV),
-        "dev_only_findings": sum(1 for x in deps if x.factors.exposure is Exposure.BUILD_OR_DEV),
-        "kev_findings": sum(1 for x in f if x.factors.kev),
-        "with_fix": sum(1 for x in f if x.fixed_in),
-        "vulnerable_packages": len({x.component.purl for x in deps}),
-        "image": image_stats,
-        "posture_hits": dict(Counter(f"{h.tool}:{h.rule}" for h in hits)),
-        "anomaly_hits": dict(Counter(h.rule for h in anomalies)),
-        "base_target": target.get("base_target"),
-        "synthetic": bool(target.get("synthetic")),
-        "by_risk_level": dict(Counter(x.risk.level.value for x in f if x.risk)),
-        "by_reachability": dict(Counter(x.factors.reachability.value for x in f)),
-        "by_exposure": dict(Counter(x.factors.exposure.value for x in f)),
-        "app_context": {
-            "runtime_imports": sorted(app.runtime_imports),
-            "dev_imports": sorted(app.dev_imports),
-            "network_facts": [f"{s.file}:{s.line}" for s in app.network_facts],
-            "dynamic_requires": app.dynamic_requires,
-        },
-    }
-    if db is not None:
-        run_id = workspace_relative(out)
-        summary["store"] = {"db": workspace_relative(jail(db)), "run_id": run_id}
-    (out / "baseline.json").write_text(json.dumps(summary, indent=2))
-    (out / "baseline.md").write_text(render_markdown(summary, finding_set))
-    if db is not None:
-        conn = connect(db)
-        try:
-            save_run(conn, run_id, summary, finding_set, graph)
-        finally:
-            conn.close()
-    return summary
+    p = Pipeline(target_name, out_dir, db)
+    p.sbom()
+    for scanner in SCANNERS:
+        p.scan(scanner)
+    p.scan_dockerfile()
+    p.scan_workflows()
+    if (p.root / "Dockerfile").is_file():
+        p.scan_image()
+    p.anomaly_rules()
+    return p.build_findings()
 
 
 def render_markdown(summary: dict, fs: FindingSet) -> str:

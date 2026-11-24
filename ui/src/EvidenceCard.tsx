@@ -132,6 +132,15 @@ export function EvidenceCard({ detail, graph }: { detail: FindingDetail; graph: 
               "Not scored"
             )}
           </Row>
+          {detail.confidence && (
+            <Row label="Confidence">
+              <span className="font-semibold">{detail.confidence.level}</span>
+              <ul className="list-disc pl-5 text-xs text-slate-600">
+                {detail.confidence.reasons.map((r) => <li key={r}>{r}</li>)}
+              </ul>
+              <div className="text-xs text-slate-500">Computed from tool agreement and factor coverage (a fact, not model opinion).</div>
+            </Row>
+          )}
           <Row label="AI explanation">
             {explanation ? (
               <div>

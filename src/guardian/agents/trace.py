@@ -1,16 +1,8 @@
-"""Turn the agent tool log into the step list shown by the UI."""
+"""Turn the recorded agent tool calls into the step list shown by the UI."""
 
 from __future__ import annotations
 
 from typing import Any
-
-AGENT_OF_TOOL = {
-    "run_discovery": "discovery",
-    "run_detection": "detection",
-    "list_findings": "analysis",
-    "get_finding": "analysis",
-    "submit_explanations": "analysis",
-}
 
 
 def build_steps(calls: list[dict]) -> list[dict]:
@@ -18,45 +10,40 @@ def build_steps(calls: list[dict]) -> list[dict]:
     for index, call in enumerate(calls, start=1):
         tool = str(call.get("tool", ""))
         args = call.get("args") if isinstance(call.get("args"), dict) else {}
-        subagent = None
-        if tool == "task":
-            agent = "orchestrator"
-            subagent = args.get("subagent_type")
-        else:
-            agent = AGENT_OF_TOOL.get(tool, "orchestrator")
         steps.append(
             {
                 "n": index,
-                "agent": agent,
-                "subagent": subagent,
+                "agent": str(call.get("agent") or "supervisor"),
+                "subagent": args.get("subagent_type") if tool == "task" else None,
                 "tool": tool,
                 "args": args,
                 "result_chars": int(call.get("result_chars", 0) or 0),
+                "error": bool(call.get("error")),
             }
         )
     return steps
 
 
-def summarize(
-    calls: list[dict],
-    *,
-    provider: str | None = None,
-    model: str | None = None,
-    accepted: int = 0,
-    rejected: int = 0,
-    blocked: int = 0,
-    final_message: str | None = None,
-) -> dict[str, Any]:
+def summarize(trace: dict[str, Any]) -> dict[str, Any]:
+    """The Agent Steps view payload from an agent-run.json document."""
+    calls = trace.get("tool_calls") if isinstance(trace.get("tool_calls"), list) else []
+    hypotheses = trace.get("hypotheses") or []
     return {
-        "provider": provider,
-        "model": model,
+        "provider": trace.get("provider"),
+        "model": trace.get("model"),
         "generator": "language model" if calls else None,
+        "status": trace.get("status"),
+        "stop_reason": trace.get("stop_reason"),
+        "goal": trace.get("goal"),
         "steps": build_steps(calls),
+        "plan": trace.get("plan") or [],
+        "hypotheses": hypotheses,
+        "usage": trace.get("usage"),
+        "final_message": trace.get("final_message"),
         "counts": {
             "tool_calls": len(calls),
-            "accepted": accepted,
-            "rejected": rejected,
-            "blocked": blocked,
+            "hypotheses": len(hypotheses),
+            "verified": sum(1 for h in hypotheses if h.get("status") == "verified"),
+            "blocked": len(trace.get("blocked_tool_calls") or []),
         },
-        "final_message": final_message,
     }

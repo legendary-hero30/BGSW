@@ -112,3 +112,21 @@ def test_schema_version_mismatch(conn):
     conn.commit()
     with pytest.raises(RuntimeError, match="schema"):
         connect(DB)
+
+
+def test_an_open_connection_does_not_hold_the_write_lock():
+    """Regression: connect() left an implicit transaction open, so a second connection's write
+    blocked for the whole 30 s timeout (found by the agent ledger running alongside a tool)."""
+    import time
+
+    shutil.rmtree(DB_DIR, ignore_errors=True)
+    first = connect(DB)
+    second = connect(DB)
+    started = time.monotonic()
+    with second:
+        second.execute("INSERT INTO meta(key, value) VALUES ('probe', '1')")
+    assert time.monotonic() - started < 2
+    assert first.execute("SELECT value FROM meta WHERE key = 'probe'").fetchone() == ("1",)
+    first.close()
+    second.close()
+    shutil.rmtree(DB_DIR, ignore_errors=True)

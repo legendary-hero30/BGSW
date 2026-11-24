@@ -17,7 +17,9 @@ from guardian.schemas.graph import DependencyGraph
 from guardian.tools.runner import jail
 
 DEFAULT_DB = "runs/guardian.db"
-SCHEMA_VERSION = 2  # v2 (D1.S8): explanations table; v1 -> v2 is additive
+SCHEMA_VERSION = (
+    4  # v2: explanations; v3: agent runs, events, plan, hypotheses; v4: Day 2 remediation
+)
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -67,23 +69,92 @@ CREATE TABLE IF NOT EXISTS explanations (
 );
 CREATE INDEX IF NOT EXISTS findings_by_score ON findings(run_id, risk_score DESC);
 CREATE INDEX IF NOT EXISTS findings_by_component ON findings(run_id, component_name);
+
+-- Agent runs (schema v3). agent_events is append-only: triggers refuse UPDATE and DELETE.
+CREATE TABLE IF NOT EXISTS agent_runs (
+    agent_run_id TEXT PRIMARY KEY, run_id TEXT, goal TEXT NOT NULL, target TEXT NOT NULL,
+    provider TEXT NOT NULL, model TEXT NOT NULL, status TEXT NOT NULL,
+    budget_json TEXT NOT NULL, usage_json TEXT, prompts_json TEXT NOT NULL,
+    report_md TEXT, stop_reason TEXT, started_at TEXT NOT NULL, finished_at TEXT
+);
+CREATE TABLE IF NOT EXISTS agent_events (
+    agent_run_id TEXT NOT NULL REFERENCES agent_runs(agent_run_id),
+    seq INTEGER NOT NULL, ts TEXT NOT NULL, agent TEXT NOT NULL, kind TEXT NOT NULL,
+    name TEXT, payload_json TEXT NOT NULL,
+    PRIMARY KEY (agent_run_id, seq)
+);
+CREATE TRIGGER IF NOT EXISTS agent_events_no_update BEFORE UPDATE ON agent_events
+BEGIN SELECT RAISE(ABORT, 'agent_events is append-only'); END;
+CREATE TRIGGER IF NOT EXISTS agent_events_no_delete BEFORE DELETE ON agent_events
+BEGIN SELECT RAISE(ABORT, 'agent_events is append-only'); END;
+CREATE TABLE IF NOT EXISTS plan_items (
+    agent_run_id TEXT NOT NULL REFERENCES agent_runs(agent_run_id),
+    id TEXT NOT NULL, goal TEXT NOT NULL, status TEXT NOT NULL, assigned_agent TEXT NOT NULL,
+    depends_on_json TEXT NOT NULL, evidence_refs_json TEXT NOT NULL, rationale TEXT NOT NULL,
+    PRIMARY KEY (agent_run_id, id)
+);
+CREATE TABLE IF NOT EXISTS hypotheses (
+    agent_run_id TEXT NOT NULL REFERENCES agent_runs(agent_run_id),
+    id TEXT NOT NULL, author TEXT NOT NULL, claim TEXT NOT NULL, kind TEXT NOT NULL,
+    evidence_refs_json TEXT NOT NULL, finding_ids_json TEXT NOT NULL, confidence TEXT NOT NULL,
+    status TEXT NOT NULL, reasons_json TEXT NOT NULL, created_at TEXT NOT NULL,
+    PRIMARY KEY (agent_run_id, id)
+);
+
+-- Remediation (schema v4). Proposals, approvals and validations are append-only: an approval
+-- is bound to the SHA-256 of the exact proposal it approved, and nothing can be edited later.
+CREATE TABLE IF NOT EXISTS proposals (
+    id TEXT PRIMARY KEY, run_id TEXT NOT NULL, finding_id TEXT NOT NULL,
+    sha256 TEXT NOT NULL, proposal_json TEXT NOT NULL, created_by TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS approvals (
+    seq INTEGER PRIMARY KEY AUTOINCREMENT,
+    proposal_id TEXT NOT NULL REFERENCES proposals(id),
+    decision TEXT NOT NULL CHECK (decision IN ('approved', 'rejected')),
+    approver TEXT NOT NULL CHECK (length(approver) > 0), at TEXT NOT NULL, note TEXT,
+    proposal_sha TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS validations (
+    seq INTEGER PRIMARY KEY AUTOINCREMENT,
+    proposal_id TEXT NOT NULL REFERENCES proposals(id),
+    verdict TEXT NOT NULL, at TEXT NOT NULL, report_json TEXT NOT NULL
+);
+CREATE TRIGGER IF NOT EXISTS proposals_no_update BEFORE UPDATE ON proposals
+BEGIN SELECT RAISE(ABORT, 'proposals are immutable'); END;
+CREATE TRIGGER IF NOT EXISTS proposals_no_delete BEFORE DELETE ON proposals
+BEGIN SELECT RAISE(ABORT, 'proposals are immutable'); END;
+CREATE TRIGGER IF NOT EXISTS approvals_no_update BEFORE UPDATE ON approvals
+BEGIN SELECT RAISE(ABORT, 'approvals are append-only'); END;
+CREATE TRIGGER IF NOT EXISTS approvals_no_delete BEFORE DELETE ON approvals
+BEGIN SELECT RAISE(ABORT, 'approvals are append-only'); END;
+CREATE TRIGGER IF NOT EXISTS validations_no_update BEFORE UPDATE ON validations
+BEGIN SELECT RAISE(ABORT, 'validations are append-only'); END;
+CREATE TRIGGER IF NOT EXISTS validations_no_delete BEFORE DELETE ON validations
+BEGIN SELECT RAISE(ABORT, 'validations are append-only'); END;
 """
 
 
-def connect(db: str | Path = DEFAULT_DB) -> sqlite3.Connection:
+def connect(db: str | Path = DEFAULT_DB, *, shared: bool = False) -> sqlite3.Connection:
+    """Open (and migrate) the store. ``shared=True`` allows use from several threads; the
+    caller must serialize access (the agent ledger holds a lock)."""
     path = jail(db)
     path.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(path)
+    conn = sqlite3.connect(path, check_same_thread=not shared, timeout=30)
     conn.execute("PRAGMA foreign_keys = ON")
     conn.executescript(SCHEMA)
-    conn.execute(
-        "INSERT OR IGNORE INTO meta(key, value) VALUES ('schema_version', ?)",
-        (str(SCHEMA_VERSION),),
-    )
-    if conn.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "1":
-        with conn:  # additive migration: SCHEMA above already created the explanations table
-            conn.execute("UPDATE meta SET value = '2' WHERE key = 'schema_version'")
+    with conn:  # commit now: an open implicit transaction would hold the write lock for as long
+        conn.execute(  # as this connection lives and block every other writer
+            "INSERT OR IGNORE INTO meta(key, value) VALUES ('schema_version', ?)",
+            (str(SCHEMA_VERSION),),
+        )
     found = conn.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0]
+    if found in {"1", "2", "3"}:  # additive migrations: SCHEMA above already created the new tables
+        with conn:
+            conn.execute(
+                "UPDATE meta SET value = ? WHERE key = 'schema_version'", (str(SCHEMA_VERSION),)
+            )
+        found = str(SCHEMA_VERSION)
     if found != str(SCHEMA_VERSION):
         raise RuntimeError(f"store schema {found} != expected {SCHEMA_VERSION}")
     return conn

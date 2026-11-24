@@ -67,36 +67,15 @@ def test_nodegoat_offline_baseline():
     assert load_findings(conn, s["store"]["run_id"]) == fs
     conn.close()
 
-    # D1.S8/D1.S9: the agents explain the top findings of this real run through the gate.
-    from guardian.agents.models import ModelConfig
-    from guardian.agents.orchestrator import run_agents
-    from guardian.agents.tools import AgentContext
-    from guardian.store import accepted_explanations
-    from tests.fake_model import FakeChatModel
-
     run_id = s["store"]["run_id"]
-    actx = AgentContext(
-        target="nodegoat",
-        out_dir=run_id,
-        db="runs/pytest-d1s4/guardian.db",
-        provider="deepinfra",
-        model="test-fixture",
-        run_id=run_id,
-        max_findings=8,
-    )
-    outcome = run_agents(actx, ModelConfig(), "analyze", model=FakeChatModel())
-    assert outcome["blocked_tool_calls"] == []
-    conn = connect("runs/pytest-d1s4/guardian.db")
-    assert len(accepted_explanations(conn, run_id)) == 8
-    conn.close()
-
     # D1.S9: the Day 1 checklist evaluated on this real run.
     from guardian.checklist import evaluate
 
     items = {i.n: i for i in evaluate(run_id, "runs/pytest-d1s4/guardian.db")}
-    assert all(items[n].status == "pass" for n in range(1, 10)), [
+    assert all(items[n].status == "pass" for n in range(1, 9)), [
         (i.n, i.evidence) for i in items.values() if i.status == "fail"
     ]
+    assert items[9].status == "n/a"  # no agent run here, so no AI claims to ground
     assert items[10].status == items[11].status == "n/a"
     assert items[12].status == "pass"  # README documents setup, dependencies and tools
 

@@ -134,12 +134,18 @@ def evaluate(run_id: str, db: str) -> list[Item]:
 
     v = verify_run(run_id)
     by_id = {x.id: x for x in f}
-    regated = [fid for fid, exp in explained.items() if gate(exp, by_id)[1]]
+    evidence = {r.id: r for r in fs.evidence}
+    regated = [fid for fid, exp in explained.items() if gate(exp, by_id, evidence)[1]]
+    agent_ran = bool(explained) or (out / "agent-run.json").exists()
     add(
         "AI recommendations are grounded, with zero unresolved citations",
-        bool(explained) and not regated and not v.failures,
-        f"{len(explained)} accepted explanations, {len(regated)} failing a re-check; "
-        f"cited facts resolved {v.resolved}/{v.checked}",
+        None if not agent_ran else (not regated and not v.failures),
+        (
+            f"{len(explained)} accepted explanations, {len(regated)} failing a re-check; "
+            f"cited facts resolved {v.resolved}/{v.checked}"
+            if agent_ran
+            else "no agent run on this stored run, so there are no AI recommendations to ground"
+        ),
     )
 
     add(

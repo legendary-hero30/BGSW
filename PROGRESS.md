@@ -313,3 +313,12 @@ Day 2 (remediation recommendation, human approval, rebuild/rescan, before-after 
 separate approved step. A live DeepInfra analysis is already verified on the dynamic NodeGoat run;
 re-run it any time with `make deepinfra` or the UI repository box.
 
+
+
+## Agentic refactor, UI and Day 2 (2026-11-24)
+- Agentic runtime, ledger, budgets, gates, sandbox layer, CLI, evidence UI: done (see D10-*).
+- Day 2: confidence, lockfile comparison, deterministic proposals, approval gate (CLI, API, UI),
+  isolated-branch validation with offline rescan, SBOM and findings diff, verdicts (D11-*).
+- Not done / not verifiable here: build and test execution (no Docker daemon), a real browser
+  check of the UI, a human-approved end-to-end validation on NodeGoat (needs an approver and
+  `GUARDIAN_ALLOW_REGISTRY_ACCESS=1`; six real proposals R-009..R-014 are stored and waiting).

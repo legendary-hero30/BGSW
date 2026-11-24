@@ -637,3 +637,39 @@ Each entry records the decision, its source, and its approval.
 - **Why:** the user asked for a live DeepInfra-only path, the agent's actual steps rather than a
   static checklist, and the ability to point the guardian at an arbitrary GitHub repository.
 - **Approval:** 2026-11-23, the revision instruction quoted in `PROGRESS.md`.
+
+
+## D10-01 Agentic architecture: supervisor and specialists replace the fixed pipeline
+- **Decision:** a Deep Agents supervisor plans, delegates to specialists with per-role tool
+  rosters and step limits, replans, and stops on goal, budget or a human gate. The old fixed
+  orchestrator and the mock model were deleted; `baseline()` remains only as a fixed composition
+  of the same stages for regression.
+- **Why:** AGENTS.md requires control flow from agent decisions and a live model only.
+- **Controls:** deterministic gates (explanation, hypothesis grounding, report), a verifier role,
+  budgets (steps, tool calls, seconds, tokens, optional USD), an append-only ledger.
+
+## D10-02 Sandbox policy
+- Untrusted code runs only in a container (`--network none`, read-only, caps dropped, digest-pinned
+  image); no host fallback. `sbx` is detection only. Docker runtime is unverified here.
+
+## D10-03 Evidence UI
+- Same-origin React UI with live agent timeline, graph overview (focused subgraph, truncation
+  stated), SBOM table, safe Markdown renderer. Not browser-verified here.
+
+## D11-01 Day 2: deterministic proposals, human-only approval
+- **Decision:** proposal action, target version, edits, compatibility and rollback are computed
+  from tool-reported fix versions; an agent may only add a grounded justification. Approval is a
+  separate gate (`decide`) with a named approver, a timestamp and the SHA-256 of the exact
+  proposal; proposals, approvals and validations are append-only (schema v4 triggers). Agents
+  have no approve tool; the API needs a per-server token plus loopback Host/Origin.
+- **Why:** AGENTS.md section 2 (approval required) and section 4 (no invented versions).
+
+## D11-02 Validation verdicts are conservative
+- `verified` needs: finding gone, no new Critical/High, build and tests passed, SBOM diff
+  explained. Build/tests need a sandbox and are `not_run` here, so the best verdict is
+  `partially_verified`. Lockfile regeneration is the only networked step, opt-in
+  (`GUARDIAN_ALLOW_REGISTRY_ACCESS=1`), `--ignore-scripts`, clean environment.
+
+## D11-03 Confidence is computed, not asserted
+- `finding_confidence` derives high/medium/low from scanner agreement, factor coverage and
+  heuristic vs confirmed evidence, and lists the reasons.

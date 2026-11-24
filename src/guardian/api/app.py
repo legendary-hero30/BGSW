@@ -9,6 +9,8 @@
 from __future__ import annotations
 
 import json
+import re
+import secrets
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
@@ -16,6 +18,7 @@ from datetime import UTC, datetime
 from functools import lru_cache
 from itertools import pairwise
 from pathlib import Path
+from urllib.parse import urlparse
 from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException, Query, Request
@@ -23,14 +26,24 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from guardian.agents.trace import build_steps
+from guardian.agents.trace import summarize
 from guardian.api.jobs import run_repo_job
+from guardian.api.views import (
+    agent_timeline,
+    findings_by_label,
+    graph_overview,
+    load_sbom,
+    sbom_view,
+)
 from guardian.checklist import as_dict, evaluate
+from guardian.remediation import proposals as props
+from guardian.remediation import service as remediation
 from guardian.schemas.evidence import EvidenceKind
 from guardian.schemas.finding import Finding
 from guardian.schemas.graph import DependencyGraph, EdgeKind, GraphEdge
 from guardian.schemas.sbom import Component, DependencyScope, SbomComponent
-from guardian.store import DEFAULT_DB, connect_readonly
+from guardian.scoring.confidence import finding_confidence
+from guardian.store import DEFAULT_DB, connect, connect_readonly
 from guardian.targets import DynamicTargetError, parse_repo
 from guardian.tools.runner import WORKSPACE, jail
 
@@ -47,6 +60,21 @@ CSP = (
 
 class StartRun(BaseModel):
     repo: str = Field(min_length=1, max_length=200)
+
+
+class Decision(BaseModel):
+    run: str = Field(min_length=1, max_length=200)
+    approver: str = Field(min_length=1, max_length=80)
+    note: str = Field(default="", max_length=500)
+
+
+class RunRef(BaseModel):
+    run: str = Field(min_length=1, max_length=200)
+
+
+LOOPBACK_HOST = re.compile(r"^(localhost|127\.0\.0\.1|\[::1\])(:\d{1,5})?$")
+PROPOSAL_ID = re.compile(r"^R-\d{3,6}$")
+WRITE_PATH = re.compile(r"^/api/proposals/R-\d{3,6}/(approve|reject|validate)$")
 
 
 # Constant SQL only: optional filters use "? IS NULL OR ..." so no query text is built at runtime.
@@ -79,6 +107,9 @@ def create_app(
     job_runner: Callable[[dict, str, str], None] | None = None,
 ) -> FastAPI:
     executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="guardian-job")
+    validator = ThreadPoolExecutor(max_workers=1, thread_name_prefix="guardian-validate")
+    validating: dict[str, dict] = {}
+    approval_token = secrets.token_urlsafe(32)  # per server process; handed to the same-origin UI
     jobs: dict[str, dict] = {}
     runner = job_runner or run_repo_job
 
@@ -86,6 +117,7 @@ def create_app(
     async def lifespan(_app: FastAPI):
         yield
         executor.shutdown(wait=False, cancel_futures=True)
+        validator.shutdown(wait=False, cancel_futures=True)
 
     app = FastAPI(
         title="Supply Chain Guardian",
@@ -96,12 +128,25 @@ def create_app(
         lifespan=lifespan,
     )
     conn = connect_readonly(db)
+    sbom_cache: dict[str, tuple[int, dict]] = {}
 
     @app.middleware("http")
     async def headers(request: Request, call_next):
-        allowed_post = request.method == "POST" and request.url.path == "/api/runs"
+        path = request.url.path
+        host = request.headers.get("host", "")
+        write = request.method == "POST" and bool(WRITE_PATH.match(path))
+        allowed_post = (request.method == "POST" and path == "/api/runs") or write
         if request.method not in {"GET", "HEAD"} and not allowed_post:
             return JSONResponse({"detail": "read-only API"}, status_code=405)
+        if write or path == "/api/approval-token":
+            # DNS-rebinding and cross-site defence for the approval gate.
+            origin = request.headers.get("origin")
+            if not LOOPBACK_HOST.match(host) or (origin and urlparse(origin).netloc != host):
+                return JSONResponse({"detail": "forbidden origin"}, status_code=403)
+            if write and not secrets.compare_digest(
+                request.headers.get("x-guardian-approval", ""), approval_token
+            ):
+                return JSONResponse({"detail": "missing or wrong approval token"}, status_code=403)
         response = await call_next(request)
         response.headers["Content-Security-Policy"] = CSP
         response.headers["X-Content-Type-Options"] = "nosniff"
@@ -278,6 +323,7 @@ def create_app(
             "evidence": evidence,
             "explanation": explanation,
             "rejected_explanations": rejected,
+            "confidence": dict(zip(("level", "reasons"), finding_confidence(f), strict=True)),
         }
 
     @app.get("/api/graph/{fid}")
@@ -367,15 +413,16 @@ def create_app(
 
     @app.get("/api/agent-steps")
     def agent_steps(run: str) -> dict:
-        """The recorded agent tool calls for a run, grouped for the Agent Steps view."""
+        """The recorded agent run for a stored run: plan, steps, hypotheses, budget, status."""
         run = known_run(run)
         trace: dict = {}
-        trace_path = jail(run) / "agent-trace.json"
+        trace_path = jail(run) / "agent-run.json"
         if trace_path.exists():
             try:
                 trace = json.loads(trace_path.read_text())
             except json.JSONDecodeError:
                 trace = {}
+        out = summarize(trace)
         doc: dict = {}
         doc_path = jail(run) / "explanations.json"
         if doc_path.exists():
@@ -383,28 +430,186 @@ def create_app(
                 doc = json.loads(doc_path.read_text())
             except json.JSONDecodeError:
                 doc = {}
-        provider = trace.get("provider") or doc.get("provider")
-        if provider in {"scripted", "scripted-hallucinating"}:
-            # Legacy offline fixtures are not part of the product; never show them as agent work.
-            trace, doc = {}, {}
-        calls = trace.get("tool_calls") if isinstance(trace.get("tool_calls"), list) else []
         accepted = doc.get("accepted") if isinstance(doc.get("accepted"), list) else []
         rejected = doc.get("rejected") if isinstance(doc.get("rejected"), list) else []
-        blocked = trace.get("blocked_tool_calls") or doc.get("blocked_tool_calls") or []
-        return {
-            "run_id": run,
-            "provider": trace.get("provider") or doc.get("provider"),
-            "model": trace.get("model") or doc.get("model"),
-            "generator": "language model" if calls else None,
-            "steps": build_steps(calls),
-            "counts": {
-                "tool_calls": len(calls),
-                "accepted": len(accepted),
-                "rejected": len(rejected),
-                "blocked": len(blocked),
-            },
-            "final_message": trace.get("final_message") or doc.get("final_message"),
-        }
+        out["run_id"] = run
+        out["counts"].update({"accepted": len(accepted), "rejected": len(rejected)})
+        return out
+
+    # -- remediation: proposals, human approval gate, validation ---------------------------------
+    @app.get("/api/approval-token")
+    def approval_token_endpoint() -> dict:
+        """Same-origin only (no CORS, loopback Host required). Approving needs this token and a
+        named approver; agents have no route to either."""
+        return {"token": approval_token}
+
+    def stored_run(run: str) -> str:
+        fresh = connect_readonly(db)
+        try:
+            row = fresh.execute("SELECT run_id FROM runs WHERE run_id = ?", (run,)).fetchone()
+        finally:
+            fresh.close()
+        if row is None:
+            raise HTTPException(404, "unknown run")
+        return row[0]
+
+    @app.get("/api/proposals")
+    def proposals(run: str = Query(min_length=1, max_length=200)) -> dict:
+        stored_run(run)
+        fresh = connect_readonly(db)
+        try:
+            rows = [remediation.view(fresh, run, p.id) for p in props.list_proposals(fresh, run)]
+        finally:
+            fresh.close()
+        for r in rows:
+            r["validating"] = validating.get(f"{run}:{r['id']}")
+        return {"run_id": run, "proposals": rows}
+
+    @app.get("/api/proposals/{pid}")
+    def proposal(pid: str, run: str = Query(min_length=1, max_length=200)) -> dict:
+        if not PROPOSAL_ID.match(pid):
+            raise HTTPException(404, "unknown proposal")
+        stored_run(run)
+        fresh = connect_readonly(db)
+        try:
+            out = remediation.view(fresh, run, pid, full=True)
+        except KeyError as exc:
+            raise HTTPException(404, "unknown proposal") from exc
+        finally:
+            fresh.close()
+        out["validating"] = validating.get(f"{run}:{pid}")
+        return out
+
+    @app.post("/api/proposals/{pid}/{decision}")
+    def decide_or_validate(pid: str, decision: str, body: Decision | RunRef) -> dict:
+        stored_run(body.run)
+        if decision == "validate":
+            return start_validation(pid, body.run)
+        if not isinstance(body, Decision):
+            raise HTTPException(422, "approver is required")
+        conn = connect(db)
+        try:
+            record = props.decide(
+                conn, body.run, pid, "approved" if decision == "approve" else "rejected",
+                body.approver, body.note,
+            )  # fmt: skip
+        except props.ApprovalError as exc:
+            raise HTTPException(409, str(exc)) from exc
+        except (KeyError, ValueError) as exc:
+            raise HTTPException(404 if isinstance(exc, KeyError) else 422, str(exc)) from exc
+        finally:
+            conn.close()
+        return record
+
+    def start_validation(pid: str, run: str) -> dict:
+        key = f"{run}:{pid}"
+        if (validating.get(key) or {}).get("state") == "running":
+            raise HTTPException(409, "validation is already running")
+        gate = connect(db)
+        try:
+            props.require_approved(gate, run, pid)
+        except props.ApprovalError as exc:
+            raise HTTPException(409, str(exc)) from exc
+        except KeyError as exc:
+            raise HTTPException(404, "unknown proposal") from exc
+        finally:
+            gate.close()
+        state = {"state": "running", "step": "Starting", "error": None}
+        validating[key] = state
+
+        def work() -> None:
+            try:
+                report = remediation.validate_for_run(
+                    db, run, pid, on_step=lambda m: state.update(step=m)
+                )
+                state.update(state="done", step=f"Verdict: {report['verdict']}")
+            except Exception as exc:
+                state.update(state="error", error=f"{type(exc).__name__}: {exc}"[:400])
+
+        validator.submit(work)
+        return dict(state)
+
+    @app.get("/api/agent-events")
+    def agent_events(
+        run: str = Query(min_length=1, max_length=200),
+        after: int = Query(0, ge=0),
+        limit: int = Query(300, ge=1, le=500),
+    ) -> dict:
+        """The agent timeline for a run directory, readable while the run is still going."""
+        fresh = connect_readonly(db)
+        try:
+            return agent_timeline(fresh, run, after, limit)
+        finally:
+            fresh.close()
+
+    @app.get("/api/graph-overview")
+    def graph_view(
+        run: str,
+        scope: str = Query("runtime", pattern="^(runtime|all)$"),
+        risk: str | None = Query(None, pattern="^(Critical|High|Medium|Low)$"),
+        q: str | None = Query(None, max_length=80),
+        limit: int = Query(160, ge=20, le=400),
+    ) -> dict:
+        """A drawable subgraph: direct dependencies and vulnerable packages with their paths."""
+        run = known_run(run)
+        return graph_overview(
+            graph(run), findings_by_label(conn, run), scope=scope, min_risk=risk, q=q, limit=limit
+        )
+
+    def sbom_data(run: str) -> dict:
+        path = jail(run) / "sbom.cdx.json"
+        if not path.exists():
+            raise HTTPException(404, "this run has no SBOM")
+        stamp = path.stat().st_mtime_ns
+        cached = sbom_cache.get(run)
+        if cached is None or cached[0] != stamp:
+            cached = (stamp, load_sbom(path))
+            sbom_cache[run] = cached
+        return cached[1]
+
+    @app.get("/api/sbom")
+    def sbom(
+        run: str,
+        q: str | None = Query(None, max_length=80),
+        type: str | None = Query(None, max_length=30),
+        ecosystem: str | None = Query(None, max_length=30),
+        vulnerable: bool = False,
+        limit: int = Query(50, ge=1, le=200),
+        offset: int = Query(0, ge=0),
+    ) -> dict:
+        """The run's CycloneDX SBOM as a searchable table, joined with finding counts."""
+        run = known_run(run)
+        return sbom_view(
+            sbom_data(run),
+            findings_by_label(conn, run),
+            q=q,
+            type_=type,
+            ecosystem=ecosystem,
+            vulnerable_only=vulnerable,
+            limit=limit,
+            offset=offset,
+        )
+
+    @app.get("/api/sbom/download")
+    def sbom_download(run: str) -> FileResponse:
+        run = known_run(run)
+        path = jail(run) / "sbom.cdx.json"
+        if not path.exists():
+            raise HTTPException(404, "this run has no SBOM")
+        return FileResponse(
+            path,
+            media_type="application/vnd.cyclonedx+json",
+            filename=f"{Path(run).name}.cdx.json",
+        )
+
+    @app.get("/api/agent-report")
+    def agent_report(run: str) -> dict:
+        """The accepted agent report (Markdown), or a labelled partial report."""
+        run = known_run(run)
+        path = jail(run) / "agent-report.md"
+        if not path.exists():
+            raise HTTPException(404, "this run has no agent report")
+        return {"run_id": run, "markdown": path.read_text()}
 
     @app.get("/api/checklist")
     def checklist(run: str) -> dict:

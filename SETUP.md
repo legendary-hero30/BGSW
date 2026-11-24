@@ -1,47 +1,43 @@
 # Setup
 
+Everything here was run on WSL2 (Linux 6.18), Python 3.12.16 via `uv`. Anything not verified in
+that environment is marked **unverified**.
+
 ## Requirements
 
-- `uv` 0.13.9, installed at `~/.local/bin/uv`.
-- Python 3.12. `uv` provides it (cpython 3.12.16). The system `python3` is 3.14 and is not used.
+- `uv` 0.13.9. Python 3.12 (uv installs cpython 3.12.16). The system `python3` is not used.
+- Node 26 and npm 11 (only to build the UI, and for the Day 2 lockfile step).
+- Scanner binaries and offline databases (sections below). Docker is optional (sandbox).
 
 ## Reproduce the environment
 
 ```bash
 cd /home/suthekshan/bosch
-uv sync --locked          # creates .venv with Python 3.12.16 and installs uv.lock
-uv run --locked pytest    # run tests
-uv run --locked ruff check .
-uv run --locked ruff format --check .
+uv sync --locked --extra llm-openai   # the OpenAI-compatible client is the only model extra
+uv run --locked ruff check . && uv run --locked ruff format --check .
+uv run --locked --extra llm-openai pytest -q     # ~3 min (integration tests run the scanners)
+uv lock --check                                  # 73 packages; cooldown cutoff 2026-11-16
 ```
 
-## Resolved dependencies (uv.lock, 2026-11-23)
+Dependencies are pinned by `uv.lock`; `exclude-newer` in `pyproject.toml` keeps every
+resolution at least 7 days old. The UI has its own pins and settings in `ui/.npmrc`
+(`ignore-scripts`, `save-exact`, `before=2026-11-16`).
 
-Since D1.S9 the lock has 73 packages. It includes deepagents 0.7.38, langchain 1.5.0,
-langchain-core 1.8.1, langgraph 1.2.22, langchain-anthropic 1.7.10, langchain-google-genai
-4.5.0, langsmith 0.14.17, fastapi 0.163.1, uvicorn 0.54.0, and the optional `llm-openai` extra
-(`langchain-openai` 1.8.0, `openai` 3.51.0, `tiktoken`, `regex`) used by DeepInfra. Everything is
-resolved with `exclude-newer = 2026-11-16`. That cutoff moved pydantic to 2.14.3 and ruff to
-0.17.5. The table below is the original D0/D1.S1 set.
+## Configuration and secrets
 
-| Package | Version | Role |
-|---|---|---|
-| pydantic | 2.14.4 | Contract validation (runtime) |
-| pydantic-core | 2.50.5 | Pydantic dependency |
-| annotated-types | 0.8.0 | Pydantic dependency |
-| typing-extensions | 4.16.0 | Pydantic dependency |
-| typing-inspection | 0.4.5 | Pydantic dependency |
-| pytest | 9.2.0 | Tests (dev) |
-| iniconfig, packaging, pluggy, pygments | 2.3.1, 26.3, 1.7.0, 2.21.0 | pytest dependencies (dev) |
-| ruff | 0.17.6 | Lint and format (dev) |
+The Guardian has no offline or mock model. A run needs a real model:
 
-Install the DeepInfra/OpenAI-compatible client with `uv sync --locked --extra llm-openai` (the
-default `uv sync --locked` leaves it out). Scanner binaries are listed below.
+| Variable | Meaning |
+|---|---|
+| `DEEPINFRA_API_KEY` | DeepInfra key. Set in your shell or a git-ignored `.env`; never commit it. |
+| `GUARDIAN_ALLOW_EXTERNAL_MODELS=1` | Required. Without it a run refuses before doing anything. |
+| `GUARDIAN_PRICE_IN_PER_M`, `GUARDIAN_PRICE_OUT_PER_M` | USD per million tokens; only needed for `--budget-usd`. |
+| `GUARDIAN_SANDBOX_IMAGE` | Digest-pinned image (`name@sha256:...`) enabling `sandbox_exec`. |
+| `GUARDIAN_ALLOW_REGISTRY_ACCESS=1` | Day 2 only: lets validation regenerate `package-lock.json` (one networked step). |
+| `GUARDIAN_LIVE_TESTS=1` | Opt in to the paid live-model test. |
 
-## Secrets
-
-No secrets are used. A future LLM API key goes in an environment variable outside the
-workspace. `.env` files are git-ignored and must not be created in the workspace.
+Provider details: `LLM_PROVIDERS.md` (default `deepinfra`, model `deepseek-ai/DeepSeek-V4.1-Flash-1017`).
+Secrets are redacted before anything is stored or sent to a model.
 
 ## Scanner binaries (D1.S2)
 
@@ -120,6 +116,90 @@ uv run --locked python -m guardian.scan evaluate --seeded runs/d1s6-seeded --cle
 stable only while the script and base commit are unchanged. The seeded target's base image is
 `node:latest`, which is not fetched, so its run has no image findings.
 
+## Run the agents (agentic, goal driven)
+
+```bash
+export DEEPINFRA_API_KEY=...            # your key
+export GUARDIAN_ALLOW_EXTERNAL_MODELS=1
+uv run --locked --extra llm-openai python -m guardian run --target nodegoat \
+  --goal "Assess supply-chain risk and propose safe, verified remediations" \
+  --budget-steps 100 --budget-tool-calls 250 --budget-seconds 900 --budget-tokens 1200000
+uv run --locked python -m guardian trace  --agent-run <id> [--kinds plan tool_call delegate]
+uv run --locked python -m guardian report --agent-run <id>
+uv run --locked python -m guardian sandboxes
+```
+
+A supervisor plans, delegates to specialists (`inventory`, `vulnerability`, `forensics`,
+`container_ci`, `risk`, `remediation`, `validation`, `verifier`), replans and stops on its
+goal, a budget (steps, tool calls, seconds, tokens, optional USD) or a need for a human.
+Prompts are in `prompts/`; every plan revision, tool call, delegation and decision is appended
+to `agent_events` (append-only) in `runs/guardian.db`. Typical live run: 80-90 steps,
+about 200 tool calls, 0.8-0.9M tokens, 7 to 8 minutes.
+
+## Evidence UI
+
+```bash
+(cd ui && npm ci && npm run build)       # writes ui/dist
+uv run --locked python -m guardian.api --port 8765   # loopback only, then open http://127.0.0.1:8765
+```
+
+Paste a GitHub URL to clone (read-only, nothing executed) and analyse it. Tabs: Overview,
+Agent run (live plan, narration, tool calls, delegations, hypotheses, budget), Findings
+(with confidence), Dependency graph, SBOM, **Remediation**, Report, Checklist.
+The UI has been type-checked, built and API-tested; it has **not been viewed in a real browser**
+in this environment (none available).
+
+## Sandbox for untrusted code
+
+Package code never runs on the host. `sandbox_exec` and the Day 2 build/test steps need a
+container backend; without one they refuse (never fall back to the host).
+
+- `docker`: `docker run --network none --read-only --cap-drop ALL --security-opt no-new-privileges
+  --user 65534 --pull never`, read-only mounts, tmpfs noexec. Needs a running daemon and
+  `GUARDIAN_SANDBOX_IMAGE`. The daemon was **not running here**, so this path is covered by unit
+  tests of the command builder only (**runtime unverified**).
+- `sbx` (Docker Agent Sandboxes): detection only. Its network policy is global; a
+  process-level recipe (`sbx policy init deny-all`, `sbx policy allow network api.deepinfra.com`)
+  is **unverified** (WSL2 is not a documented platform).
+
+## Day 2: prioritise, investigate, remediate, validate
+
+```bash
+# 1. agents propose (or let the goal include remediation); proposals are stored, never applied
+# 2. a human reviews and decides, with a name that is logged with the time
+uv run --locked python -m guardian approvals list     --run runs/<run-dir>
+uv run --locked python -m guardian approvals show     --run runs/<run-dir> R-009
+uv run --locked python -m guardian approvals approve  --run runs/<run-dir> R-009 --approver "Your Name" --note "ok"
+# 3. validate the approved proposal on an isolated branch
+GUARDIAN_ALLOW_REGISTRY_ACCESS=1 uv run --locked python -m guardian approvals validate --run runs/<run-dir> R-009
+```
+
+What validation does: copies the target to `targets/work/` (its own git repo, hooks off,
+branch `guardian/fix-<finding>`), applies the approved `package.json` edit, regenerates the
+lockfile with `npm install --package-lock-only --ignore-scripts` (clean environment, no
+credentials), rescans offline with the same scanners as the original run, then diffs the SBOM
+and findings and reports a verdict:
+
+| Verdict | Meaning |
+|---|---|
+| `verified` | original finding gone, no new Critical/High, build and tests passed, SBOM diff explained |
+| `partially_verified` | rescan clean, but build/tests did **not run** (reason recorded) or SBOM changed beyond the upgraded package |
+| `failed` | finding remains, a new Critical/High appeared, or a build/test step failed |
+| `blocked` | change not applied or not rescannable (e.g. registry access not allowed) |
+
+Without a configured sandbox, build and tests are always `not_run`, so the best possible verdict
+here is `partially_verified`. In the UI, the same flow is the Remediation tab (the API needs a
+per-server token plus a loopback `Host`; agents have no approve tool and no route to the token).
+The original target checkout is never written. Nothing is merged or pushed.
+
+Prioritisation: severity, EPSS/KEV, reachability, exposure and provenance feed the PDF formula
+(unknown factors renormalised, coverage shown). Each finding also carries a computed
+**confidence** (scanner agreement, factor coverage, heuristic vs confirmed). Non-CVE
+investigation uses `run_anomaly_rules`, `check_typosquat`, `inspect_lockfile_entry`,
+`list_install_scripts` and `compare_lockfiles` (target vs its `base_target`, e.g. the seeded
+fork `nodegoat-seeded` vs `nodegoat`); tools return facts and agents' reasoning is stored as
+hypotheses ruled on by the verifier.
+
 ## Risk scoring and the evidence store (D1.S7)
 
 The baseline command now also scores and ranks every finding, and saves the run to SQLite:
@@ -130,27 +210,18 @@ sqlite3 runs/guardian.db "SELECT id, risk_score, risk_level, weight_coverage, co
   FROM findings WHERE run_id='runs/d1s7' ORDER BY ordinal LIMIT 10"
 ```
 
-`baseline(..., db=None)` skips the store (the tests use this or their own database). The store
+Store schema is v4 (v3 added agent runs, v4 adds proposals, approvals and validations;
+older stores migrate additively). `baseline(..., db=None)` skips the store (the tests use this or their own database). The store
 needs only Python's stdlib `sqlite3`; the `sqlite3` command line tool is optional.
 
-## Agents (D1.S8) and the evidence view (D1.S9)
+## Known limitations
 
-```bash
-uv sync --locked --extra llm-openai   # deepagents, LangChain, FastAPI, DeepInfra client
-export GUARDIAN_ALLOW_EXTERNAL_MODELS=1 DEEPINFRA_API_KEY=...
-uv run --locked python -m guardian.agents analyze --run runs/demo --limit 10
-uv run --locked python -m guardian.agents run --target nodegoat --out runs/demo
-uv run --locked python -m guardian.api --port 8000
-```
-
-Every run uses a live model; there is no offline/scripted model. DeepInfra is the provider
-(`--provider deepinfra`, `DEEPINFRA_API_KEY`, default model
-`deepseek-ai/DeepSeek-V4.1-Flash-1017`); the opt-in and data-handling policy are in
-`LLM_PROVIDERS.md`. The API serves `ui/dist`, refuses non-loopback hosts and exposes one write
-endpoint (`POST /api/runs`) for the GitHub repository box. Rebuild the UI with
-`cd ui && npm ci && npm run build`.
-
-## Not yet set up
-
-- The Docker daemon. The CLI exists, but `/var/run/docker.sock` is missing. NodeGoat's own
-  image cannot be built until it runs; the base image is scanned instead.
+- Build and test execution is not implemented end to end: it needs Docker and a toolchain
+  image; recorded as `not_run`. No remediation can be `verified` in this environment.
+- Lockfile regeneration needs the npm registry (opt-in); without it validation is `blocked`.
+- Image and CI proposals (`update_base_image`, `pin`) name what is missing (digest, commit SHA)
+  rather than guessing; they are not auto-applicable.
+- The model exposes no hidden reasoning; the UI shows narration, rationale and tool choices.
+- Agent runs are non-deterministic; deterministic gates, not the model, enforce facts.
+- Licenses are mostly "unspecified" in Syft output; no license policy is evaluated.
+- UI not browser-verified; `sbx` and Docker sandbox runtime unverified.

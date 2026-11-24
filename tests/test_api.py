@@ -133,23 +133,50 @@ def client():
     (ui / "index.html").write_text("<!doctype html><div id=root></div>")
     (ui / "assets" / "app.js").write_text("console.log(1)")
     (DIR / "run").mkdir(parents=True, exist_ok=True)
-    (DIR / "run" / "agent-trace.json").write_text(
+    (DIR / "run" / "agent-run.json").write_text(
         json.dumps(
             {
                 "provider": "deepinfra",
                 "model": "test-model",
-                "generator": "language model",
+                "status": "completed",
+                "stop_reason": None,
+                "goal": "assess",
+                "plan": [{"id": "P-01", "goal": "scan", "status": "done"}],
+                "hypotheses": [{"id": "H-01", "status": "verified", "claim": "c"}],
+                "usage": {"steps": 4, "tool_calls": 4},
                 "tool_calls": [
-                    {"tool": "task", "args": {"subagent_type": "analysis"}, "result_chars": 10},
-                    {"tool": "list_findings", "args": {"limit": 10}, "result_chars": 20},
-                    {"tool": "get_finding", "args": {"finding_id": "F-001"}, "result_chars": 30},
-                    {"tool": "submit_explanations", "args": {"count": 1}, "result_chars": 40},
+                    {
+                        "agent": "supervisor",
+                        "tool": "task",
+                        "args": {"subagent_type": "risk"},
+                        "result_chars": 10,
+                    },
+                    {
+                        "agent": "risk",
+                        "tool": "list_findings",
+                        "args": {"limit": 10},
+                        "result_chars": 20,
+                    },
+                    {
+                        "agent": "risk",
+                        "tool": "get_finding",
+                        "args": {"finding_id": "F-001"},
+                        "result_chars": 30,
+                        "error": True,
+                    },
+                    {
+                        "agent": "risk",
+                        "tool": "submit_explanations",
+                        "args": {"count": 1},
+                        "result_chars": 40,
+                    },
                 ],
                 "blocked_tool_calls": [],
                 "final_message": "done",
             }
         )
     )
+    (DIR / "run" / "agent-report.md").write_text("# Report\n\nFinding F-001 matters.\n")
     (DIR / "run" / "explanations.json").write_text(
         json.dumps(
             {
@@ -216,21 +243,31 @@ def test_finding_detail_returns_ordered_evidence_and_explanation(client):
 def test_agent_steps_are_exposed_for_the_view(client):
     j = client.get("/api/agent-steps", params={"run": RUN}).json()
     assert j["provider"] == "deepinfra" and j["generator"] == "language model"
+    assert j["status"] == "completed" and j["goal"] == "assess"
     assert [s["tool"] for s in j["steps"]] == [
         "task",
         "list_findings",
         "get_finding",
         "submit_explanations",
     ]
-    assert [s["agent"] for s in j["steps"]] == [
-        "orchestrator",
-        "analysis",
-        "analysis",
-        "analysis",
-    ]
-    assert j["steps"][0]["subagent"] == "analysis"
-    assert j["counts"] == {"tool_calls": 4, "accepted": 1, "rejected": 0, "blocked": 0}
+    assert [s["agent"] for s in j["steps"]] == ["supervisor", "risk", "risk", "risk"]
+    assert j["steps"][0]["subagent"] == "risk" and j["steps"][2]["error"] is True
+    assert j["counts"] == {
+        "tool_calls": 4,
+        "hypotheses": 1,
+        "verified": 1,
+        "blocked": 0,
+        "accepted": 1,
+        "rejected": 0,
+    }
+    assert j["plan"][0]["id"] == "P-01" and j["hypotheses"][0]["status"] == "verified"
     assert j["final_message"] == "done"
+
+
+def test_agent_report_is_served_or_404(client):
+    r = client.get("/api/agent-report", params={"run": RUN}).json()
+    assert r["markdown"].startswith("# Report")
+    assert client.get("/api/agent-report", params={"run": "../../etc"}).status_code == 404
 
 
 def test_graph_from_dependency_graph(client):
@@ -262,6 +299,7 @@ def test_graph_from_recorded_image_path(client):
         "/api/findings/F-001",
         "/api/graph/F-001",
         "/api/agent-steps",
+        "/api/agent-report",
     ],
 )
 def test_unknown_run_is_404(client, path):
