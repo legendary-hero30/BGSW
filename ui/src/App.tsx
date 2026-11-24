@@ -1,3 +1,4 @@
+// Top-level page: start a scan (public or own repo), flow bar, and the tab views for the selected run.
 import { useEffect, useState, type FormEvent } from "react";
 import { api, type Capabilities, type Job, type Proposal, type RunInfo } from "./api";
 import { AgentView } from "./views/AgentView";
@@ -21,7 +22,9 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "report", label: "Report" },
   { id: "checklist", label: "Checklist" },
 ];
+// Public repos with an npm lockfile, offered as one-click examples.
 const EXAMPLES = ["https://github.com/OWASP/NodeGoat", "https://github.com/cr0hn/vulnerable-node"];
+// Job states that mean work is still going on.
 const ACTIVE = new Set(["queued", "cloning", "scanning", "analyzing"]);
 const STAGES: { id: string; label: string }[] = [
   { id: "cloning", label: "Clone" },
@@ -29,6 +32,7 @@ const STAGES: { id: string; label: string }[] = [
   { id: "done", label: "Done" },
 ];
 
+// Progress line for the running scan: clone, agents at work, done.
 function JobBanner({ job, onWatch }: { job: Job; onWatch: () => void }) {
   const active = ACTIVE.has(job.status);
   const index = job.status === "queued" ? -1 : STAGES.findIndex((s) => s.id === (job.status === "scanning" ? "analyzing" : job.status));
@@ -57,6 +61,7 @@ function JobBanner({ job, onWatch }: { job: Job; onWatch: () => void }) {
   );
 }
 
+// Five-step bar from risk to verified fix; a rejection counts as a decision.
 function FlowStepper({ proposals, onGo }: { proposals: Proposal[]; onGo: () => void }) {
   const fixable = proposals.filter((p) => p.applicable);
   const approved = fixable.filter((p) => p.approvals.at(-1)?.decision === "approved");
@@ -89,6 +94,7 @@ function FlowStepper({ proposals, onGo }: { proposals: Proposal[]; onGo: () => v
   );
 }
 
+// Page state: runs, the selected run and tab, scan form, capabilities and proposals.
 export default function App() {
   const [runs, setRuns] = useState<RunInfo[]>([]);
   const [run, setRun] = useState("");
@@ -104,6 +110,7 @@ export default function App() {
   const [caps, setCaps] = useState<Capabilities | null>(null);
   const [proposals, setProposals] = useState<Proposal[]>([]);
 
+  // Reload the run list; used after a job finishes.
   async function refreshRuns(): Promise<RunInfo[]> {
     const r = await api.runs();
     setRuns(r);
@@ -158,6 +165,7 @@ export default function App() {
     };
   }, [job?.id, job?.status]);
 
+  // Start a scan (repo, demo, or a rescan of a pushed branch) and jump to the agent view.
   async function startScan(event: FormEvent | null, demo = false, again?: { repo: string; branch: string }) {
     event?.preventDefault();
     const url = again ? again.repo : repo.trim();

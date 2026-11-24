@@ -1,3 +1,4 @@
+// Detail card for one finding: score breakdown, confidence, evidence, fix and validation status.
 import type { ReactNode } from "react";
 import { advisoryUrl, type FindingDetail, type GraphElements, type Proposal } from "./api";
 import { PathGraph } from "./PathGraph";

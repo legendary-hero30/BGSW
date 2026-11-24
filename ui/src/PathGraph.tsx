@@ -1,3 +1,4 @@
+// Cytoscape drawing of the dependency path from the app to a vulnerable package.
 import cytoscape from "cytoscape";
 import { useEffect, useRef } from "react";
 import type { GraphElements } from "./api";

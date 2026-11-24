@@ -1,3 +1,4 @@
+// Small shared UI pieces (chips, cards, risk badges, agent colours).
 import type { ReactNode } from "react";
 
 export const RISK_ORDER = ["Critical", "High", "Medium", "Low"] as const;

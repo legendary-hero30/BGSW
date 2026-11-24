@@ -259,6 +259,7 @@ export interface SbomView {
 export interface ProposalEdit { file: string; op: string; section: string; package: string; from_spec: string | null; to_spec: string }
 export interface Approval { decision: "approved" | "rejected"; approver: string; at: string; note: string | null; proposal_sha: string }
 export interface ValidationBrief { verdict: string; at: string; reasons: string[] }
+// A fix proposal as the server stores it.
 export interface Proposal {
   id: string;
   run_id: string;
@@ -298,6 +299,7 @@ export interface ValidationReport {
   at: string;
 }
 
+// What the server can do right now; used to explain disabled buttons.
 export interface Capabilities {
   agents: { ready: boolean; detail: string };
   validation: { ready: boolean; detail: string };
@@ -337,6 +339,7 @@ export interface RunSummary {
   generated_at: string;
 }
 
+// GET JSON; throws with the server's error text on failure.
 async function get<T>(path: string, params: Record<string, string | number | undefined>): Promise<T> {
   const query = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== "") query.set(k, String(v));
@@ -345,6 +348,7 @@ async function get<T>(path: string, params: Record<string, string | number | und
   return (await response.json()) as T;
 }
 
+// POST JSON with optional headers (e.g. the approval token).
 async function post<T>(path: string, body: unknown, extra: Record<string, string> = {}): Promise<T> {
   const response = await fetch(path, {
     method: "POST",
@@ -364,6 +368,7 @@ async function post<T>(path: string, body: unknown, extra: Record<string, string
   return (await response.json()) as T;
 }
 
+// Every server call the UI makes, in one place.
 export const api = {
   runs: () => get<RunInfo[]>("/api/runs", {}),
   summary: (run: string) => get<RunSummary>("/api/summary", { run }),
