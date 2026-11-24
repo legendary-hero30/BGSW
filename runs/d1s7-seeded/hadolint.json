@@ -1,1 +1,0 @@
-[{"code":"DL3007","column":1,"file":"/home/suthekshan/bosch/targets/nodegoat-seeded/Dockerfile","level":"warning","line":7,"message":"Using latest is prone to errors if the image will ever update. Pin the version explicitly to a release tag"}]

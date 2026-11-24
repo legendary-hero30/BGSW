@@ -21,7 +21,7 @@ from guardian.agents.supervisor import build_supervisor, prompt_versions
 from guardian.redact import redact
 from guardian.sandbox import backend_report, select_sandbox
 from guardian.scan.pipeline import Pipeline
-from guardian.store import DEFAULT_DB
+from guardian.store import DEFAULT_DB, connect
 
 RECURSION_LIMIT = 300  # LangGraph supersteps; the budget is the real bound
 DEFAULT_GOAL = (
@@ -73,6 +73,13 @@ def run_goal(
         sandbox_reason=reason,
         on_event=on_event,
     )
+    probe = connect(db)
+    try:  # continue on an existing stored run (e.g. validating proposals a human approved)
+        if probe.execute("SELECT 1 FROM runs WHERE run_id = ?", (S.run_id,)).fetchone():
+            S.findings_built = True
+            S.builds = 1
+    finally:
+        probe.close()
     ledger.start_run(
         goal=S.goal,
         target=target,

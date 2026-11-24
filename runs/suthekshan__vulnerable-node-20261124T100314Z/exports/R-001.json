@@ -1,0 +1,12 @@
+{
+  "repo": "https://github.com/suthekshan/vulnerable-node",
+  "base_commit": "c35fa32337e5a7d7493bd80fef66823dcce5fce3",
+  "branch": "guardian/fix-f-002",
+  "title": "guardian: Upgrade minimist 1.2.5 -> 1.2.6 (direct); resolves 1 finding(s), highest Medium.",
+  "proposal": "R-001",
+  "verdict": "verified",
+  "approved_by": "suthekshan",
+  "approved_at": "2026-11-24T10:11:07+00:00",
+  "lockfile_origin": "repository",
+  "patch_sha256": "2a80c994a9602e54cdffa4287460ac98cf44a1c7d3917ff59b753bf27475df8e"
+}

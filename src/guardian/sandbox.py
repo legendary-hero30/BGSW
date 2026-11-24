@@ -9,6 +9,10 @@ Tool tiers:
 Backends:
   * ``docker``: plain ``docker run`` with every isolation flag set below. The command is built by
     a pure function so each flag is unit-tested. Needs a running daemon and a digest-pinned image.
+  * ``bwrap``: bubblewrap (Linux namespaces: user, pid, net, ipc, uts, cgroup). Same properties
+    as the container flags above: no network, no capabilities, read-only filesystem, tmpfs
+    scratch, no home directory, killed with its parent. It uses the host's toolchain read-only
+    instead of an image. Used for build and test execution. Needs no daemon and no root.
   * ``sbx``: Docker Sandboxes (microVMs). Detected, not driven: its network policy is global
     (``sbx policy``), and Guardian will not change a user's global policy to obtain "no network".
     To run the whole supervisor inside an sbx sandbox with network limited to the model API, see
@@ -19,6 +23,7 @@ from __future__ import annotations
 
 import os
 import re
+import resource
 import shutil
 import subprocess
 import time
@@ -33,6 +38,7 @@ IMAGE_ENV = "GUARDIAN_SANDBOX_IMAGE"
 DIGEST_RE = re.compile(r"^[a-z0-9][a-z0-9._/:-]*@sha256:[0-9a-f]{64}$")
 MAX_OUTPUT = 64 * 1024
 DOCKER = "/usr/bin/docker"
+BWRAP = "/usr/bin/bwrap"
 SBX = "sbx"
 
 
@@ -181,6 +187,84 @@ class DockerSandbox:
         )
 
 
+@dataclass(frozen=True)
+class ExecSpec:
+    """A command to run in a namespace sandbox. The work directory is mounted read-only."""
+
+    work: str  # absolute host directory, mounted read-only at /work
+    ro_paths: tuple[str, ...] = ()  # extra absolute host paths mounted read-only at the same path
+    path_env: str = "/usr/bin:/bin"
+    timeout_s: int = 300
+    memory_mb: int = 2048
+    nproc: int = 512
+
+
+def bwrap_command(argv: list[str], spec: ExecSpec) -> list[str]:
+    """The exact bubblewrap invocation. Pure, so every flag is testable."""
+    if not Path(spec.work).is_absolute():
+        raise SandboxUnavailableError("work directory must be absolute")
+    for p in spec.ro_paths:
+        if not Path(p).is_absolute() or ".." in Path(p).parts:
+            raise SandboxUnavailableError(f"bad read-only path {p!r}")
+    if not 1 <= spec.timeout_s <= 900:
+        raise SandboxUnavailableError("timeout_s must be between 1 and 900")
+    cmd = [
+        BWRAP, "--unshare-all", "--die-with-parent", "--new-session", "--cap-drop", "ALL",
+        "--ro-bind", "/usr", "/usr", "--symlink", "usr/bin", "/bin",
+        "--symlink", "usr/lib", "/lib", "--symlink", "usr/lib64", "/lib64",
+        "--ro-bind", "/etc/ssl", "/etc/ssl", "--ro-bind", "/etc/ld.so.cache", "/etc/ld.so.cache",
+        "--proc", "/proc", "--dev", "/dev", "--tmpfs", "/tmp",  # noqa: S108 - inside the sandbox
+        "--clearenv", "--setenv", "PATH", spec.path_env, "--setenv", "HOME", "/tmp",  # noqa: S108 - the sandbox tmpfs
+        "--setenv", "CI", "1", "--setenv", "NODE_ENV", "test",
+    ]  # fmt: skip
+    for p in spec.ro_paths:
+        cmd += ["--ro-bind", p, p]
+    cmd += ["--ro-bind", spec.work, "/work", "--chdir", "/work"]
+    return [*cmd, "--", *argv]
+
+
+class BwrapSandbox:
+    name = "bwrap"
+
+    def available(self) -> tuple[bool, str]:
+        if not Path(BWRAP).exists():
+            return False, "bubblewrap (/usr/bin/bwrap) is not installed"
+        probe = subprocess.run(  # noqa: S603 - fixed binary and argv
+            [BWRAP, "--unshare-all", "--ro-bind", "/usr", "/usr", "--symlink", "usr/bin", "/bin",
+             "--symlink", "usr/lib", "/lib", "--symlink", "usr/lib64", "/lib64",
+             "--", "/usr/bin/true"],
+            capture_output=True, timeout=15, check=False, stdin=subprocess.DEVNULL,
+        )  # fmt: skip
+        if probe.returncode:
+            first = probe.stderr.decode(errors="replace").strip().splitlines()[:1]
+            return False, f"bubblewrap cannot create namespaces ({first[0] if first else '?'})"
+        return True, "bubblewrap namespaces (no network, no capabilities, read-only root)"
+
+    def run_spec(self, argv: list[str], spec: ExecSpec) -> SandboxResult:
+        ok, why = self.available()
+        if not ok:
+            raise SandboxUnavailableError(why)
+        cmd = bwrap_command(argv, spec)
+        limit = spec.memory_mb * 1024 * 1024
+
+        def limits() -> None:  # runs in the child before exec
+            resource.setrlimit(resource.RLIMIT_AS, (limit, limit))
+            resource.setrlimit(resource.RLIMIT_NPROC, (spec.nproc, spec.nproc))
+
+        start = time.monotonic()
+        try:
+            proc = subprocess.run(  # noqa: S603 - argv list, no shell, spec checked above
+                cmd, capture_output=True, timeout=spec.timeout_s, check=False,
+                stdin=subprocess.DEVNULL, env={"PATH": "/usr/bin:/bin"}, preexec_fn=limits,
+            )  # fmt: skip
+        except subprocess.TimeoutExpired:
+            return SandboxResult(self.name, -1, "", "timed out", time.monotonic() - start, True)
+        return SandboxResult(
+            self.name, proc.returncode, _clip(proc.stdout), _clip(proc.stderr),
+            time.monotonic() - start,
+        )  # fmt: skip
+
+
 class SbxSandbox:
     """Docker Sandboxes (``sbx``): detection only. See the module docstring."""
 
@@ -206,7 +290,7 @@ def backend_report() -> dict[str, dict]:
     """Availability of each backend, for the run record and the API."""
     return {
         b.name: dict(zip(("available", "detail"), b.available(), strict=True))
-        for b in (DockerSandbox(), SbxSandbox())
+        for b in (DockerSandbox(), BwrapSandbox(), SbxSandbox())
     }
 
 

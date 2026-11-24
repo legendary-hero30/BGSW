@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { advisoryUrl, type FindingDetail, type GraphElements } from "./api";
+import { advisoryUrl, type FindingDetail, type GraphElements, type Proposal } from "./api";
 import { PathGraph } from "./PathGraph";
 
 const LEVEL_STYLE: Record<string, string> = {
@@ -29,7 +29,10 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
 }
 
 // Evidence card, following the PDF section 10 layout. All text renders escaped (React default).
-export function EvidenceCard({ detail, graph }: { detail: FindingDetail; graph: GraphElements | null }) {
+export function EvidenceCard({
+  detail, graph, proposals = [], onOpenRemediation,
+}: { detail: FindingDetail; graph: GraphElements | null; proposals?: Proposal[]; onOpenRemediation?: () => void }) {
+  const validations = proposals.flatMap((p) => p.validations);
   const { finding: f, evidence, explanation } = detail;
   const scannerTools = [...new Set(evidence.map((e) => e.tool))].filter(
     (t) => !["dependency-graph", "epss", "cisa-kev", "oci-layout"].includes(t),
@@ -141,6 +144,15 @@ export function EvidenceCard({ detail, graph }: { detail: FindingDetail; graph: 
               <div className="text-xs text-slate-500">Computed from tool agreement and factor coverage (a fact, not model opinion).</div>
             </Row>
           )}
+          {detail.confidence && (
+            <Row label="Confidence">
+              <span className="font-semibold">{detail.confidence.level}</span>
+              <ul className="list-disc pl-5 text-xs text-slate-600">
+                {detail.confidence.reasons.map((r) => <li key={r}>{r}</li>)}
+              </ul>
+              <div className="text-xs text-slate-500">Computed from tool agreement and factor coverage (a fact, not model opinion).</div>
+            </Row>
+          )}
           <Row label="AI explanation">
             {explanation ? (
               <div>
@@ -163,14 +175,30 @@ export function EvidenceCard({ detail, graph }: { detail: FindingDetail; graph: 
               </p>
             )}
           </Row>
-          <Row label="Recommended action (Day 2)">
-            <span className="text-slate-500">Day 2. Tool-reported fix versions: </span>
+          <Row label="Recommended fix">
+            <span className="text-slate-500">Tool-reported fix versions: </span>
             {f.fixed_in.length > 0
               ? f.fixed_in.map((x) => `${x.tool}: ${x.versions.join(", ")}`).join("; ")
               : "none reported"}
+            {proposals.length > 0 ? (
+              <ul className="mt-1 text-sm">
+                {proposals.map((p) => (
+                  <li key={p.id}>
+                    <b>{p.id}</b> {p.summary} <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs">{p.status}</span>
+                    {onOpenRemediation && <> <button type="button" className="text-sky-700 underline" onClick={onOpenRemediation}>review and approve</button></>}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="text-xs text-slate-500">No proposal yet. Ask the agents to propose remediations.</div>
+            )}
           </Row>
-          <Row label="Validation (Day 2)">
-            <span className="text-slate-500">Day 2 (rebuild, rescan, SBOM diff).</span>
+          <Row label="Validation">
+            {validations.length > 0 ? (
+              validations.map((v) => <div key={v.at}>{v.verdict.replaceAll("_", " ")} · {v.at}</div>)
+            ) : (
+              <span className="text-slate-500">Not validated. Validation runs only after a human approves a proposal.</span>
+            )}
           </Row>
         </tbody>
       </table>

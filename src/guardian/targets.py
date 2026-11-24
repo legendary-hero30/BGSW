@@ -4,7 +4,8 @@ A user supplies an HTTPS GitHub repository URL. Guardian clones it read-only (de
 no hooks, no LFS smudge, no submodules), pins the resolved commit, removes Git metadata, and
 records the target in ``targets/dynamic.json`` so the normal pipeline can load it.
 
-Only npm projects with a ``package-lock.json`` (lockfile v2/v3) are supported. Nothing from the
+Only npm projects are supported. A missing or v1 lockfile is generated/upgraded by npm in the
+clone (needs GUARDIAN_ALLOW_REGISTRY_ACCESS=1) and recorded as ``lockfile_origin``. Nothing from the
 repository is executed; scanners still run offline.
 """
 
@@ -21,6 +22,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
+from guardian.remediation.lockfile import RegistryAccessError, regenerate
 from guardian.sbom.npm_lock import LockfileError, parse_lockfile
 from guardian.tools.runner import WORKSPACE, workspace_relative
 
@@ -109,9 +111,16 @@ def _register(target: dict) -> None:
     tmp.replace(DYNAMIC_TARGETS_FILE)
 
 
-def prepare_target(repo_url: str, *, progress: Callable[[str], None] | None = None) -> dict:
+BRANCH_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/-]{0,99}$")
+
+
+def prepare_target(
+    repo_url: str, *, progress: Callable[[str], None] | None = None, branch: str | None = None
+) -> dict:
     """Clone a GitHub repo, validate it, pin the commit and register it as a target."""
     owner, repo = parse_repo(repo_url)
+    if branch is not None and (not BRANCH_NAME.match(branch) or ".." in branch):
+        raise DynamicTargetError("invalid branch name")
     DYNAMIC_DIR.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     name = f"{owner}__{repo}-{stamp}"
@@ -140,6 +149,7 @@ def prepare_target(repo_url: str, *, progress: Callable[[str], None] | None = No
                 "1",
                 "--no-tags",
                 "--single-branch",
+                *(["--branch", branch] if branch else []),
                 "--filter=blob:limit=2m",
                 url,
                 str(dest),
@@ -165,16 +175,27 @@ def prepare_target(repo_url: str, *, progress: Callable[[str], None] | None = No
         raise DynamicTargetError(f"repository working tree is too large: {size} bytes")
 
     lock = dest / "package-lock.json"
-    if not lock.is_file() or not (dest / "package.json").is_file():
+    if not (dest / "package.json").is_file():
         shutil.rmtree(dest, ignore_errors=True)
-        raise DynamicTargetError(
-            "only npm projects with package.json and package-lock.json are supported"
-        )
+        raise DynamicTargetError("only npm projects (with a package.json) are supported")
+    lock_origin = "repository"
     try:
+        if not lock.is_file():
+            raise LockfileError("no package-lock.json in the repository")
         parse_lockfile(lock, workspace_relative(lock))
-    except (LockfileError, ValueError) as exc:
-        shutil.rmtree(dest, ignore_errors=True)
-        raise DynamicTargetError(f"unsupported lockfile: {exc}") from exc
+    except (LockfileError, ValueError) as first:
+        # Missing or pre-v2 lockfile: have npm generate/upgrade it (metadata only, no scripts).
+        lock_origin = "upgraded" if lock.is_file() else "generated"
+        try:
+            if progress:
+                progress(f"Lockfile problem ({first}); npm will make it ({lock_origin})")
+            regenerate(dest)
+            parse_lockfile(lock, workspace_relative(lock))
+        except (RegistryAccessError, LockfileError, ValueError, subprocess.TimeoutExpired) as exc:
+            shutil.rmtree(dest, ignore_errors=True)
+            raise DynamicTargetError(
+                f"unsupported lockfile: {first}. Automatic repair failed: {exc}"
+            ) from exc
 
     target = {
         "name": name,
@@ -183,7 +204,9 @@ def prepare_target(repo_url: str, *, progress: Callable[[str], None] | None = No
         "commit_date": None,
         "license": "unknown",
         "ecosystem": "npm",
+        "branch": branch,
         "lockfile": "package-lock.json",
+        "lockfile_origin": lock_origin,  # repository | generated | upgraded (by Guardian)
         "path": workspace_relative(dest),
         "read_only": True,
         "dynamic": True,

@@ -1,0 +1,7 @@
+{
+  "name": "colour-utils",
+  "version": "0.0.1",
+  "description": "Vendored helper (demo anomaly: carries an install script).",
+  "main": "index.js",
+  "scripts": { "postinstall": "node setup.js" }
+}

@@ -1,0 +1,40 @@
+diff --git a/package-lock.json b/package-lock.json
+index ac294ea..ee92166 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -13,7 +13,7 @@
+         "colour-utils": "file:vendor/colour-utils",
+         "ejs": "3.1.6",
+         "jsonwebtoken": "8.5.1",
+-        "lodash": "4.17.15",
++        "lodash": "4.18.0",
+         "minimist": "1.2.5",
+         "node-fetch": "2.6.0",
+         "underscore": "~1.9.1"
+@@ -173,9 +173,10 @@
+       }
+     },
+     "node_modules/lodash": {
+-      "version": "4.17.15",
+-      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.15.tgz",
+-      "integrity": "sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==",
++      "version": "4.18.0",
++      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.18.0.tgz",
++      "integrity": "sha512-l1mfj2atMqndAHI3ls7XqPxEjV2J9ZkcNyHpoZA3r2T1LLwDB69jgkMWh71YKwhBbK0G2f4WSn05ahmQXVxupA==",
++      "deprecated": "Bad release. Please use lodash@4.17.21 instead.",
+       "license": "MIT"
+     },
+     "node_modules/lodash.includes": {
+diff --git a/package.json b/package.json
+index 173fef9..bc0222c 100644
+--- a/package.json
++++ b/package.json
+@@ -14,7 +14,7 @@
+     "colour-utils": "file:vendor/colour-utils",
+     "ejs": "3.1.6",
+     "jsonwebtoken": "8.5.1",
+-    "lodash": "4.17.15",
++    "lodash": "4.18.0",
+     "minimist": "1.2.5",
+     "node-fetch": "2.6.0",
+     "underscore": "~1.9.1"

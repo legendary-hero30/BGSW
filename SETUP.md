@@ -25,11 +25,13 @@ resolution at least 7 days old. The UI has its own pins and settings in `ui/.npm
 
 ## Configuration and secrets
 
+Step-by-step browser demo: [DEMO.md](DEMO.md).
+
 The Guardian has no offline or mock model. A run needs a real model:
 
 | Variable | Meaning |
 |---|---|
-| `DEEPINFRA_API_KEY` | DeepInfra key. Set in your shell or a git-ignored `.env`; never commit it. |
+| `DEEPINFRA_API_KEY` | DeepInfra key. Put it in the git-ignored `.env` (copy `.env.example`, `chmod 600 .env`); the CLI, the API server and the demo script load it. A shell export overrides it. Never commit it. |
 | `GUARDIAN_ALLOW_EXTERNAL_MODELS=1` | Required. Without it a run refuses before doing anything. |
 | `GUARDIAN_PRICE_IN_PER_M`, `GUARDIAN_PRICE_OUT_PER_M` | USD per million tokens; only needed for `--budget-usd`. |
 | `GUARDIAN_SANDBOX_IMAGE` | Digest-pinned image (`name@sha256:...`) enabling `sandbox_exec`. |
@@ -156,8 +158,13 @@ container backend; without one they refuse (never fall back to the host).
 
 - `docker`: `docker run --network none --read-only --cap-drop ALL --security-opt no-new-privileges
   --user 65534 --pull never`, read-only mounts, tmpfs noexec. Needs a running daemon and
-  `GUARDIAN_SANDBOX_IMAGE`. The daemon was **not running here**, so this path is covered by unit
-  tests of the command builder only (**runtime unverified**).
+  `GUARDIAN_SANDBOX_IMAGE`. The daemon could **not be started here** (not root, no `newuidmap` for rootless mode), so
+  this path is covered by unit tests of the command builder only (**runtime unverified**).
+- `bwrap` (bubblewrap, used for build and test): user/pid/net/ipc/uts namespaces, no network, no
+  capabilities, read-only work tree, tmpfs scratch, no home, killed with its parent, rlimits.
+  Needs no daemon and no root. Isolation properties are tested with real namespaces
+  (`tests/test_sandbox.py`). `npm ci --ignore-scripts` is the only networked step and runs no
+  package code.
 - `sbx` (Docker Agent Sandboxes): detection only. Its network policy is global; a
   process-level recipe (`sbx policy init deny-all`, `sbx policy allow network api.deepinfra.com`)
   is **unverified** (WSL2 is not a documented platform).
@@ -214,10 +221,36 @@ Store schema is v4 (v3 added agent runs, v4 adds proposals, approvals and valida
 older stores migrate additively). `baseline(..., db=None)` skips the store (the tests use this or their own database). The store
 needs only Python's stdlib `sqlite3`; the `sqlite3` command line tool is optional.
 
+## End-to-end demo (Prioritized Risk -> Fix -> Approval -> Build & Test -> Rescan -> Verdict)
+
+```bash
+python3 scripts/demo_remediation.py --allow-external-models --allow-registry   # asks you at the gate
+python3 scripts/demo_remediation.py --allow-external-models --allow-registry --approve-as "Your Name"
+```
+
+It registers `demo/vulnerable-app` (two outdated dependencies, real build and tests), runs the
+agents to propose fixes, **stops for your approval**, runs the validation agent, and prints the
+verdicts from the evidence store. `--approve-as` means *you* approve everything under that name.
+
+### Whole demo in the browser
+
+```bash
+scripts/run_demo.sh --ui      # starts the UI at http://127.0.0.1:8765 with the key and opt-ins set
+```
+
+Press **Run the demo app** (or paste a GitHub URL; choose the goal "Assess and propose fixes").
+The header strip shows what the server can do (agents, npm registry, sandbox). The flow bar
+tracks Prioritized risk -> Recommended fix -> Human approval -> Build, test, rescan -> Verified
+remediation. The agents run live (Agent run tab), the UI jumps to **Remediation** when proposals
+exist, you enter your name and **Approve**, then **Validate on a branch** and read the verdict.
+Verified in a real browser (headless Chromium) on 2026-11-24: ~4 min to the approval gate;
+approve and validate on the demo app took 47 s and returned *Verified*.
+
 ## Known limitations
 
-- Build and test execution is not implemented end to end: it needs Docker and a toolchain
-  image; recorded as `not_run`. No remediation can be `verified` in this environment.
+- Build and test run in bubblewrap (host toolchain, read-only), not in a Docker image; Docker
+  could not be started here. A suite that already fails on the unmodified copy is `not_run`,
+  never evidence for the fix.
 - Lockfile regeneration needs the npm registry (opt-in); without it validation is `blocked`.
 - Image and CI proposals (`update_base_image`, `pin`) name what is missing (digest, commit SHA)
   rather than guessing; they are not auto-applicable.

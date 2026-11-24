@@ -38,6 +38,17 @@ def add_proposal(conn: sqlite3.Connection, p: Proposal, created_by: str) -> Prop
         ).fetchone()
         if row:
             return get_proposal(conn, row[0])
+        if p.applicable:  # one fix per package change: another finding on it maps to the same one
+            key = (p.package, p.current_version, p.action, p.target, p.edits)
+            for other in list_proposals(conn, p.run_id):
+                if (
+                    other.package,
+                    other.current_version,
+                    other.action,
+                    other.target,
+                    other.edits,
+                ) == key:
+                    return other
         n = conn.execute("SELECT COUNT(*) FROM proposals WHERE run_id = ?", (p.run_id,)).fetchone()[
             0
         ]

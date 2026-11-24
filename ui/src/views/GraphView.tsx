@@ -49,7 +49,7 @@ export function GraphView({ run, onOpenFinding }: { run: string; onOpenFinding: 
       container: box.current,
       elements: [...data.nodes, ...data.edges],
       minZoom: 0.15,
-      maxZoom: 3,
+      maxZoom: 1.4,
       wheelSensitivity: 0.25,
       style: [
         {

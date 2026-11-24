@@ -120,3 +120,17 @@ def read_manifest(target: str) -> dict | None:
     t = load_target(target)
     path = jail(Path(t["path"]) / "package.json")
     return json.loads(path.read_text()) if path.is_file() else None
+
+
+def baseline_copy(base_target: str, p: Proposal) -> Path:
+    """An unmodified copy of the target (no node_modules), for comparing build/test results."""
+    base = load_target(base_target)
+    dest = WORK_DIR / f"{base_target}-{p.id}-baseline".replace(":", "-").lower()
+    if dest.exists():
+        shutil.rmtree(dest)
+    WORK_DIR.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(jail(base["path"]), dest, ignore=SKIP, symlinks=False)
+    for path in [dest, *dest.rglob("*")]:
+        if not path.is_symlink():
+            path.chmod(path.stat().st_mode | 0o200)
+    return dest

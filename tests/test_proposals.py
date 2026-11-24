@@ -87,3 +87,14 @@ def test_tables_are_append_only(conn):
         with pytest.raises(sqlite3.DatabaseError, match=r"append-only|immutable"):
             conn.execute(sql)
     assert validations(conn, "run1", p.id)[0]["verdict"] == "partially_verified"
+
+
+def test_second_finding_on_the_same_package_change_reuses_the_proposal(conn):
+    fs, _ = sample_findings()
+    twin = fs.findings[0].model_copy(update={"id": "F-010"})
+    from guardian.schemas import FindingSet
+
+    both = FindingSet(evidence=fs.evidence, findings=(*fs.findings, twin))
+    a = add_proposal(conn, propose(both, "F-001", MANIFEST, run_id="run1"), "t")
+    b = add_proposal(conn, propose(both, "F-010", MANIFEST, run_id="run1"), "t")
+    assert a.id == b.id

@@ -54,3 +54,9 @@ against the stored run, and a rejection lists exactly what to fix. Do not write 
 appendix (counts, coverage, budget); code appends it.
 
 You are done when the goal is met and the report is accepted, or when the budget is spent.
+
+## Keep the plan current
+
+The plan is what the human watches. Use `plan_update` to mark an item `in_progress` when you
+delegate it and `done`, `blocked` or `dropped` when you have its result, with a short reason.
+Do not finish a run with every item still `pending`.

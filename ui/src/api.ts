@@ -298,6 +298,13 @@ export interface ValidationReport {
   at: string;
 }
 
+export interface Capabilities {
+  agents: { ready: boolean; detail: string };
+  validation: { ready: boolean; detail: string };
+  sandbox: { ready: boolean; detail: string };
+  push: { ready: boolean; detail: string };
+}
+
 export interface Checklist {
   counts: Record<string, number>;
   items: { n: number; text: string; status: "pass" | "fail" | "n/a"; evidence: string }[];
@@ -379,7 +386,13 @@ export const api = {
     post<Approval>(`/api/proposals/${encodeURIComponent(id)}/${decision}`, { run, approver, note }, { "X-Guardian-Approval": token }),
   validate: (run: string, id: string, token: string) =>
     post<{ state: string }>(`/api/proposals/${encodeURIComponent(id)}/validate`, { run }, { "X-Guardian-Approval": token }),
-  startRun: (repo: string) => post<Job>("/api/runs", { repo }),
+  exportFix: (run: string, id: string, token: string) =>
+    post<ExportResult>(`/api/proposals/${encodeURIComponent(id)}/export`, { run }, { "X-Guardian-Approval": token }),
+  pushFix: (run: string, id: string, confirm_repo: string, token: string) =>
+    post<{ branch: string; compare_url: string; default_branch_moved: boolean }>(`/api/proposals/${encodeURIComponent(id)}/push`, { run, confirm_repo }, { "X-Guardian-Approval": token }),
+  startRun: (opts: { repo?: string; demo?: boolean; goal: "assess" | "remediate"; custom_goal?: string; branch?: string }) =>
+    post<Job>("/api/runs", opts),
+  capabilities: () => get<Capabilities>("/api/capabilities", {}),
   job: (id: string) => get<Job>(`/api/jobs/${encodeURIComponent(id)}`, {}),
 };
 
@@ -389,4 +402,9 @@ export function advisoryUrl(id: string): string | null {
   if (/^GHSA(-[0-9a-z]{4}){3}$/.test(id)) return `https://github.com/advisories/${id}`;
   if (/^MAL-\d{4}-\d+$/.test(id)) return `https://osv.dev/vulnerability/${id}`;
   return null;
+}
+
+export interface ExportResult {
+  repo: string; branch: string; title: string; verdict: string; approved_by: string;
+  lockfile_origin: string; metadata_file: string; command: string;
 }

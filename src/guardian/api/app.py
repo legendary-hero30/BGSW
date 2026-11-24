@@ -9,8 +9,10 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import secrets
+import threading
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
@@ -18,16 +20,17 @@ from datetime import UTC, datetime
 from functools import lru_cache
 from itertools import pairwise
 from pathlib import Path
+from typing import Literal
 from urllib.parse import urlparse
 from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from guardian.agents.trace import summarize
-from guardian.api.jobs import run_repo_job
+from guardian.api.jobs import GOALS, run_repo_job
 from guardian.api.views import (
     agent_timeline,
     findings_by_label,
@@ -38,6 +41,9 @@ from guardian.api.views import (
 from guardian.checklist import as_dict, evaluate
 from guardian.remediation import proposals as props
 from guardian.remediation import service as remediation
+from guardian.remediation.export import export_fix
+from guardian.remediation.push import PushError, push_fix
+from guardian.remediation.push import allowed as push_allowed
 from guardian.schemas.evidence import EvidenceKind
 from guardian.schemas.finding import Finding
 from guardian.schemas.graph import DependencyGraph, EdgeKind, GraphEdge
@@ -58,8 +64,36 @@ CSP = (
 )
 
 
+class ThreadLocalReader:
+    """One read-only connection per worker thread. A single shared sqlite3 connection used by
+    the server's thread pool raised "bad parameter or other API misuse" under concurrent
+    requests (seen in the browser: the page polls several endpoints at once)."""
+
+    def __init__(self, db: str) -> None:
+        self.db = db
+        self.local = threading.local()
+
+    def execute(self, sql: str, params: tuple | list = ()):
+        c = getattr(self.local, "conn", None)
+        if c is None:
+            c = self.local.conn = connect_readonly(self.db)
+        return c.execute(sql, params)
+
+
 class StartRun(BaseModel):
-    repo: str = Field(min_length=1, max_length=200)
+    repo: str = Field(default="", max_length=200)
+    demo: bool = False  # the bundled demo app instead of a GitHub repository
+    goal: Literal["assess", "remediate"] = "remediate"
+    custom_goal: str | None = Field(default=None, max_length=800)
+    branch: str | None = Field(
+        default=None, max_length=100, pattern=r"^[A-Za-z0-9][A-Za-z0-9._/-]*$"
+    )
+
+    @model_validator(mode="after")
+    def needs_a_target(self) -> StartRun:
+        if not self.demo and not self.repo.strip():
+            raise ValueError("give a GitHub repository or choose the demo app")
+        return self
 
 
 class Decision(BaseModel):
@@ -69,12 +103,13 @@ class Decision(BaseModel):
 
 
 class RunRef(BaseModel):
+    model_config = ConfigDict(extra="allow")  # push carries confirm_repo
     run: str = Field(min_length=1, max_length=200)
 
 
 LOOPBACK_HOST = re.compile(r"^(localhost|127\.0\.0\.1|\[::1\])(:\d{1,5})?$")
 PROPOSAL_ID = re.compile(r"^R-\d{3,6}$")
-WRITE_PATH = re.compile(r"^/api/proposals/R-\d{3,6}/(approve|reject|validate)$")
+WRITE_PATH = re.compile(r"^/api/proposals/R-\d{3,6}/(approve|reject|validate|export|push)$")
 
 
 # Constant SQL only: optional filters use "? IS NULL OR ..." so no query text is built at runtime.
@@ -127,7 +162,7 @@ def create_app(
         openapi_url="/api/openapi.json",
         lifespan=lifespan,
     )
-    conn = connect_readonly(db)
+    conn = ThreadLocalReader(db)
     sbom_cache: dict[str, tuple[int, dict]] = {}
 
     @app.middleware("http")
@@ -218,13 +253,18 @@ def create_app(
     @app.post("/api/runs", status_code=202)
     def start_run(body: StartRun) -> dict:
         """Queue one scan of a user-supplied GitHub npm repository (the only write endpoint)."""
-        try:
-            parse_repo(body.repo)
-        except DynamicTargetError as exc:
-            raise HTTPException(400, str(exc)) from exc
+        if not body.demo:
+            try:
+                parse_repo(body.repo)
+            except DynamicTargetError as exc:
+                raise HTTPException(400, str(exc)) from exc
+        goal_text = (body.custom_goal or "").strip() or GOALS[body.goal]
         job = {
             "id": uuid4().hex,
-            "repo": body.repo.strip(),
+            "repo": "bundled demo app" if body.demo else body.repo.strip(),
+            "demo": body.demo,
+            "branch": body.branch,
+            "goal_text": goal_text,
             "status": "queued",
             "step": "Queued",
             "run_id": None,
@@ -243,6 +283,47 @@ def create_app(
         snapshot = dict(job)  # the worker may finish before this response is serialised
         executor.submit(runner, job, job["repo"], db)
         return snapshot
+
+    @app.get("/api/capabilities")
+    def capabilities() -> dict:
+        """What this server can do right now, so the UI can say what is missing."""
+        from guardian.remediation import lockfile
+        from guardian.sandbox import BwrapSandbox
+
+        key = bool(os.environ.get("DEEPINFRA_API_KEY"))
+        allowed = os.environ.get("GUARDIAN_ALLOW_EXTERNAL_MODELS") == "1"
+        sandbox_ok, sandbox_why = BwrapSandbox().available()
+        return {
+            "agents": {
+                "ready": key and allowed,
+                "detail": "DeepInfra key set and external models allowed"
+                if key and allowed
+                else "missing "
+                + " and ".join(
+                    m
+                    for m, ok in (
+                        ("DEEPINFRA_API_KEY (empty or absent in .env and the environment)", key),
+                        ("GUARDIAN_ALLOW_EXTERNAL_MODELS=1", allowed),
+                    )
+                    if not ok
+                )
+                + ". Set them in .env and restart the server; without them runs are scanner-only",
+            },
+            "validation": {
+                "ready": lockfile.allowed(),
+                "detail": "npm registry access allowed for the lockfile and install steps"
+                if lockfile.allowed()
+                else "set GUARDIAN_ALLOW_REGISTRY_ACCESS=1 to let validation regenerate lockfiles",
+            },
+            "sandbox": {"ready": sandbox_ok, "detail": sandbox_why},
+            "push": {
+                "ready": push_allowed(),
+                "detail": "push enabled (token set); new guardian/fix-* branches only"
+                if push_allowed()
+                else "set GUARDIAN_ALLOW_PUSH=1 and GUARDIAN_GITHUB_TOKEN in .env to let the "
+                "server push",
+            },
+        }
 
     @app.get("/api/jobs/{job_id}")
     def job_status(job_id: str) -> dict:
@@ -455,7 +536,11 @@ def create_app(
 
     @app.get("/api/proposals")
     def proposals(run: str = Query(min_length=1, max_length=200)) -> dict:
-        stored_run(run)
+        fresh = connect_readonly(db)
+        known = fresh.execute("SELECT 1 FROM runs WHERE run_id = ?", (run,)).fetchone()
+        fresh.close()
+        if known is None:  # the agents are still working: nothing is stored yet, not an error
+            return {"run_id": run, "proposals": []}
         fresh = connect_readonly(db)
         try:
             rows = [remediation.view(fresh, run, p.id) for p in props.list_proposals(fresh, run)]
@@ -485,6 +570,23 @@ def create_app(
         stored_run(body.run)
         if decision == "validate":
             return start_validation(pid, body.run)
+        if decision == "push":
+            confirm = (body.model_extra or {}).get("confirm_repo", "")
+            try:
+                return push_fix(db, body.run, pid, str(confirm))
+            except props.ApprovalError as exc:
+                raise HTTPException(409, str(exc)) from exc
+            except PushError as exc:
+                raise HTTPException(502, str(exc)) from exc
+            except KeyError as exc:
+                raise HTTPException(404, "unknown proposal") from exc
+        if decision == "export":
+            try:
+                return export_fix(db, body.run, pid)
+            except props.ApprovalError as exc:
+                raise HTTPException(409, str(exc)) from exc
+            except KeyError as exc:
+                raise HTTPException(404, "unknown proposal") from exc
         if not isinstance(body, Decision):
             raise HTTPException(422, "approver is required")
         conn = connect(db)

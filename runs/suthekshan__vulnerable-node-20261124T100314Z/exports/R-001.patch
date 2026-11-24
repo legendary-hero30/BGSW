@@ -1,0 +1,39 @@
+diff --git a/package-lock.json b/package-lock.json
+index ac294ea..e8edec9 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -14,7 +14,7 @@
+         "ejs": "3.1.6",
+         "jsonwebtoken": "8.5.1",
+         "lodash": "4.17.15",
+-        "minimist": "1.2.5",
++        "minimist": "1.2.6",
+         "node-fetch": "2.6.0",
+         "underscore": "~1.9.1"
+       }
+@@ -233,9 +233,9 @@
+       }
+     },
+     "node_modules/minimist": {
+-      "version": "1.2.5",
+-      "resolved": "https://registry.npmjs.org/minimist/-/minimist-1.2.5.tgz",
+-      "integrity": "sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==",
++      "version": "1.2.6",
++      "resolved": "https://registry.npmjs.org/minimist/-/minimist-1.2.6.tgz",
++      "integrity": "sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==",
+       "license": "MIT"
+     },
+     "node_modules/ms": {
+diff --git a/package.json b/package.json
+index 173fef9..032cfc4 100644
+--- a/package.json
++++ b/package.json
+@@ -15,7 +15,7 @@
+     "ejs": "3.1.6",
+     "jsonwebtoken": "8.5.1",
+     "lodash": "4.17.15",
+-    "minimist": "1.2.5",
++    "minimist": "1.2.6",
+     "node-fetch": "2.6.0",
+     "underscore": "~1.9.1"
+   }

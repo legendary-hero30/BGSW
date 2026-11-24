@@ -253,6 +253,7 @@ export function AgentView({
     return (data?.events ?? []).filter((e) => {
       if (hidden.has(e.agent)) return false;
       if (e.kind === "model_call" && !showCalls) return false;
+      if (e.kind === "tool_call" && (e.name === "plan_add" || e.name === "plan_update")) return false; // shown as a PLAN row
       if (onlyIssues && !(ISSUE_KINDS.has(e.kind) || e.payload.error === true)) return false;
       return !needle || JSON.stringify(e).toLowerCase().includes(needle);
     });
@@ -291,7 +292,10 @@ export function AgentView({
             </span>
           }
         >
-          <div className="text-sm text-slate-800">{info.goal}</div>
+          <details className="text-sm text-slate-800">
+            <summary className="cursor-pointer list-none"><span className="line-clamp-3">{info.goal}</span></summary>
+            <p className="mt-1 text-slate-700">{info.goal}</p>
+          </details>
           <div className="mt-2 text-xs text-slate-500">
             {info.provider} · <span className="font-mono">{info.model}</span>
           </div>

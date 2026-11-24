@@ -7,14 +7,12 @@ from datetime import UTC, datetime
 from guardian.agents.budget import BudgetLimits
 from guardian.agents.models import ModelConfig, ModelDisabledError
 from guardian.agents.runner import run_goal
+from guardian.remediation.demo import GOAL_ASSESS, GOAL_REMEDIATE, prepare_demo_target
 from guardian.scan.baseline import baseline
 from guardian.targets import DynamicTargetError, prepare_target
 
-JOB_GOAL = (
-    "Assess the software supply-chain risk of this repository. Find what is in it, what is "
-    "vulnerable, and what looks suspicious beyond known CVEs. Report the few things that matter "
-    "most, with evidence, what was not checked, and what to do next."
-)
+JOB_GOAL = GOAL_ASSESS
+GOALS = {"assess": GOAL_ASSESS, "remediate": GOAL_REMEDIATE}
 JOB_LIMITS = {"max_steps": 100, "max_tool_calls": 250, "max_seconds": 900}
 
 
@@ -29,8 +27,16 @@ def _error_text(exc: BaseException) -> str:
 def run_repo_job(job: dict, repo: str, db: str) -> None:
     """Run one repository end to end. Updates ``job`` in place for the polling endpoint."""
     try:
-        job.update(status="cloning", step="Validating the GitHub URL and cloning the repository")
-        target = prepare_target(repo, progress=lambda msg: job.update(step=msg))
+        if job.get("demo"):
+            job.update(status="cloning", step="Preparing the bundled demo app")
+            target = prepare_demo_target()
+        else:
+            job.update(
+                status="cloning", step="Validating the GitHub URL and cloning the repository"
+            )
+            target = prepare_target(
+                repo, progress=lambda msg: job.update(step=msg), branch=job.get("branch")
+            )
         run_id = f"runs/{target['name']}"
         job["run_id"] = run_id
 
@@ -53,7 +59,8 @@ def run_repo_job(job: dict, repo: str, db: str) -> None:
         job.update(status="analyzing", step="The agents are planning")
         try:
             doc = run_goal(
-                target["name"], goal=JOB_GOAL, out_dir=run_id, db=db, cfg=ModelConfig(),
+                target["name"], goal=job.get("goal_text") or JOB_GOAL, out_dir=run_id, db=db,
+                cfg=ModelConfig(),
                 limits=BudgetLimits.from_env(**JOB_LIMITS), sandbox="auto", on_event=on_event,
             )  # fmt: skip
         except ModelDisabledError as exc:

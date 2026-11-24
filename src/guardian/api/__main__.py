@@ -11,10 +11,13 @@ import argparse
 import os
 import sys
 
+from guardian.envfile import load_env
+
 LOOPBACK = {"127.0.0.1", "localhost", "::1"}
 
 
 def main(argv: list[str] | None = None) -> int:
+    load_env()  # settings from the git-ignored .env; real environment variables win
     p = argparse.ArgumentParser(prog="guardian.api")
     p.add_argument("--host", default="127.0.0.1")
     p.add_argument("--port", type=int, default=8000)

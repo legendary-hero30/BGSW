@@ -16,7 +16,7 @@ from collections import Counter
 from collections.abc import Callable
 from pathlib import Path
 
-from guardian.remediation import lockfile, workspace
+from guardian.remediation import execute, lockfile, workspace
 from guardian.remediation.proposals import (
     ApprovalError,
     add_validation,
@@ -24,7 +24,6 @@ from guardian.remediation.proposals import (
     require_approved,
 )
 from guardian.remediation.schemas import Proposal
-from guardian.sandbox import select_sandbox
 from guardian.schemas.finding import Finding, FindingSet
 from guardian.store import connect, load_findings
 from guardian.tools.runner import jail
@@ -142,17 +141,23 @@ def verdict_for(d: dict, steps: dict, sbom: dict, proposal: Proposal) -> tuple[s
     return "verified", ["every AGENTS.md verification criterion held"]
 
 
-def build_test_steps() -> dict:
-    """Build and tests execute untrusted code, so they may only run in a sandbox container."""
-    sandbox, reason = select_sandbox("auto")
-    detail = (
-        f"{reason}; but no build/test toolchain image with the app's dependencies is configured"
-        if sandbox else reason
-    )  # fmt: skip
-    return {
-        "build": {"status": "not_run", "detail": detail},
-        "tests": {"status": "not_run", "detail": detail},
-    }
+def build_test_steps(after_dir: Path, base_dir: Path | None) -> dict:
+    """Build and tests execute untrusted code, so they run only in the namespace sandbox. The
+    same steps run on an unmodified copy so a failure can be attributed to the fix or not."""
+    out: dict = {}
+    try:
+        execute.install(after_dir)
+        if base_dir is not None:
+            execute.install(base_dir)
+    except lockfile.RegistryAccessError as e:
+        why = {"status": "not_run", "detail": str(e)}
+        return {"build": why, "tests": why}
+    for name in ("build", "test"):
+        after = execute.step(after_dir, name)
+        if base_dir is not None and after["status"] == "failed":
+            after = execute.attribute(after, execute.step(base_dir, name))
+        out["tests" if name == "test" else name] = after
+    return out
 
 
 def validate(
@@ -239,7 +244,9 @@ def validate(
               "version_changed": []}
     )  # fmt: skip
     diff = findings_diff(before, after, p)
-    report["steps"].update(build_test_steps())
+    say("Building and testing in the sandbox (and on an unmodified copy for comparison)")
+    base_dir = workspace.baseline_copy(base_target, p)
+    report["steps"].update(build_test_steps(jail(ws["path"]), base_dir))
     report["sbom_diff"] = sbom
     report["findings_diff"] = diff
     report["risk"] = {

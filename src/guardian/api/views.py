@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from collections import Counter
+from datetime import UTC, datetime
 from itertools import pairwise
 from pathlib import Path
 
@@ -18,6 +19,7 @@ RISK_RANK = {"Critical": 4, "High": 3, "Medium": 2, "Low": 1}
 RANK_LEVEL = {v: k for k, v in RISK_RANK.items()}
 MAX_GRAPH_NODES = 400
 MAX_PAGE = 200
+STALL_SECONDS = 600
 
 
 def findings_by_label(conn: sqlite3.Connection, run: str) -> dict[str, tuple[int, int]]:
@@ -280,6 +282,17 @@ def agent_timeline(conn: sqlite3.Connection, run: str, after: int = 0, limit: in
         "tool_calls": agg[1] or 0,
         "tokens": int((agg[2] or 0) + (agg[3] or 0)),
     }
+    last_ts = conn.execute(
+        "SELECT MAX(ts) FROM agent_events WHERE agent_run_id = ?", (rid,)
+    ).fetchone()[0]
+    if info["status"] == "running" and last_ts:
+        idle = (datetime.now(UTC) - datetime.fromisoformat(last_ts)).total_seconds()
+        if idle > STALL_SECONDS:  # a killed process cannot close its own record
+            info["status"] = "interrupted"
+            info["stop_reason"] = (
+                f"no activity for {int(idle // 60)} minutes; the process most likely ended "
+                "(shown as interrupted; the stored record is unchanged)"
+            )
     limit = max(1, min(limit, 500))
     events = [
         {"seq": s, "ts": ts, "agent": a, "kind": k, "name": n, "payload": json.loads(p)}

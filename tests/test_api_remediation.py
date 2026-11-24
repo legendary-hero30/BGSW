@@ -95,7 +95,33 @@ def test_approval_is_logged_with_approver_and_time(client):
 
 
 def test_unknown_run_and_malformed_ids(client):
-    assert client.get("/api/proposals", params={"run": "nope"}).status_code == 404
+    assert client.get("/api/proposals", params={"run": "nope"}).json()["proposals"] == []
     assert client.get("/api/proposals/../x", params={"run": RUN}).status_code in {404, 422}
     assert client.post("/api/proposals/R-1/approve", json={}).status_code == 405
     assert json.dumps(client.get("/api/proposals", params={"run": RUN}).json())
+
+
+def test_concurrent_reads_do_not_share_a_connection(client):
+    from concurrent.futures import ThreadPoolExecutor
+
+    def hit(_):
+        return client.get("/api/findings", params={"run": RUN, "limit": 5}).status_code
+
+    with ThreadPoolExecutor(8) as ex:
+        assert set(ex.map(hit, range(80))) == {200}
+
+
+def test_capabilities_report_what_is_missing(client, monkeypatch):
+    monkeypatch.delenv("DEEPINFRA_API_KEY", raising=False)
+    monkeypatch.delenv("GUARDIAN_ALLOW_REGISTRY_ACCESS", raising=False)
+    caps = client.get("/api/capabilities").json()
+    assert caps["agents"]["ready"] is False and "DEEPINFRA_API_KEY" in caps["agents"]["detail"]
+    assert caps["validation"]["ready"] is False and "REGISTRY" in caps["validation"]["detail"]
+    assert set(caps) == {"agents", "validation", "sandbox", "push"}
+
+
+def test_start_run_accepts_demo_and_goal(client):
+    assert client.post("/api/runs", json={}).status_code == 422
+    r = client.post("/api/runs", json={"demo": True, "goal": "assess"})
+    assert r.status_code == 202 and r.json()["repo"] == "bundled demo app"
+    assert client.post("/api/runs", json={"demo": True, "goal": "nope"}).status_code == 422

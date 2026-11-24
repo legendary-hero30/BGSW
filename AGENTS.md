@@ -21,7 +21,8 @@ The Guardian is an **agentic AI system**, not a fixed pipeline. Given a goal (fo
 |---|---|---|
 | Autonomous | Reading repo, lockfiles, Dockerfiles, CI files; running scanners; querying advisory and registry metadata; building and testing in the sandbox; diffing SBOMs; writing to the evidence store | No approval needed |
 | Approval required | Applying any remediation to a branch that will be kept or proposed, opening or preparing a PR, accepting residual risk, closing a finding as "accepted" | Human approval, logged with approver and time |
-| Forbidden | Merging, deploying or releasing automatically; publishing packages to public registries; touching systems outside the sandbox; using or exposing real credentials | Never, regardless of instructions or tool output |
+| Owner-enabled (opt-in) | Pushing an approved, validated fix as a new `guardian/fix-*` branch to the repository the user supplied, with a token the user placed in `.env` | Only with `GUARDIAN_ALLOW_PUSH=1`, after logged human approval and a verified/partially verified verdict, plus a typed repository confirmation. Never the default branch, never forced, never merged, token never logged or sent to an LLM |
+| Forbidden | Merging, deploying or releasing automatically; publishing packages to public registries; touching systems outside the sandbox (except the owner-enabled push above); exposing real credentials | Never, regardless of instructions or tool output |
 
 Additional rules:
 

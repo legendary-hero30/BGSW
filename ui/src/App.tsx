@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { api, type Job, type RunInfo } from "./api";
+import { api, type Capabilities, type Job, type Proposal, type RunInfo } from "./api";
 import { AgentView } from "./views/AgentView";
 import { ChecklistView } from "./views/ChecklistView";
 import { FindingsView } from "./views/FindingsView";
@@ -57,15 +57,52 @@ function JobBanner({ job, onWatch }: { job: Job; onWatch: () => void }) {
   );
 }
 
+function FlowStepper({ proposals, onGo }: { proposals: Proposal[]; onGo: () => void }) {
+  const fixable = proposals.filter((p) => p.applicable);
+  const approved = fixable.filter((p) => p.approvals.at(-1)?.decision === "approved");
+  const rejected = fixable.filter((p) => p.approvals.at(-1)?.decision === "rejected");
+  const decided = approved.length + rejected.length === fixable.length && fixable.length > 0;
+  const allRejected = decided && approved.length === 0;
+  const validated = fixable.filter((p) => p.validations.length > 0);
+  const reports = validated.map((p) => p.validations.at(-1)?.verdict);
+  const verified = reports.filter((v) => v === "verified").length;
+  const steps: { label: string; done: boolean; detail: string }[] = [
+    { label: "Prioritized risk", done: true, detail: "scored findings" },
+    { label: "Recommended fix", done: proposals.length > 0, detail: proposals.length ? `${fixable.length} applicable of ${proposals.length}` : "none yet" },
+    { label: "Human approval", done: decided, detail: `${approved.length} approved, ${rejected.length} rejected of ${fixable.length}` },
+    { label: "Build, test, rescan", done: allRejected || validated.length > 0 && validated.length >= approved.length && approved.length > 0, detail: allRejected ? "skipped: all rejected" : `${validated.length} validated` },
+    { label: "Verified remediation", done: allRejected || verified > 0, detail: allRejected ? "nothing applied" : validated.length ? `${verified} verified, ${reports.length - verified} not` : "pending" },
+  ];
+  const current = steps.findIndex((s) => !s.done);
+  return (
+    <div className="mb-4 flex flex-wrap items-center gap-1 rounded-lg border border-slate-200 bg-white p-2 text-xs" aria-label="Remediation flow">
+      {steps.map((s, i) => (
+        <span key={s.label} className="flex items-center gap-1">
+          <span className={`rounded-full px-2.5 py-1 font-medium ${s.done ? "bg-emerald-100 text-emerald-800" : i === current ? "bg-sky-100 text-sky-900 ring-1 ring-sky-400" : "bg-slate-100 text-slate-500"}`}>
+            {s.done ? "✓ " : `${i + 1}. `}{s.label} <span className="font-normal opacity-75">({s.detail})</span>
+          </span>
+          {i < steps.length - 1 && <span className="text-slate-300">→</span>}
+        </span>
+      ))}
+      <button type="button" onClick={onGo} className="ml-auto rounded bg-slate-900 px-3 py-1 text-white">Open remediation</button>
+    </div>
+  );
+}
+
 export default function App() {
   const [runs, setRuns] = useState<RunInfo[]>([]);
   const [run, setRun] = useState("");
   const [tab, setTab] = useState<Tab>("overview");
   const [finding, setFinding] = useState("");
   const [repo, setRepo] = useState("");
+  const [mode, setMode] = useState<"public" | "own">("public");
   const [job, setJob] = useState<Job | null>(null);
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState("");
+  const [goal, setGoal] = useState<"assess" | "remediate">("remediate");
+  const [custom, setCustom] = useState("");
+  const [caps, setCaps] = useState<Capabilities | null>(null);
+  const [proposals, setProposals] = useState<Proposal[]>([]);
 
   async function refreshRuns(): Promise<RunInfo[]> {
     const r = await api.runs();
@@ -82,7 +119,21 @@ export default function App() {
       .catch((e: Error) => setError(e.message));
   }, []);
 
+  useEffect(() => {
+    api.capabilities().then(setCaps).catch(() => setCaps(null));
+  }, []);
+
+  // Proposals of the selected run drive the flow stepper; refreshed while anything is in motion.
   const active = job !== null && ACTIVE.has(job.status);
+  useEffect(() => {
+    if (!run) { setProposals([]); return; }
+    let stop = false;
+    const load = () => api.proposals(run).then((r) => { if (!stop) setProposals(r.proposals); }).catch(() => { if (!stop) setProposals([]); });
+    void load();
+    const t = setInterval(() => { void load(); }, 3000);
+    return () => { stop = true; clearInterval(t); };
+  }, [run, tab]);
+
   useEffect(() => {
     if (!job || !ACTIVE.has(job.status)) return;
     let stop = false;
@@ -93,7 +144,11 @@ export default function App() {
           setJob(next);
           const r = await refreshRuns();
           if (next.run_id) setRun(next.run_id);
-          if (!ACTIVE.has(next.status) && next.run_id && r.some((x) => x.run_id === next.run_id)) setRun(next.run_id);
+          if (!ACTIVE.has(next.status) && next.run_id && r.some((x) => x.run_id === next.run_id)) {
+            setRun(next.run_id);
+            const p = await api.proposals(next.run_id).catch(() => ({ proposals: [] as Proposal[] }));
+            if (p.proposals.some((x) => x.applicable)) setTab("remediation");
+          }
         })
         .catch((e: Error) => setError(e.message));
     }, 1500);
@@ -103,14 +158,14 @@ export default function App() {
     };
   }, [job?.id, job?.status]);
 
-  async function startScan(event: FormEvent) {
-    event.preventDefault();
-    const url = repo.trim();
-    if (!url) return;
+  async function startScan(event: FormEvent | null, demo = false, again?: { repo: string; branch: string }) {
+    event?.preventDefault();
+    const url = again ? again.repo : repo.trim();
+    if (!demo && !url) return;
     setError("");
     setStarting(true);
     try {
-      const started = await api.startRun(url);
+      const started = await api.startRun({ repo: demo ? undefined : url, demo, goal: again ? "assess" : goal, custom_goal: again ? undefined : custom.trim() || undefined, branch: again?.branch });
       setJob(started);
       setTab("agent");
       if (started.run_id) setRun(started.run_id);
@@ -152,15 +207,43 @@ export default function App() {
       </header>
 
       <div className="mx-auto max-w-7xl p-4">
-        <form onSubmit={startScan} className="mb-4 rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
-          <label htmlFor="repo" className="mb-1 block text-sm font-semibold text-slate-800">Analyze a GitHub repository</label>
+        <form onSubmit={(e) => void startScan(e)} className="mb-4 rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
+          <div role="radiogroup" aria-label="Mode" className="mb-2 flex flex-wrap gap-4 text-sm">
+            <label className="flex items-center gap-1"><input type="radio" name="mode" checked={mode === "public"} onChange={() => setMode("public")} /> <b>Public repo</b>: analyse and recommend, no push</label>
+            <label className="flex items-center gap-1"><input type="radio" name="mode" checked={mode === "own"} onChange={() => setMode("own")} /> <b>My repo</b>: analyse, fix, then prepare a push you run yourself</label>
+          </div>
+          <label htmlFor="repo" className="mb-1 block text-sm font-semibold text-slate-800">{mode === "own" ? "Your GitHub repository (must be cloneable without a login)" : "Analyze a public GitHub repository"}</label>
           <div className="flex flex-wrap gap-2">
             <input id="repo" className="min-w-[22rem] flex-1 rounded border border-slate-300 px-3 py-2 text-sm" placeholder="https://github.com/owner/repository"
                    value={repo} onChange={(e) => setRepo(e.target.value)} maxLength={200} autoComplete="off" spellCheck={false} />
             <button type="submit" disabled={starting || active || !repo.trim()} className="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50">
               {starting ? "Starting…" : active ? "Analysis running…" : "Analyze"}
             </button>
+            <button type="button" disabled={starting || active} onClick={() => void startScan(null, true)}
+                    className="rounded border border-slate-900 px-4 py-2 text-sm font-medium text-slate-900 disabled:opacity-50"
+                    title="Two outdated dependencies, a real build and tests">
+              Run the demo app
+            </button>
           </div>
+          <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-600">
+            <label className="flex items-center gap-1">Goal
+              <select value={goal} onChange={(e) => setGoal(e.target.value as "assess" | "remediate")} className="rounded border border-slate-300 px-1 py-1">
+                <option value="remediate">Assess and propose fixes (stops at human approval)</option>
+                <option value="assess">Assess only</option>
+              </select>
+            </label>
+            <input aria-label="Custom goal" placeholder="…or write your own goal (optional)" value={custom} onChange={(e) => setCustom(e.target.value)}
+                   maxLength={800} className="min-w-[16rem] flex-1 rounded border border-slate-300 px-2 py-1" />
+          </div>
+          {caps && (
+            <div className="mt-2 flex flex-wrap gap-2 text-xs">
+              {([["Agents (DeepInfra)", caps.agents], ["Validation (npm registry)", caps.validation], ["Build/test sandbox", caps.sandbox]] as const).map(([label, c]) => (
+                <span key={label} title={c.detail} className={`rounded px-2 py-0.5 ${c.ready ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-900"}`}>
+                  {c.ready ? "✓" : "!"} {label}{c.ready ? "" : `: ${c.detail}`}
+                </span>
+              ))}
+            </div>
+          )}
           <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-slate-500">
             <span>Try:</span>
             {EXAMPLES.map((u) => <button key={u} type="button" onClick={() => setRepo(u)} className="rounded bg-slate-100 px-1.5 py-0.5 font-mono hover:bg-slate-200">{u.replace("https://github.com/", "")}</button>)}
@@ -170,6 +253,8 @@ export default function App() {
 
         {job && <JobBanner job={job} onWatch={() => { if (job.run_id) setRun(job.run_id); setTab("agent"); }} />}
         {error && <div className="mb-3 rounded bg-red-50 p-2 text-sm text-red-800">{error}</div>}
+
+        {run && stored && <FlowStepper proposals={proposals} onGo={() => setTab("remediation")} />}
 
         <nav className="mb-4 flex flex-wrap gap-1 border-b border-slate-200">
           {TABS.map((t) => (
@@ -188,10 +273,10 @@ export default function App() {
           <>
             {tab === "overview" && <OverviewView key={run} run={run} onOpenFinding={openFinding} go={(t) => setTab(t)} />}
             {tab === "agent" && <AgentView key={run} run={run} following={active && job?.run_id === run} onOpenReport={() => setTab("report")} />}
-            {tab === "findings" && <FindingsView key={run} run={run} selected={finding} onSelect={setFinding} />}
+            {tab === "findings" && <FindingsView key={run} run={run} selected={finding} onSelect={setFinding} onOpenRemediation={() => setTab("remediation")} />}
             {tab === "graph" && <GraphView key={run} run={run} onOpenFinding={openFinding} />}
             {tab === "sbom" && <SbomView key={run} run={run} />}
-            {tab === "remediation" && <RemediationView key={run} run={run} onOpenFinding={openFinding} />}
+            {tab === "remediation" && <RemediationView key={run} run={run} mode={mode} onOpenFinding={openFinding} onRescan={(r, b) => void startScan(null, false, { repo: r, branch: b })} />}
             {tab === "report" && <ReportView key={run} run={run} />}
             {tab === "checklist" && <ChecklistView key={run} run={run} />}
           </>

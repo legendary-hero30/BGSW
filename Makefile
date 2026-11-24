@@ -3,7 +3,8 @@ RUN ?= runs/demo
 LIMIT ?= 20
 PORT ?= 8000
 
-.PHONY: help sync ui scan agents deepinfra api demo test lint fmt integration clean
+
+.PHONY: remediation-demo help sync ui scan agents deepinfra api demo test lint fmt integration clean
 
 help:
 	@printf '%s\n' \
@@ -51,3 +52,6 @@ lint:
 
 clean:
 	rm -rf .pytest_cache .ruff_cache
+
+remediation-demo:
+	./scripts/run_demo.sh $(ARGS)

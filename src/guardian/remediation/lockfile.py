@@ -37,8 +37,8 @@ def regenerate(work: Path, timeout: int = 300) -> dict:
         env = {
             "PATH": os.pathsep.join([str(Path(npm).parent), "/usr/bin", "/bin"]),
             "HOME": home,
-            "NPM_CONFIG_USERCONFIG": "/dev/null",
-            "NPM_CONFIG_GLOBALCONFIG": "/dev/null",
+            "NPM_CONFIG_USERCONFIG": f"{home}/user.npmrc",  # empty, so no user tokens are read
+            "NPM_CONFIG_GLOBALCONFIG": f"{home}/global.npmrc",
             "NPM_CONFIG_CACHE": f"{home}/cache",
         }
         done = subprocess.run(  # noqa: S603 - fixed argv, no shell, scripts disabled

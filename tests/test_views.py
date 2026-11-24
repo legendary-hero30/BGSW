@@ -256,3 +256,30 @@ def test_timeline_for_an_unknown_run_is_empty(timeline):
         "hypotheses": [],
         "last_seq": 0,
     }
+
+
+def test_running_run_with_no_recent_events_is_shown_as_interrupted():
+    from datetime import UTC, datetime, timedelta
+
+    from guardian.api.views import agent_timeline
+    from guardian.store import connect
+
+    conn = connect("runs/pytest-views-stall/g.db")
+    old = (datetime.now(UTC) - timedelta(minutes=30)).isoformat(timespec="milliseconds")
+    with conn:
+        conn.execute(
+            "INSERT INTO agent_runs(agent_run_id, run_id, goal, target, provider, model, status, "
+            "budget_json, prompts_json, started_at) VALUES ('s1','r','g','t','p','m','running',"
+            "'{}','{}',?)",
+            (old,),
+        )
+        conn.execute(
+            "INSERT INTO agent_events(agent_run_id, seq, ts, agent, kind, name, payload_json) "
+            "VALUES ('s1', 1, ?, 'runner', 'note', NULL, '{}')",
+            (old,),
+        )
+    out = agent_timeline(conn, "r")
+    assert out["agent_run"]["status"] == "interrupted" and out["live"] is False
+    assert "no activity" in out["agent_run"]["stop_reason"]
+    conn.close()
+    shutil.rmtree(WORKSPACE / "runs/pytest-views-stall", ignore_errors=True)

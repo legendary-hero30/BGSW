@@ -1,0 +1,22 @@
+{
+  "name": "guardian-demo-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sample app for the Guardian demo: outdated dependencies, a risky vendored package, an unsafe Dockerfile and an unsafe CI workflow.",
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "node --check src/index.js && node --check src/cli.js && node --check src/server.js",
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "axios": "0.21.1",
+    "colour-utils": "file:vendor/colour-utils",
+    "ejs": "3.1.6",
+    "jsonwebtoken": "8.5.1",
+    "lodash": "4.17.15",
+    "minimist": "1.2.5",
+    "node-fetch": "2.6.0",
+    "underscore": "~1.9.1"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "generated_at": "2026-11-24T10:26:37+00:00",
+  "target": {
+    "name": "work-suthekshan__vulnerable-node-20261124t100314z-r-005",
+    "repo": "https://github.com/suthekshan/vulnerable-node",
+    "commit": "c35fa32337e5a7d7493bd80fef66823dcce5fce3",
+    "license": "unknown",
+    "path": "targets/work/suthekshan__vulnerable-node-20261124t100314z-r-005"
+  },
+  "tools": {
+    "syft": "syft 1.57.2"
+  },
+  "artifacts": {
+    "sbom": {
+      "file": "runs/suthekshan__vulnerable-node-20261124T100314Z-after-r-005/sbom.cdx.json",
+      "sha256": "4a7f6f2fb7d9f55149f60265df9a4509983445f3a13cc8380b89bcbe1283eb75",
+      "format": "CycloneDX 1.5 JSON"
+    },
+    "graph": {
+      "file": "runs/suthekshan__vulnerable-node-20261124T100314Z-after-r-005/graph.json"
+    }
+  },
+  "discovered_files": {
+    "manifests": [
+      "targets/work/suthekshan__vulnerable-node-20261124t100314z-r-005/package-lock.json",
+      "targets/work/suthekshan__vulnerable-node-20261124t100314z-r-005/package.json",
+      "targets/work/suthekshan__vulnerable-node-20261124t100314z-r-005/vendor/colour-utils/package.json"
+    ],
+    "dockerfiles": [
+      "targets/work/suthekshan__vulnerable-node-20261124t100314z-r-005/Dockerfile"
+    ],
+    "compose": [],
+    "ci": [
+      "targets/work/suthekshan__vulnerable-node-20261124t100314z-r-005/.github/workflows/ci.yml"
+    ]
+  },
+  "sbom": {
+    "components": 40,
+    "by_purl_type": {
+      "pkg:github": 3,
+      "pkg:npm": 35,
+      "none": 2
+    },
+    "ci_actions": [
+      "pkg:github/actions/checkout@main",
+      "pkg:github/actions/setup-node@v3",
+      "pkg:github/some-org/deploy-action@master"
+    ],
+    "dependency_records": 13
+  },
+  "graph": {
+    "nodes": 34,
+    "edges": 35,
+    "runtime_install_paths": 33,
+    "dev_install_paths": 0,
+    "unique_runtime_packages": 33,
+    "unique_dev_packages": 0,
+    "direct": {
+      "runtime": [
+        "axios@0.21.1",
+        "ejs@3.1.6",
+        "jsonwebtoken@8.5.1",
+        "lodash@4.17.15",
+        "minimist@1.2.5",
+        "node-fetch@2.6.7",
+        "underscore@1.9.2"
+      ],
+      "dev": []
+    },
+    "by_depth": {
+      "0": 1,
+      "1": 8,
+      "2": 13,
+      "3": 7,
+      "4": 3,
+      "5": 1,
+      "6": 1
+    },
+    "max_depth": 6,
+    "unreachable_from_root": [],
+    "unresolved_optional": 0,
+    "unresolved_required": [
+      "node_modules/node-fetch -> encoding"
+    ]
+  },
+  "cross_check_vs_sbom": {
+    "agrees": false,
+    "graph_runtime_unique": 34,
+    "sbom_npm_unique": 35,
+    "only_in_graph": [],
+    "only_in_sbom": [
+      "colour-utils@UNKNOWN"
+    ]
+  }
+}

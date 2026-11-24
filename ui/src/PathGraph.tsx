@@ -20,6 +20,7 @@ export function PathGraph({ elements }: { elements: GraphElements | null }) {
       elements: [...elements.nodes, ...elements.edges],
       layout: { name: "breadthfirst", directed: true, spacingFactor: 1.1, padding: 12 },
       userZoomingEnabled: true,
+      maxZoom: 1.4,
       boxSelectionEnabled: false,
       style: [
         {

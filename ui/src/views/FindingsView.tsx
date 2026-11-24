@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api, type FindingDetail, type FindingRow, type GraphElements } from "../api";
+import { api, type FindingDetail, type FindingRow, type GraphElements, type Proposal } from "../api";
 import { EvidenceCard } from "../EvidenceCard";
 import { Empty, RISK_ORDER, RiskBadge } from "../ui";
 
@@ -9,7 +9,11 @@ const TYPES = [
   "unpinned_ci", "misconfiguration",
 ];
 
-export function FindingsView({ run, selected, onSelect }: { run: string; selected: string; onSelect: (id: string) => void }) {
+export function FindingsView({ run, selected, onSelect, onOpenRemediation }: { run: string; selected: string; onSelect: (id: string) => void; onOpenRemediation?: () => void }) {
+  const [proposals, setProposals] = useState<Proposal[]>([]);
+  useEffect(() => {
+    api.proposals(run).then((r) => setProposals(r.proposals)).catch(() => setProposals([]));
+  }, [run]);
   const [filters, setFilters] = useState({ type: "", level: "", q: "" });
   const [rows, setRows] = useState<{ total: number; items: FindingRow[] }>({ total: 0, items: [] });
   const [detail, setDetail] = useState<FindingDetail | null>(null);
@@ -82,7 +86,8 @@ export function FindingsView({ run, selected, onSelect }: { run: string; selecte
           ))}
         </ol>
       </aside>
-      <main>{detail ? <EvidenceCard detail={detail} graph={graph} /> : <Empty title="Select a finding" />}</main>
+      <main>{detail ? <EvidenceCard detail={detail} graph={graph} onOpenRemediation={onOpenRemediation}
+        proposals={proposals.filter((p) => p.finding_id === selected || p.expected_risk_reduction.findings_resolved.includes(selected))} /> : <Empty title="Select a finding" />}</main>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { api, type Proposal, type ValidationReport } from "../api";
+import { api, type Capabilities, type ExportResult, type Proposal, type ValidationReport } from "../api";
 import { Card, Chip, Empty, RiskBadge } from "../ui";
 
 const STATUS_TONE: Record<string, "neutral" | "good" | "warn" | "bad" | "info"> = {
@@ -67,7 +67,12 @@ function Report({ r }: { r: ValidationReport }) {
   );
 }
 
-function Detail({ run, id, onChange }: { run: string; id: string; onChange: () => void }) {
+function Detail({ run, id, onChange, mode, onRescan }: { run: string; id: string; onChange: () => void; mode: "public" | "own"; onRescan: (repo: string, branch: string) => void }) {
+  const [exported, setExported] = useState<ExportResult | null>(null);
+  const [confirm, setConfirm] = useState("");
+  const [pushed, setPushed] = useState<{ branch: string; compare_url: string; default_branch_moved: boolean } | null>(null);
+  const [caps, setCaps] = useState<Capabilities | null>(null);
+  useEffect(() => { api.capabilities().then(setCaps).catch(() => setCaps(null)); }, []);
   const [p, setP] = useState<Proposal | null>(null);
   const [approver, setApprover] = useState("");
   const [note, setNote] = useState("");
@@ -82,6 +87,36 @@ function Detail({ run, id, onChange }: { run: string; id: string; onChange: () =
     const t = setInterval(() => { void load(); }, 2000);
     return () => clearInterval(t);
   }, [running, load]);
+  const finished = p?.validating?.state === "done" || p?.validating?.state === "error";
+  useEffect(() => { if (finished) onChange(); }, [finished]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function prepare() {
+    setError("");
+    setBusy(true);
+    try {
+      const { token } = await api.approvalToken();
+      setExported(await api.exportFix(run, id, token));
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function push() {
+    setError("");
+    setBusy(true);
+    try {
+      const { token } = await api.approvalToken();
+      const done = await api.pushFix(run, id, confirm.trim(), token);
+      setPushed(done);
+      if (exported) onRescan(exported.repo, done.branch);
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function act(kind: "approve" | "reject" | "validate") {
     setError("");
@@ -152,20 +187,44 @@ function Detail({ run, id, onChange }: { run: string; id: string; onChange: () =
             </label>
             <button type="button" disabled={busy || !approver.trim()} onClick={() => void act("approve")} className="rounded bg-emerald-700 px-3 py-1.5 text-white disabled:opacity-50">Approve</button>
             <button type="button" disabled={busy || !approver.trim()} onClick={() => void act("reject")} className="rounded bg-red-700 px-3 py-1.5 text-white disabled:opacity-50">Reject</button>
-            <button type="button" disabled={busy || running || last?.decision !== "approved"} onClick={() => void act("validate")} className="rounded bg-slate-900 px-3 py-1.5 text-white disabled:opacity-50">{running ? "Validating…" : "Validate on a branch"}</button>
+            <button type="button" disabled={busy || running || last?.decision !== "approved" || caps?.validation.ready === false} onClick={() => void act("validate")} className="rounded bg-slate-900 px-3 py-1.5 text-white disabled:opacity-50">{running ? "Validating…" : "Validate on a branch"}</button>
           </div>
         ) : <div className="text-sm text-slate-600">This proposal changes no file, so there is nothing to approve for application. It records a recommendation for a human reviewer.</div>}
+        {caps?.validation.ready === false && <div className="mt-2 rounded bg-amber-50 p-2 text-xs text-amber-900">Validate is disabled: {caps.validation.detail}.</div>}
         {running && <div className="mt-2 text-sm text-sky-800">{p.validating?.step}</div>}
         {p.validating?.error && <div className="mt-2 rounded bg-red-50 p-2 text-sm text-red-800">{p.validating.error}</div>}
         {error && <div className="mt-2 rounded bg-red-50 p-2 text-sm text-red-800">{error}</div>}
         <p className="mt-2 text-xs text-slate-500">Agents cannot approve. Nothing is merged: validation works on an isolated copy and branch. Build and tests run only in a sandbox container; when none is configured they are reported as “not run” and the verdict cannot be “verified”.</p>
       </Card>
       {report && <Report r={report} />}
+      {mode === "own" && report && (report.verdict === "verified" || report.verdict === "partially_verified") && (
+        <Card title="Push this fix to your repository, then rescan it">
+          <p className="text-sm">Guardian never pushes and never holds your git credentials. It prepares a patch; you run one command in a terminal with your own git login. It pushes a new <code>guardian/fix-…</code> branch only, never the default branch, and nothing is merged.</p>
+          <button type="button" disabled={busy} onClick={() => void prepare()} className="mt-2 rounded bg-slate-900 px-3 py-1.5 text-sm text-white disabled:opacity-50">Push fix to my repo…</button>
+          {exported && caps?.push.ready && !pushed && (
+            <div className="mt-3 rounded border border-amber-300 bg-amber-50 p-2 text-sm">
+              <div>Push <b>{exported.branch}</b> to <b>{exported.repo}</b> now, using the token in the server's <code>.env</code>. Type <code>{exported.repo.replace("https://github.com/", "")}</code> to confirm.</div>
+              <div className="mt-1 flex gap-2">
+                <input aria-label="Repository to confirm" className="flex-1 rounded border border-slate-300 px-2 py-1" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
+                <button type="button" disabled={busy || confirm.trim() !== exported.repo.replace("https://github.com/", "")} onClick={() => void push()} className="rounded bg-red-700 px-3 py-1 text-white disabled:opacity-50">Push branch</button>
+              </div>
+            </div>
+          )}
+          {exported && caps && !caps.push.ready && <div className="mt-2 text-xs text-slate-600">Server push is off ({caps.push.detail}).</div>}
+          {pushed && <div className="mt-2 rounded bg-emerald-50 p-2 text-sm text-emerald-900">Pushed <b>{pushed.branch}</b>{pushed.default_branch_moved ? " (the default branch had moved since the scan; the patch still applied)" : ""}. <a className="underline" href={pushed.compare_url} target="_blank" rel="noreferrer">Open the pull request</a> and merge it yourself. Rescanning the pushed branch now: the new run appears in the Run list.</div>}
+          {exported && (
+            <div className="mt-2 text-sm">
+              <div>Branch <b>{exported.branch}</b> on {exported.repo}{exported.lockfile_origin !== "repository" ? ` (lockfile ${exported.lockfile_origin} by Guardian)` : ""}. Run from the project folder:</div>
+              <pre className="mt-1 overflow-x-auto rounded bg-slate-900 p-2 text-xs text-slate-100">{exported.command}</pre>
+            </div>
+          )}
+        </Card>
+      )}
     </div>
   );
 }
 
-export function RemediationView({ run, onOpenFinding }: { run: string; onOpenFinding: (id: string) => void }) {
+export function RemediationView({ run, onOpenFinding, mode, onRescan }: { run: string; onOpenFinding: (id: string) => void; mode: "public" | "own"; onRescan: (repo: string, branch: string) => void }) {
   const [rows, setRows] = useState<Proposal[] | null>(null);
   const [sel, setSel] = useState("");
   const [error, setError] = useState("");
@@ -186,7 +245,7 @@ export function RemediationView({ run, onOpenFinding }: { run: string; onOpenFin
           </button>
         ))}
       </aside>
-      <main>{sel && <Detail key={sel} run={run} id={sel} onChange={() => void load()} />}</main>
+      <main>{sel && <Detail key={sel} mode={mode} onRescan={onRescan} run={run} id={sel} onChange={() => void load()} />}</main>
     </div>
   );
 }

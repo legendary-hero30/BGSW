@@ -114,5 +114,51 @@ def test_sbx_is_detection_only_and_says_why():
 
 def test_backend_report_lists_both_backends():
     report = backend_report()
-    assert set(report) == {"docker", "sbx"}
+    assert set(report) == {"docker", "bwrap", "sbx"}
     assert all(set(v) == {"available", "detail"} for v in report.values())
+
+
+# --- bubblewrap backend: real namespaces, no daemon ---------------------------------------------
+
+import shutil as _shutil  # noqa: E402
+
+from guardian.sandbox import BwrapSandbox, ExecSpec, bwrap_command  # noqa: E402
+
+needs_bwrap = pytest.mark.skipif(not BwrapSandbox().available()[0], reason="bubblewrap unusable")
+
+
+def test_bwrap_command_flags(tmp_path):
+    cmd = bwrap_command(["npm", "test"], ExecSpec(work=str(tmp_path), ro_paths=("/opt",)))
+    for flag in ("--unshare-all", "--die-with-parent", "--cap-drop", "--clearenv"):
+        assert flag in cmd
+    assert "--share-net" not in cmd and cmd[-2:] == ["npm", "test"]
+    assert ["--ro-bind", str(tmp_path), "/work"] == cmd[
+        cmd.index(str(tmp_path)) - 1 : cmd.index(str(tmp_path)) + 2
+    ]
+
+
+def test_bwrap_rejects_bad_specs(tmp_path):
+    with pytest.raises(SandboxUnavailableError):
+        bwrap_command(["x"], ExecSpec(work="relative"))
+    with pytest.raises(SandboxUnavailableError):
+        bwrap_command(["x"], ExecSpec(work=str(tmp_path), ro_paths=("/a/../b",)))
+    with pytest.raises(SandboxUnavailableError):
+        bwrap_command(["x"], ExecSpec(work=str(tmp_path), timeout_s=0))
+
+
+@needs_bwrap
+def test_bwrap_isolation_is_real(tmp_path):
+    (tmp_path / "f.txt").write_text("hi")
+    sb = BwrapSandbox()
+    spec = ExecSpec(work=str(tmp_path), timeout_s=20)
+    out = sb.run_spec(["/bin/sh", "-c", "cat f.txt; grep CapEff /proc/self/status"], spec)
+    assert out.returncode == 0 and "hi" in out.stdout and "0000000000000000" in out.stdout
+    # no home directory, no network, read-only work tree, host files not visible
+    assert sb.run_spec(["/bin/sh", "-c", "ls /home"], spec).returncode != 0
+    assert sb.run_spec(["/bin/sh", "-c", "echo x > /work/new"], spec).returncode != 0
+    assert (tmp_path / "new").exists() is False
+    net = sb.run_spec(["/bin/sh", "-c", "exec 3<>/dev/tcp/1.1.1.1/53"], spec)
+    assert net.returncode != 0
+    slow = sb.run_spec(["/bin/sleep", "30"], ExecSpec(work=str(tmp_path), timeout_s=1))
+    assert slow.timed_out
+    assert _shutil.which("bwrap")

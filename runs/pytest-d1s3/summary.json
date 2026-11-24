@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T03:00:04+00:00",
+  "generated_at": "2026-11-24T09:40:09+00:00",
   "target": {
     "name": "nodegoat",
     "repo": "https://github.com/OWASP/NodeGoat.git",
@@ -13,7 +13,7 @@
   "artifacts": {
     "sbom": {
       "file": "runs/pytest-d1s3/sbom.cdx.json",
-      "sha256": "ee9f661f322960f66015f90b2c5c0987784e19c56162ab59fb74d46ba9e8712a",
+      "sha256": "d1c788dde761dd69aebd022ce2a73768bce76c987fe5ce22cf5ddf2bda5e77a3",
       "format": "CycloneDX 1.5 JSON"
     },
     "graph": {
