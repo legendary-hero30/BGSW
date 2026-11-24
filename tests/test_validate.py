@@ -137,3 +137,19 @@ def test_validate_refuses_unapproved(monkeypatch):
             v.validate(DB, session.pipeline.run_id, p.id, "fixture", OUT)
     finally:
         cleanup()
+
+
+def test_path_named_findings_do_not_change_identity_between_copies(fs):
+    """A Dockerfile finding is named by its path; the work copy has a different directory."""
+
+    def renamed(name: str) -> FindingSet:
+        first = fs.findings[0]
+        moved = first.model_copy(
+            update={"component": first.component.model_copy(update={"name": name})}
+        )
+        return FindingSet(evidence=fs.evidence, findings=(moved, *fs.findings[1:]))
+
+    before = renamed("targets/dynamic/app-1/Dockerfile")
+    after = renamed("targets/work/app-1-r-001/Dockerfile")
+    d = v.findings_diff(before, after, prop(fs))
+    assert d["new"] == [] and len(d["resolved"]) == 0

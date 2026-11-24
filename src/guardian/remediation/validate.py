@@ -12,6 +12,7 @@ Verdicts (AGENTS.md section 8: "verified" needs all of the following):
 from __future__ import annotations
 
 import json
+import re
 from collections import Counter
 from collections.abc import Callable
 from pathlib import Path
@@ -59,8 +60,17 @@ def sbom_diff(before: Path, after: Path) -> dict:
     }
 
 
+WORK_PREFIX = re.compile(r"^targets/(?:work|dynamic)/[^/]+/")
+
+
+def cname(f: Finding) -> str:
+    """Component name with the scan directory removed: a Dockerfile or workflow finding is named
+    by its path, which differs between the original checkout and the work copy."""
+    return WORK_PREFIX.sub("", f.component.name)
+
+
 def key(f: Finding) -> tuple:
-    return (f.type.value, f.component.name, tuple(sorted(f.advisory_ids)))
+    return (f.type.value, cname(f), tuple(sorted(f.advisory_ids)))
 
 
 def levels(fs: FindingSet) -> dict[str, int]:
@@ -81,20 +91,20 @@ def findings_diff(before: FindingSet, after: FindingSet, proposal: Proposal) -> 
     for f in before.findings:
         gone = key(f) not in after_keys and not (
             f.advisory_ids and set(f.advisory_ids) & after_adv
-            and any(g.component.name == f.component.name for g in after.findings)
+            and any(cname(g) == cname(f) for g in after.findings)
         )  # fmt: skip
         (resolved if gone else remaining).append(f)
     before_keys = {key(f) for f in before.findings}
-    before_adv = {(f.component.name, a) for f in before.findings for a in f.advisory_ids}
+    before_adv = {(cname(f), a) for f in before.findings for a in f.advisory_ids}
     new = [
         f for f in after.findings
         if key(f) not in before_keys
-        and not any((f.component.name, a) in before_adv for a in f.advisory_ids)
+        and not any((cname(f), a) in before_adv for a in f.advisory_ids)
     ]  # fmt: skip
 
     def row(f: Finding) -> dict:
         return {
-            "id": f.id, "type": f.type.value, "component": f.component.name,
+            "id": f.id, "type": f.type.value, "component": cname(f),
             "version": f.component.version, "advisories": list(f.advisory_ids),
             "level": f.risk.level.value if f.risk else "Unknown",
             "score": f.risk.score if f.risk else None,

@@ -185,8 +185,8 @@ function Detail({ run, id, onChange, mode, onRescan }: { run: string; id: string
             <label className="flex min-w-[12rem] flex-1 flex-col text-xs text-slate-600">Note
               <input className="rounded border border-slate-300 px-2 py-1 text-sm" value={note} onChange={(e) => setNote(e.target.value)} maxLength={500} />
             </label>
-            <button type="button" disabled={busy || !approver.trim()} onClick={() => void act("approve")} className="rounded bg-emerald-700 px-3 py-1.5 text-white disabled:opacity-50">Approve</button>
-            <button type="button" disabled={busy || !approver.trim()} onClick={() => void act("reject")} className="rounded bg-red-700 px-3 py-1.5 text-white disabled:opacity-50">Reject</button>
+            <button type="button" disabled={busy || !approver.trim() || last?.decision === "approved"} onClick={() => void act("approve")} className="rounded bg-emerald-700 px-3 py-1.5 text-white disabled:opacity-50">Approve</button>
+            <button type="button" disabled={busy || !approver.trim() || last?.decision === "rejected"} onClick={() => void act("reject")} className="rounded bg-red-700 px-3 py-1.5 text-white disabled:opacity-50">Reject</button>
             <button type="button" disabled={busy || running || last?.decision !== "approved" || caps?.validation.ready === false} onClick={() => void act("validate")} className="rounded bg-slate-900 px-3 py-1.5 text-white disabled:opacity-50">{running ? "Validating…" : "Validate on a branch"}</button>
           </div>
         ) : <div className="text-sm text-slate-600">This proposal changes no file, so there is nothing to approve for application. It records a recommendation for a human reviewer.</div>}

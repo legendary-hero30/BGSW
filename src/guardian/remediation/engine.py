@@ -184,8 +184,8 @@ def propose(
             alternatives = [
                 Alternative(
                     action=ActionKind.ESCALATE,
-                    why_not_chosen="a human review is not needed for a patch-level fix; "
-                    "still available if the approver disagrees",
+                    why_not_chosen="every change already needs a named human's approval; "
+                    "escalating adds nothing unless the approver disagrees with this fix",
                 ),
                 Alternative(
                     action=ActionKind.REMOVE,
