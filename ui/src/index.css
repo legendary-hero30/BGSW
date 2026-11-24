@@ -1,1 +1,61 @@
 @import "tailwindcss";
+
+/* Keyboard users always see where they are. */
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+html { color-scheme: light; }
+html[data-theme="dark"] { color-scheme: dark; }
+
+/* Dark theme. The components use fixed Tailwind palette classes, so the dark theme remaps the
+   handful of classes they use. Unlayered rules here win over Tailwind's layered utilities. */
+html[data-theme="dark"] body,
+html[data-theme="dark"] .bg-slate-50 { background-color: #0b1220; color: #e2e8f0; }
+html[data-theme="dark"] .bg-white { background-color: #111a2e; }
+html[data-theme="dark"] .bg-slate-100 { background-color: #1b2740; }
+html[data-theme="dark"] .bg-slate-200 { background-color: #25324f; }
+html[data-theme="dark"] .hover\:bg-slate-200:hover { background-color: #25324f; }
+html[data-theme="dark"] .border-slate-200,
+html[data-theme="dark"] .border-slate-300 { border-color: #2c3a58; }
+html[data-theme="dark"] .text-slate-900,
+html[data-theme="dark"] .text-slate-800,
+html[data-theme="dark"] .text-slate-700 { color: #e2e8f0; }
+html[data-theme="dark"] .text-slate-600,
+html[data-theme="dark"] .text-slate-500 { color: #9fb0cc; }
+html[data-theme="dark"] .text-slate-400 { color: #7f91b0; }
+html[data-theme="dark"] .divide-slate-200 > :not(:last-child) { border-color: #2c3a58; }
+html[data-theme="dark"] .bg-slate-900 { background-color: #020617; border: 1px solid #2c3a58; }
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea { background-color: #0f1a30; color: #e2e8f0; }
+/* tinted notice boxes and chips */
+html[data-theme="dark"] .bg-amber-50 { background-color: rgba(245, 158, 11, 0.14); }
+html[data-theme="dark"] .bg-red-50 { background-color: rgba(239, 68, 68, 0.14); }
+html[data-theme="dark"] .bg-emerald-50 { background-color: rgba(16, 185, 129, 0.14); }
+html[data-theme="dark"] .bg-violet-50 { background-color: rgba(139, 92, 246, 0.16); }
+html[data-theme="dark"] .bg-sky-50 { background-color: rgba(14, 165, 233, 0.14); }
+html[data-theme="dark"] .bg-emerald-100 { background-color: rgba(16, 185, 129, 0.22); }
+html[data-theme="dark"] .bg-sky-100 { background-color: rgba(14, 165, 233, 0.22); }
+html[data-theme="dark"] .bg-amber-100 { background-color: rgba(245, 158, 11, 0.22); }
+html[data-theme="dark"] .bg-red-100 { background-color: rgba(239, 68, 68, 0.22); }
+html[data-theme="dark"] .text-amber-900 { color: #fcd34d; }
+html[data-theme="dark"] .text-red-800 { color: #fca5a5; }
+html[data-theme="dark"] .text-emerald-800,
+html[data-theme="dark"] .text-emerald-900 { color: #6ee7b7; }
+html[data-theme="dark"] .text-sky-800,
+html[data-theme="dark"] .text-sky-900 { color: #7dd3fc; }
+html[data-theme="dark"] .text-violet-900 { color: #c4b5fd; }
+
+/* Grid children may shrink below their content width, so long text wraps instead of widening the page. */
+.grid > * { min-width: 0; }
+html[data-theme="dark"] .bg-blue-50 { background-color: rgba(59, 130, 246, 0.2); }
+html[data-theme="dark"] .hover\:bg-slate-50:hover { background-color: #17233b; }
+html[data-theme="dark"] .border-slate-100 { border-color: #223050; }
+html[data-theme="dark"] .bg-slate-800 { background-color: #3b4a6b; }
+/* Long package paths and hashes wrap inside table cells instead of widening the page. */
+td, th, pre, code { overflow-wrap: anywhere; }
+pre { white-space: pre-wrap; }

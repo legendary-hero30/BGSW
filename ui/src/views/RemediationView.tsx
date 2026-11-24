@@ -249,7 +249,7 @@ export function RemediationView({ run, onOpenFinding, mode, onRescan }: { run: s
   if (!rows) return <Empty title="Loading…" />;
   if (!rows.length) return <Empty title="No remediation proposals yet" hint="Ask the agents to fix the findings, e.g. run with the goal “assess and propose remediations”. Proposals appear here for human approval." />;
   return (
-    <div className="grid gap-4 lg:grid-cols-[22rem_1fr]">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[22rem_1fr]">
       <aside className="space-y-1">
         {rows.map((p) => (
           <button key={p.id} type="button" onClick={() => setSel(p.id)} className={`block w-full rounded border p-2 text-left text-sm ${sel === p.id ? "border-slate-900 bg-white" : "border-slate-200 bg-slate-50 hover:bg-white"}`}>

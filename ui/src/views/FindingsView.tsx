@@ -48,7 +48,7 @@ export function FindingsView({ run, selected, onSelect, onOpenRemediation }: { r
 
   if (error && rows.items.length === 0) return <Empty title="Could not load findings" hint={error} />;
   return (
-    <div className="grid gap-4 lg:grid-cols-[23rem_1fr]">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[23rem_1fr]">
       <aside>
         <div className="mb-2 flex flex-wrap gap-1">
           <button type="button" onClick={() => setFilters({ ...filters, level: "" })}

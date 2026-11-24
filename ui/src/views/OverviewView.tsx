@@ -41,7 +41,7 @@ export function OverviewView({
         <Stat label="Commit" value={<span className="font-mono text-base">{s.target.commit.slice(0, 10)}</span>} sub={s.target.name} />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card title="Risk distribution">
           <ul className="space-y-1.5">
             {levels.map(([level, n]) => (
@@ -75,7 +75,7 @@ export function OverviewView({
         </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_22rem]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_22rem]">
         <Card title="Highest-risk findings" right={<button type="button" onClick={() => go("findings")} className="text-xs text-blue-700 underline">All findings</button>}>
           <ul className="divide-y divide-slate-100">
             {top.map((f) => (

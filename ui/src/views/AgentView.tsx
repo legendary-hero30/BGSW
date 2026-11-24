@@ -282,7 +282,7 @@ export function AgentView({
   const u = info.live_usage;
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[21rem_1fr]">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[21rem_1fr]">
       <aside className="space-y-3">
         <Card
           title="Agent run"

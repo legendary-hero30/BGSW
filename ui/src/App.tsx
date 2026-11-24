@@ -58,7 +58,7 @@ function JobBanner({ job, onWatch }: { job: Job; onWatch: () => void }) {
         {job.steps.length > 0 && <Chip tone="info">{job.steps.length} agent steps</Chip>}
         {job.run_id && <button type="button" onClick={onWatch} className="ml-auto rounded bg-slate-900 px-3 py-1 text-xs text-white">Watch the agents</button>}
       </div>
-      <div className="mt-1 text-slate-700">{job.step}</div>
+      <div className="mt-1 text-slate-700" role="status" aria-live="polite">{job.step}</div>
       {job.error && <div className="mt-1 rounded bg-amber-50 p-2 text-xs text-amber-900">{job.error}</div>}
     </div>
   );
@@ -105,6 +105,18 @@ export default function App() {
   const [finding, setFinding] = useState("");
   const [repo, setRepo] = useState("");
   const [mode, setMode] = useState<"public" | "own">("public");
+  // Light/dark theme: saved choice, else the system preference. Storage may be blocked.
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    try {
+      const saved = localStorage.getItem("guardian.theme");
+      if (saved === "light" || saved === "dark") return saved;
+    } catch { /* storage blocked */ }
+    return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem("guardian.theme", theme); } catch { /* storage blocked */ }
+  }, [theme]);
   const [job, setJob] = useState<Job | null>(null);
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState("");
@@ -197,15 +209,18 @@ export default function App() {
 
   return (
     <div className="min-h-screen">
+      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-2 focus:rounded focus:bg-white focus:px-3 focus:py-2 focus:text-slate-900">Skip to content</a>
       <header className="bg-slate-900 text-white">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <div>
             <h1 className="text-lg font-bold tracking-tight">Software Supply Chain Guardian</h1>
             <p className="text-xs text-slate-300">Know what you build. Trust what you ship.</p>
           </div>
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex flex-wrap items-center gap-2 text-sm">
+            <button type="button" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+                    className="rounded border border-slate-600 px-2 py-1 text-slate-200 hover:bg-slate-800">{theme === "dark" ? "☀ Light" : "☾ Dark"}</button>
             <label htmlFor="run" className="text-slate-300">Run</label>
-            <select id="run" className="max-w-[22rem] rounded border border-slate-600 bg-slate-800 px-2 py-1 text-white" value={run}
+            <select id="run" className="max-w-[16rem] truncate rounded border border-slate-600 bg-slate-800 px-2 py-1 text-white sm:max-w-[22rem]" value={run}
                     onChange={(e) => { setRun(e.target.value); setFinding(""); }}>
               {options.map((r) => (
                 <option key={r.run_id} value={r.run_id}>
@@ -217,7 +232,7 @@ export default function App() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-7xl p-4">
+      <div id="main" className="mx-auto max-w-7xl p-4">
         <form onSubmit={(e) => void startScan(e)} className="mb-4 rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
           <div role="radiogroup" aria-label="Mode" className="mb-3 grid gap-2 sm:grid-cols-2">
             {([["public", "Public repo", "Analyse and recommend. Nothing is pushed."], ["own", "My repo", "Analyse, fix, then push a new branch and rescan it."]] as const).map(([id, title, hint]) => (
@@ -242,8 +257,8 @@ export default function App() {
             </button>
           </div>
           <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-600">
-            <label className="flex items-center gap-1">Goal
-              <select value={goal} onChange={(e) => setGoal(e.target.value as "assess" | "remediate")} className="rounded border border-slate-300 px-1 py-1">
+            <label className="flex max-w-full min-w-0 items-center gap-1">Goal
+              <select value={goal} onChange={(e) => setGoal(e.target.value as "assess" | "remediate")} className="min-w-0 max-w-full rounded border border-slate-300 px-1 py-1">
                 <option value="remediate">Assess and propose fixes (stops at human approval)</option>
                 <option value="assess">Assess only</option>
               </select>
@@ -272,13 +287,25 @@ export default function App() {
 
         {run && stored && <div className="sticky top-0 z-10"><FlowStepper proposals={proposals} onGo={() => setTab("remediation")} /></div>}
 
-        <nav className="mb-4 flex flex-wrap gap-1 border-b border-slate-200">
-          {TABS.map((t) => (
-            <button key={t.id} type="button" onClick={() => setTab(t.id)}
-                    className={`-mb-px border-b-2 px-3 py-2 text-sm ${tab === t.id ? "border-slate-900 font-semibold text-slate-900" : "border-transparent text-slate-500 hover:text-slate-800"}`}>
-              {t.label}
-            </button>
-          ))}
+        <nav role="tablist" aria-label="Views" className="mb-4 flex gap-1 overflow-x-auto border-b border-slate-200"
+             onKeyDown={(e) => {
+               if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+               const i = TABS.findIndex((t) => t.id === tab);
+               const next = TABS[(i + (e.key === "ArrowRight" ? 1 : TABS.length - 1)) % TABS.length];
+               if (!next) return;
+               setTab(next.id);
+               e.currentTarget.querySelector<HTMLElement>(`[data-tab="${next.id}"]`)?.focus();
+             }}>
+          {TABS.map((t) => {
+            const pending = t.id === "remediation" ? proposals.filter((p) => p.applicable && p.approvals.length === 0).length : 0;
+            return (
+              <button key={t.id} type="button" role="tab" data-tab={t.id} aria-selected={tab === t.id} tabIndex={tab === t.id ? 0 : -1} onClick={() => setTab(t.id)}
+                      className={`-mb-px shrink-0 whitespace-nowrap border-b-2 px-3 py-2 text-sm ${tab === t.id ? "border-slate-900 font-semibold text-slate-900" : "border-transparent text-slate-500 hover:text-slate-800"}`}>
+                {t.label}
+                {pending > 0 && <span className="ml-1.5 rounded-full bg-sky-600 px-1.5 text-[11px] font-semibold text-white" title={`${pending} proposal(s) waiting for a human decision`}>{pending}</span>}
+              </button>
+            );
+          })}
         </nav>
 
         {!run ? (

@@ -113,7 +113,7 @@ export function GraphView({ run, onOpenFinding }: { run: string; onOpenFinding: 
 
   const s = data?.stats;
   return (
-    <div className="grid gap-4 lg:grid-cols-[1fr_20rem]">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_20rem]">
       <div>
         <div className="mb-2 flex flex-wrap items-center gap-2 text-sm">
           <select aria-label="Scope" value={scope} onChange={(e) => setScope(e.target.value as "runtime" | "all")} className="rounded border border-slate-300 bg-white px-2 py-1">
