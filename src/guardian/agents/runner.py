@@ -7,6 +7,7 @@ exists (a clearly labelled partial report if the agents did not produce one).
 
 from __future__ import annotations
 
+import logging
 import os
 from collections.abc import Callable
 from datetime import UTC, datetime
@@ -29,6 +30,9 @@ DEFAULT_GOAL = (
     "evidence-backed report of what matters most, what was and was not checked, and what "
     "to do next."
 )
+
+
+log = logging.getLogger("guardian.runner")
 
 
 def default_out_dir(target: str) -> str:
@@ -88,6 +92,7 @@ def run_goal(
         budget=S.budget.snapshot()["limits"],
         prompts=prompt_versions(),
     )
+    log.info("run start target=%s model=%s sandbox=%s", target, cfg.model, reason)
     ledger.set_stored_run(pipeline.run_id)  # lets the UI follow a run before findings exist
     ledger.log(
         "runner",
@@ -131,5 +136,6 @@ def run_goal(
     finally:
         ledger.finish_run(status, stop_reason, S.budget.snapshot(), S.report_markdown)
         ledger.close()
+    log.info("run end status=%s stop=%s blocked=%d", status, stop_reason, len(blocked))
     doc["agent_run_id"] = S.ledger.agent_run_id
     return doc

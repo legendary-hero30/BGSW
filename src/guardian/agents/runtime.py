@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import time
 from collections.abc import Callable
 from typing import Any
@@ -19,8 +20,10 @@ from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 
 from guardian.agents.budget import BudgetExhausted
 from guardian.agents.session import Session
+from guardian.log import short
 from guardian.redact import redact, redact_obj
 
+log = logging.getLogger("guardian.agent")
 PREVIEW_CHARS = 400
 TEXT_CHARS = 3000
 
@@ -184,6 +187,7 @@ class AgentRuntime(AgentMiddleware):
         tool, args, call_id = call["name"], redact_obj(call.get("args") or {}), call["id"]
         if tool not in self.allowed:
             self.blocked.append(f"{self.agent}:{tool}")
+            log.warning("blocked tool %s for agent %s (not in its roster)", tool, self.agent)
             self.S.ledger.log(self.agent, "blocked", tool, {"args": args})
             return ToolMessage(
                 content=json.dumps({"error": f"tool '{tool}' is not available to {self.agent}"}),
@@ -200,10 +204,12 @@ class AgentRuntime(AgentMiddleware):
         try:
             result = handler(request)
         except BudgetExhausted:
+            log.warning("budget exhausted at %s:%s", self.agent, tool)
             self.S.ledger.log(self.agent, "budget_exhausted", tool, {"args": args})
             raise
         except Exception as exc:
             message = f"{type(exc).__name__}: {exc}"
+            log.warning("tool error %s:%s %s", self.agent, tool, short(message, 160))
             event = {"args": args, "error": True, "message": redact(message)[:500]}
             self.S.ledger.log(self.agent, "tool_error", tool, event)
             self._emit({"agent": self.agent, "tool": tool, "args": args, "error": True})
@@ -220,6 +226,11 @@ class AgentRuntime(AgentMiddleware):
         }
         if kind == "delegate":  # the specialist's final answer is the thing worth reading
             event["result_text"] = redact(content)[:6000]
+        log.log(
+            logging.WARNING if event["error"] else logging.INFO,
+            "%s %s:%s %dms %d chars args=%s",
+            kind, self.agent, tool, event["ms"], len(content), short(args),
+        )
         self.S.ledger.log(self.agent, kind, tool, event)
         self._emit({"agent": self.agent, "tool": tool, "args": args, "error": event["error"]})
         return result
