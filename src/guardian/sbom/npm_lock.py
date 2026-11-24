@@ -2,8 +2,8 @@
 
 The graph follows npm's resolution rule. A dependency ``n`` of the package installed at path
 ``P`` resolves to the nearest ``<ancestor>/node_modules/n``, searching ``P`` first and then
-each enclosing install path up to the root. Every node keeps its lockfile line number, so a
-finding can cite ``package-lock.json:<line>``.
+each enclosing install path up to the root. Every node keeps its lockfile line number, so
+a finding can cite ``package-lock.json:<line>``.
 
 Lockfile content is untrusted data. It is parsed as JSON only and nothing in it is executed.
 """
@@ -20,16 +20,19 @@ from guardian.schemas.common import Ecosystem
 from guardian.schemas.graph import DependencyGraph, EdgeKind, GraphEdge
 from guardian.schemas.sbom import Component, DependencyScope, SbomComponent, SourceLocation
 
+# Root node identifier and lockfile package-key pattern.
 ROOT_ID = "."
 _KEY_LINE = re.compile(r'^\s*"((?:node_modules/[^"\\]*)|)":\s*\{')
 
 
 class LockfileError(ValueError):
+    """Raised when the npm lockfile is invalid or unsupported."""
     pass
 
 
 @dataclass(frozen=True)
 class LockEntry:
+    """Represents a package entry from the npm lockfile."""
     path: str  # lockfile key; "" is the root project
     name: str
     version: str | None
@@ -50,6 +53,7 @@ class LockEntry:
 
 @dataclass(frozen=True)
 class Unresolved:
+    """Represents a dependency that could not be resolved."""
     source: str
     name: str
     kind: EdgeKind
@@ -57,6 +61,7 @@ class Unresolved:
 
 @dataclass(frozen=True)
 class NpmLock:
+    """Stores parsed lockfile entries and metadata."""
     file: str  # workspace-relative path of the lockfile
     lockfile_version: int
     entries: dict[str, LockEntry]
@@ -64,10 +69,12 @@ class NpmLock:
 
     @property
     def root(self) -> LockEntry:
+        """Return the root project entry."""
         return self.entries[""]
 
 
 def _name_from_path(path: str) -> str:
+    """Extract the package name from its installation path."""
     return path.rsplit("node_modules/", 1)[-1]
 
 
@@ -81,6 +88,7 @@ def _ancestors(path: str):
 
 
 def _candidate(base: str, name: str) -> str:
+    """Build a possible node_modules installation path."""
     return f"{base}/node_modules/{name}" if base else f"node_modules/{name}"
 
 
@@ -102,11 +110,14 @@ def _key_lines(text: str) -> dict[str, int]:
 
 
 def parse_lockfile(path: Path, workspace_relative_file: str) -> NpmLock:
+    """Parse and validate an npm lockfile, preserving package line numbers."""
     text = path.read_text(encoding="utf-8")
     try:
         data = json.loads(text)
     except json.JSONDecodeError as exc:
         raise LockfileError(f"{workspace_relative_file}: invalid JSON: {exc}") from exc
+
+    # Ensure the lockfile has a supported version and packages map.
     version = data.get("lockfileVersion")
     packages = data.get("packages")
     if version not in (2, 3) or not isinstance(packages, dict) or "" not in packages:
@@ -114,11 +125,15 @@ def parse_lockfile(path: Path, workspace_relative_file: str) -> NpmLock:
             f"{workspace_relative_file}: need lockfileVersion 2 or 3 with a 'packages' map "
             f"(got lockfileVersion={version!r})"
         )
+
+    # Extract source line numbers for package entries.
     lines = _key_lines(text)
 
     def as_map(value: object) -> dict[str, str]:
+        """Convert a dictionary value into a string-to-string mapping."""
         return {str(k): str(v) for k, v in value.items()} if isinstance(value, dict) else {}
 
+    # Convert raw package data into LockEntry objects.
     entries: dict[str, LockEntry] = {}
     for key, raw in packages.items():
         if not isinstance(raw, dict):
@@ -145,11 +160,12 @@ def parse_lockfile(path: Path, workspace_relative_file: str) -> NpmLock:
 
 
 def resolve(lock: NpmLock, source: str, name: str) -> str | None:
-    """Install path that ``name`` resolves to when required from ``source``, or None."""
+    """Resolve a dependency using npm's nearest-ancestor node_modules rule."""
     for base in _ancestors(source):
         target = _candidate(base, name)
         entry = lock.entries.get(target)
         if entry is not None:
+            # Follow linked package entries to their actual target.
             if entry.link and entry.resolved in lock.entries:
                 return entry.resolved
             return target
@@ -157,6 +173,7 @@ def resolve(lock: NpmLock, source: str, name: str) -> str | None:
 
 
 def purl(name: str, version: str | None) -> str:
+    """Generate a normalized npm package URL."""
     if name.startswith("@") and "/" in name:
         scope, _, pkg = name.partition("/")
         base = f"pkg:npm/{quote(scope, safe='')}/{quote(pkg, safe='')}"
@@ -168,6 +185,8 @@ def purl(name: str, version: str | None) -> str:
 def build_graph(lock: NpmLock) -> tuple[DependencyGraph, tuple[Unresolved, ...]]:
     """Build the full graph (runtime and dev). Returns the graph and any unresolved deps."""
     root = lock.root
+
+    # Collect all direct dependency names declared by the root project.
     direct_names = (
         set(root.dependencies)
         | set(root.dev_dependencies)
@@ -176,8 +195,10 @@ def build_graph(lock: NpmLock) -> tuple[DependencyGraph, tuple[Unresolved, ...]]
     )
 
     def node_id(path: str) -> str:
+        """Convert the root package path into its graph identifier."""
         return ROOT_ID if path == "" else path
 
+    # Create graph nodes while excluding link aliases.
     nodes: list[SbomComponent] = []
     for path, entry in lock.entries.items():
         if entry.link:
@@ -208,6 +229,7 @@ def build_graph(lock: NpmLock) -> tuple[DependencyGraph, tuple[Unresolved, ...]]
             )
         )
 
+    # Build dependency edges and record packages that cannot be resolved.
     edges: list[GraphEdge] = []
     unresolved: list[Unresolved] = []
     seen: set[tuple[str, str]] = set()
@@ -233,5 +255,6 @@ def build_graph(lock: NpmLock) -> tuple[DependencyGraph, tuple[Unresolved, ...]]
                 seen.add(pair)
                 edges.append(GraphEdge(source=pair[0], target=pair[1], kind=kind))
 
+    # Return the completed dependency graph and unresolved dependencies.
     graph = DependencyGraph(root=ROOT_ID, nodes=tuple(nodes), edges=tuple(edges))
     return graph, tuple(unresolved)
