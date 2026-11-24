@@ -127,7 +127,7 @@ export default function App() {
     setFinding(id);
     setTab("findings");
   }
-  const needsStored = tab !== "agent";
+  const  needsStored = tab !== "agent";
 
   return (
     <div className="min-h-screen">
