@@ -42,6 +42,7 @@ REACH_WORDS = {
 }
 
 
+# An agent's explanation of one finding, with the evidence ids it cites.
 class Explanation(GuardianModel):
     """The PDF evidence card's 'AI explanation': why it matters, reachability, confidence."""
 
@@ -65,6 +66,7 @@ class Explanation(GuardianModel):
 
 
 @dataclass(frozen=True)
+# The tool-reported facts an explanation is allowed to state.
 class Facts:
     """Everything a piece of model text may mention, for one scope (a finding, several, a run)."""
 
@@ -75,6 +77,7 @@ class Facts:
     versions: frozenset[str]
 
 
+# Collect the facts (versions, IDs, fix versions) from the stored finding.
 def facts_for(
     findings: Iterable[Finding],
     *,
@@ -112,6 +115,7 @@ def facts_for(
     )
 
 
+# List claims in the text that are not backed by the facts or citations.
 def grounding_problems(text: str, facts: Facts, cited: Iterable[str] = ()) -> list[str]:
     """Every identifier or version in ``text`` (and every ``cited`` ID) must be in ``facts``."""
     problems: list[str] = []
@@ -130,6 +134,7 @@ def grounding_problems(text: str, facts: Facts, cited: Iterable[str] = ()) -> li
     return problems
 
 
+# Accept an explanation only if every claim is grounded; otherwise return why not.
 def gate(
     raw: dict,
     findings: dict[str, Finding],

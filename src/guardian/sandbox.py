@@ -47,6 +47,7 @@ class SandboxUnavailableError(RuntimeError):
 
 
 @dataclass(frozen=True)
+# What untrusted code may do: no network, resource caps, read-only mounts.
 class SandboxPolicy:
     image: str
     mounts_ro: tuple[tuple[str, str], ...] = ()  # (host path, container path), always read-only
@@ -76,6 +77,7 @@ class Sandbox(Protocol):
     def run(self, argv: list[str], policy: SandboxPolicy) -> SandboxResult: ...
 
 
+# Refuse policies that would weaken isolation.
 def check_policy(policy: SandboxPolicy) -> None:
     if not DIGEST_RE.match(policy.image):
         raise SandboxUnavailableError(
@@ -89,6 +91,7 @@ def check_policy(policy: SandboxPolicy) -> None:
         raise SandboxUnavailableError("timeout_s must be between 1 and 600")
 
 
+# Build the docker run argv (dropped caps, no network, read-only root).
 def docker_command(name: str, argv: list[str], policy: SandboxPolicy) -> list[str]:
     """The exact ``docker run`` invocation. Pure, so every flag is testable."""
     check_policy(policy)
@@ -136,6 +139,7 @@ def _clip(data: bytes) -> str:
     )
 
 
+# Runs untrusted code in a container. Unit-tested; no daemon here to run it.
 class DockerSandbox:
     name = "docker"
 
@@ -188,6 +192,7 @@ class DockerSandbox:
 
 
 @dataclass(frozen=True)
+# What a bubblewrap run needs: tree to expose, writable dirs, env, limits.
 class ExecSpec:
     """A command to run in a namespace sandbox. The work directory is mounted read-only."""
 
@@ -199,6 +204,7 @@ class ExecSpec:
     nproc: int = 512
 
 
+# Build the bubblewrap argv (new namespaces, no network, read-only tree).
 def bwrap_command(argv: list[str], spec: ExecSpec) -> list[str]:
     """The exact bubblewrap invocation. Pure, so every flag is testable."""
     if not Path(spec.work).is_absolute():
@@ -223,6 +229,7 @@ def bwrap_command(argv: list[str], spec: ExecSpec) -> list[str]:
     return [*cmd, "--", *argv]
 
 
+# Namespace sandbox that works without root; used for build and test here.
 class BwrapSandbox:
     name = "bwrap"
 
@@ -265,6 +272,7 @@ class BwrapSandbox:
         )  # fmt: skip
 
 
+# Docker sbx microVM backend: detected, not executed.
 class SbxSandbox:
     """Docker Sandboxes (``sbx``): detection only. See the module docstring."""
 
@@ -286,6 +294,7 @@ class SbxSandbox:
         )
 
 
+# Which sandbox backends are usable on this machine, and why not if not.
 def backend_report() -> dict[str, dict]:
     """Availability of each backend, for the run record and the API."""
     return {
@@ -294,6 +303,7 @@ def backend_report() -> dict[str, dict]:
     }
 
 
+# Pick a backend by preference; None means untrusted code is not run at all.
 def select_sandbox(preference: str = "auto") -> tuple[Sandbox | None, str]:
     """Pick a backend that can actually run commands. Returns (backend or None, reason)."""
     if preference == "none":

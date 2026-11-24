@@ -19,6 +19,7 @@ PRICE_OUT_ENV = "GUARDIAN_PRICE_OUT_PER_M"
 WARN_FRACTION = 0.8
 
 
+# Raised to stop a run when a limit is reached (steps, tools, time, tokens).
 class BudgetExhausted(RuntimeError):  # noqa: N818 - control-flow signal, like StopIteration
     def __init__(self, reason: str) -> None:
         super().__init__(reason)
@@ -30,6 +31,7 @@ class BudgetConfigError(ValueError):
 
 
 @dataclass(frozen=True)
+# The per-run limits. Defaults can be overridden from the environment.
 class BudgetLimits:
     max_steps: int = 100
     max_tool_calls: int = 250
@@ -65,6 +67,7 @@ class BudgetLimits:
         return limits
 
 
+# Counts model calls, tool calls, time and tokens against the limits.
 class BudgetTracker:
     """Thread-safe usage counters shared by every agent in a run."""
 
@@ -98,6 +101,7 @@ class BudgetTracker:
             + self.tokens_out * self.limits.price_out_per_m
         ) / 1_000_000
 
+    # Raise BudgetExhausted if any limit has been reached.
     def check(self) -> None:
         """Raise BudgetExhausted if any limit is spent. Called before every model/tool call."""
         with self._lock:
@@ -153,6 +157,7 @@ class BudgetTracker:
             fractions.append(usd / lim.max_usd)
         return max(fractions)
 
+    # One-time warning when most of a budget is used, so agents can wrap up.
     def take_warning(self) -> str | None:
         """One-time notice once 80% of any budget is spent, so the agent can wrap up."""
         with self._lock:
@@ -177,6 +182,7 @@ class BudgetTracker:
             parts.append(f"spend ${self.usd:.4f}/${lim.max_usd:.2f}")
         return ", ".join(parts)
 
+    # Current usage and limits as plain data for the ledger and UI.
     def snapshot(self) -> dict:
         with self._lock:
             return {
