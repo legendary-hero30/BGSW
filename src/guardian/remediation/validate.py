@@ -189,6 +189,7 @@ def validate(
     out_dir: str,
     *,
     on_step: Callable[[str], None] | None = None,
+    on_progress: Callable[[dict], None] | None = None,
 ) -> dict:
     """Apply, rescan, diff, verdict. Raises ApprovalError unless a human approved this proposal."""
     from guardian.scan import baseline as bl
@@ -196,9 +197,20 @@ def validate(
 
     trail: list[dict] = []  # what happened and when; stored in the report so it can be replayed
 
-    def say(msg: str) -> None:
+    stage = {"name": ""}  # the stage in progress, so a block can be attributed to it
+
+    def say(
+        msg: str, *, stage_name: str | None = None, state: str = "start", detail: str = ""
+    ) -> None:
+        """One line of progress. ``stage_name`` and ``state`` (start, done, fail) let the UI
+        draw each stage with its own status; ``detail`` is the plain-language outcome."""
         log.info("validate %s %s: %s", run_id, proposal_id, msg)
-        trail.append({"at": now(), "msg": msg})
+        if stage_name:
+            stage["name"] = stage_name
+        entry = {"at": now(), "msg": msg, "stage": stage_name, "state": state, "detail": detail}
+        trail.append(entry)
+        if on_progress:
+            on_progress(entry)
         if on_step:
             on_step(msg)
 
@@ -220,6 +232,7 @@ def validate(
 
     def blocked(reason: str) -> dict:
         report.update(verdict="blocked", reasons=[reason])
+        say(f"Blocked: {reason}", stage_name=stage["name"] or None, state="fail", detail=reason)
         c = connect(db)
         try:
             add_validation(c, run_id, p.id, report)
@@ -227,23 +240,38 @@ def validate(
             c.close()
         return report
 
-    say(f"Approval confirmed: {approval['approver']} approved {proposal_id} (hash matches)")
-    say("Creating the isolated work copy and applying the approved edit")
+    say(
+        f"Approval confirmed: {approval['approver']} approved {proposal_id} (hash matches)",
+        stage_name="approval", state="done",
+        detail=f"Approved by {approval['approver']} at {approval['at']}. The approval is bound to "
+        f"proposal hash {approval['proposal_sha'][:10]}, so only this exact change can be applied.",
+    )  # fmt: skip
+    say("Creating the isolated work copy and applying the approved edit", stage_name="copy")
     try:
         ws = workspace.create(base_target, p)
     except workspace.WorkspaceError as e:
         return blocked(f"could not apply the change: {e}")
     report["branch"] = {k: ws[k] for k in ("branch", "commit", "path")}
     report["diff"] = ws["diff"]
+    say(
+        "Isolated copy ready", stage_name="copy", state="done",
+        detail=f"Branch {ws['branch']} at {ws['commit'][:10]} in a throw-away copy; the "
+        "approved edit is applied to package.json. The original checkout is untouched.",
+    )  # fmt: skip
 
-    say("Regenerating package-lock.json (the one networked step)")
+    say("Regenerating package-lock.json (the one networked step)", stage_name="lockfile")
     try:
         report["steps"]["lockfile"] = {"status": "passed", **lockfile.regenerate(jail(ws["path"]))}
     except lockfile.RegistryAccessError as e:
         report["steps"]["lockfile"] = {"status": "not_run", "detail": str(e)}
         return blocked(f"lockfile not regenerated, so no rescan is meaningful: {e}")
+    say(
+        "Lockfile regenerated", stage_name="lockfile", state="done",
+        detail="npm install --package-lock-only --ignore-scripts against registry.npmjs.org. "
+        "No package code ran; only metadata was resolved.",
+    )  # fmt: skip
 
-    say("Rescanning the work copy offline")
+    say("Rescanning the work copy offline", stage_name="rescan")
     before_out = jail(out_dir)
     cov = {}
     if (before_out / "baseline.json").is_file():
@@ -265,6 +293,11 @@ def validate(
         return blocked(f"rescan failed: {type(e).__name__}: {e}")
     after = FindingSet.model_validate_json((pipe.out / "findings.json").read_text())
     report["steps"]["rescan"] = {"status": "passed", "scanners": scanners}
+    say(
+        "Rescan finished", stage_name="rescan", state="done",
+        detail=f"{len(after.findings)} findings after the change (was {len(before.findings)}), "
+        f"using {', '.join(scanners)} plus the Dockerfile, workflow and anomaly rules. Offline.",
+    )  # fmt: skip
 
     before_sbom = before_out / "sbom.cdx.json"
     sbom = (
@@ -274,9 +307,19 @@ def validate(
               "version_changed": []}
     )  # fmt: skip
     diff = findings_diff(before, after, p)
-    say("Building and testing in the sandbox (and on an unmodified copy for comparison)")
+    say(
+        "Building and testing in the sandbox (and on an unmodified copy for comparison)",
+        stage_name="buildtest",
+    )
     base_dir = workspace.baseline_copy(base_target, p)
     report["steps"].update(build_test_steps(jail(ws["path"]), base_dir))
+    bt = {k: report["steps"].get(k, {}).get("status", "not_run") for k in ("build", "tests")}
+    say(
+        "Build and tests finished", stage_name="buildtest",
+        state="fail" if "failed" in bt.values() else "done",
+        detail=f"build: {bt['build']}, tests: {bt['tests']}. Run with no network and a read-only "
+        "tree. A test that already failed on the unmodified copy is reported as not run.",
+    )  # fmt: skip
     report["sbom_diff"] = sbom
     report["findings_diff"] = diff
     report["risk"] = {
@@ -287,6 +330,11 @@ def validate(
     }  # fmt: skip
     report["verdict"], report["reasons"] = verdict_for(diff, report["steps"], sbom, p)
     log.info("validate %s %s verdict=%s", run_id, proposal_id, report["verdict"])
+    say(
+        f"Verdict: {report['verdict']}", stage_name="verdict",
+        state="fail" if report["verdict"] == "failed" else "done",
+        detail="; ".join(report["reasons"]),
+    )  # fmt: skip
     report["final_confidence"] = (
         "high" if report["verdict"] == "verified" else
         "medium" if report["verdict"] == "partially_verified" else "low"

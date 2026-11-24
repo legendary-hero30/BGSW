@@ -61,6 +61,8 @@ Under the form, three chips should be green: **Agents (DeepInfra)**, **Validatio
 | 7 | Press **Validate on a branch**. | A progress line while it works: isolated copy and branch -> lockfile regenerated -> offline rescan -> build and tests in the sandbox. About 1 minute. |
 | 8 | Read the **Validation report**. | Verdict (**Verified** / Partially verified / Failed / Blocked), step results (build, tests, lockfile, rescan), risk before -> after, resolved / remaining / new findings, SBOM diff, the patch diff and the final confidence. |
 
+**Two ways to approve.** (1) One at a time: open a proposal, approve it, press *Validate on a branch*, and watch its *Steps after approval*. (2) All at once: in the panel above the list, type your name, press **Approve all (N)**, then **Validate all approved (M)**. Validations run one after another, and the detail pane follows whichever proposal is working. Each approval is still logged separately, with its own proposal hash.
+
 Repeat 5-8 for the second proposal (`underscore -> 1.13.8`). Each is validated on its own, so the
 other package's finding still shows as *remaining* in that report.
 

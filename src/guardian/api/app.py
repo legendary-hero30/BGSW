@@ -647,15 +647,14 @@ def create_app(
         state: dict = {"state": "running", "step": "Starting", "error": None, "log": []}
         validating[key] = state
 
-        def on_step(msg: str) -> None:  # the running list the UI shows under "Steps"
-            state["step"] = msg
-            stamp = datetime.now(UTC).isoformat(timespec="seconds")
-            state["log"] = [*state["log"], {"at": stamp, "msg": msg}]
+        def on_progress(entry: dict) -> None:  # the running list the UI shows under "Steps"
+            state["step"] = entry["msg"]
+            state["log"] = [*state["log"], entry]
 
         def work() -> None:
             try:
                 report = remediation.validate_for_run(
-                    db, run, pid, on_step=on_step
+                    db, run, pid, on_progress=on_progress
                 )
                 state.update(state="done", step=f"Verdict: {report['verdict']}")
             except Exception as exc:

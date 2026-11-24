@@ -35,7 +35,9 @@ def run_target(conn: sqlite3.Connection, run_id: str) -> str:
     return row[0]
 
 
-def validate_for_run(db: str, run_id: str, proposal_id: str, on_step=None) -> dict:
+def validate_for_run(
+    db: str, run_id: str, proposal_id: str, on_step=None, on_progress=None
+) -> dict:
     """Validate an approved proposal of a stored run (target and run directory come from the
     store, never from the caller)."""
     from guardian.store import connect
@@ -45,7 +47,9 @@ def validate_for_run(db: str, run_id: str, proposal_id: str, on_step=None) -> di
         target = run_target(conn, run_id)
     finally:
         conn.close()
-    return validate(db, run_id, proposal_id, target, run_id, on_step=on_step)
+    return validate(
+        db, run_id, proposal_id, target, run_id, on_step=on_step, on_progress=on_progress
+    )
 
 
 __all__ = ["ApprovalError", "run_target", "validate_for_run", "view"]

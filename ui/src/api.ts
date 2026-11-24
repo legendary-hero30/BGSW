@@ -283,9 +283,12 @@ export interface Proposal {
   status: "proposed" | "approved" | "rejected" | "applied" | "validated" | "failed";
   approvals: Approval[];
   validations: (ValidationBrief & Partial<ValidationReport>)[];
-  validating?: { state: "running" | "done" | "error"; step: string; error: string | null; log?: { at: string; msg: string }[] } | null;
+  validating?: { state: "running" | "done" | "error"; step: string; error: string | null; log?: ProgressEntry[] } | null;
 }
 export interface FindingRef { id: string; type: string; component: string; version: string | null; advisories: string[]; level: string; score: number | null }
+// One line of validation progress. Older reports have only at and msg.
+export interface ProgressEntry { at: string; msg: string; stage?: string | null; state?: "start" | "done" | "fail"; detail?: string }
+
 export interface ValidationReport {
   verdict: "verified" | "partially_verified" | "failed" | "blocked";
   reasons: string[];
@@ -293,7 +296,7 @@ export interface ValidationReport {
   branch?: { branch: string; commit: string; path: string };
   diff?: string;
   steps: Record<string, { status: string; detail?: string }>;
-  progress?: { at: string; msg: string }[];
+  progress?: ProgressEntry[];
   sbom_diff?: { components_before: number; components_after: number; added: string[]; removed: string[]; version_changed: string[] };
   findings_diff?: { targeted_resolved: string[]; targeted_remaining: string[]; resolved: FindingRef[]; remaining: FindingRef[]; new: FindingRef[] };
   risk?: { before: { levels: Record<string, number>; top_score: number | null; findings: number }; after: { levels: Record<string, number>; top_score: number | null; findings: number } };
