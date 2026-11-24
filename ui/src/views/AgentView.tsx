@@ -1,3 +1,4 @@
+// Live agent run: plan, narration, tool calls, delegations, verifier rulings, budget.
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { api, type AgentEvent, type AgentTimeline, type Hypothesis, type PlanItem } from "../api";
 import { Markdown } from "../markdown";

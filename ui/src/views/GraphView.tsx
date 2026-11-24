@@ -1,3 +1,4 @@
+// Dependency graph view with scope, risk and search filters.
 import cytoscape from "cytoscape";
 import { useEffect, useRef, useState } from "react";
 import { api, type FindingRow, type GraphNodeData, type GraphOverview } from "../api";

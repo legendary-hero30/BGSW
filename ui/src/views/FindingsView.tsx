@@ -1,3 +1,4 @@
+// Ranked, filterable findings list with the selected finding's evidence card.
 import { useEffect, useState } from "react";
 import { api, type FindingDetail, type FindingRow, type GraphElements, type Proposal } from "../api";
 import { EvidenceCard } from "../EvidenceCard";

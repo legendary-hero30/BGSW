@@ -1,3 +1,4 @@
+// CycloneDX component list for the run, searchable.
 import { useEffect, useState } from "react";
 import { api, type SbomView as SbomData } from "../api";
 import { Card, Chip, Empty, RiskBadge, Stat } from "../ui";

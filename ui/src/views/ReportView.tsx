@@ -1,3 +1,4 @@
+// The agent's accepted report with the evidence it cites.
 import { useEffect, useState } from "react";
 import { api } from "../api";
 import { Markdown } from "../markdown";

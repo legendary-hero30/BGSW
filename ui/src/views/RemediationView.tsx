@@ -1,3 +1,4 @@
+// Fix proposals, human approval, validation report, and the push-and-rescan step.
 import { useCallback, useEffect, useState } from "react";
 import { api, type Capabilities, type ExportResult, type Proposal, type ValidationReport } from "../api";
 import { Card, Chip, Empty, RiskBadge } from "../ui";
@@ -12,12 +13,14 @@ const VERDICT: Record<string, { tone: "good" | "warn" | "bad"; text: string }> =
   blocked: { tone: "bad", text: "Blocked" },
 };
 
+// Small row of counts per risk level (used for before/after).
 function Levels({ levels }: { levels: Record<string, number> }) {
   const entries = Object.entries(levels);
   if (!entries.length) return <span className="text-slate-500">none</span>;
   return <span className="flex flex-wrap gap-1">{entries.map(([k, v]) => <span key={k} className="flex items-center gap-1"><RiskBadge level={k} /> {v}</span>)}</span>;
 }
 
+// The validation report: verdict, step results, risk before/after, diffs.
 function Report({ r }: { r: ValidationReport }) {
   const v = VERDICT[r.verdict] ?? { tone: "warn" as const, text: r.verdict };
   const fd = r.findings_diff;
@@ -67,6 +70,7 @@ function Report({ r }: { r: ValidationReport }) {
   );
 }
 
+// One proposal: details, human approval, validation, and (own-repo mode) push and rescan.
 function Detail({ run, id, onChange, mode, onRescan }: { run: string; id: string; onChange: () => void; mode: "public" | "own"; onRescan: (repo: string, branch: string) => void }) {
   const [exported, setExported] = useState<ExportResult | null>(null);
   const [confirm, setConfirm] = useState("");
@@ -90,6 +94,7 @@ function Detail({ run, id, onChange, mode, onRescan }: { run: string; id: string
   const finished = p?.validating?.state === "done" || p?.validating?.state === "error";
   useEffect(() => { if (finished) onChange(); }, [finished]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Ask the server to write the patch and metadata; nothing is pushed yet.
   async function prepare() {
     setError("");
     setBusy(true);
@@ -103,6 +108,7 @@ function Detail({ run, id, onChange, mode, onRescan }: { run: string; id: string
     }
   }
 
+  // Push the new branch (needs the typed repo name), then rescan that branch.
   async function push() {
     setError("");
     setBusy(true);
@@ -118,6 +124,7 @@ function Detail({ run, id, onChange, mode, onRescan }: { run: string; id: string
     }
   }
 
+  // Approve, reject or validate. Fetches the per-server token first; the server logs the approver.
   async function act(kind: "approve" | "reject" | "validate") {
     setError("");
     setBusy(true);
@@ -224,6 +231,7 @@ function Detail({ run, id, onChange, mode, onRescan }: { run: string; id: string
   );
 }
 
+// Proposal list on the left, the selected proposal's detail on the right.
 export function RemediationView({ run, onOpenFinding, mode, onRescan }: { run: string; onOpenFinding: (id: string) => void; mode: "public" | "own"; onRescan: (repo: string, branch: string) => void }) {
   const [rows, setRows] = useState<Proposal[] | null>(null);
   const [sel, setSel] = useState("");

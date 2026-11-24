@@ -1,3 +1,4 @@
+// Pass/fail checklist of the run's requirements, each with its evidence.
 import { useEffect, useState } from "react";
 import { api, type Checklist } from "../api";
 import { Chip, Empty } from "../ui";

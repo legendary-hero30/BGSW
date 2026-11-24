@@ -1,3 +1,4 @@
+// Run summary: counts by risk level and type, and shortcuts to the other tabs.
 import { useEffect, useState } from "react";
 import { api, type AgentTimeline, type FindingRow, type RunSummary } from "../api";
 import { AgentBadge, Card, Chip, Empty, RISK_BAR, RISK_ORDER, RiskBadge, Stat } from "../ui";
