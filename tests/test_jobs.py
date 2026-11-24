@@ -31,7 +31,7 @@ def new_job():
 
 
 def target(name):
-    return lambda repo, progress=None: {"name": name, "commit": "c" * 40}
+    return lambda repo, progress=None, branch=None: {"name": name, "commit": "c" * 40}
 
 
 def test_completed_agent_run_is_recorded(monkeypatch):
@@ -103,7 +103,7 @@ def test_without_a_model_the_job_falls_back_to_the_scanner_baseline(monkeypatch)
 def test_clone_errors_are_reported(monkeypatch):
     job = new_job()
 
-    def broken(repo, progress=None):
+    def broken(repo, progress=None, branch=None):
         raise DynamicTargetError("only npm projects are supported")
 
     monkeypatch.setattr(jobs, "prepare_target", broken)

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from datetime import UTC, datetime
 
 from guardian.agents.budget import BudgetLimits
@@ -10,6 +11,8 @@ from guardian.agents.runner import run_goal
 from guardian.remediation.demo import GOAL_ASSESS, GOAL_REMEDIATE, prepare_demo_target
 from guardian.scan.baseline import baseline
 from guardian.targets import DynamicTargetError, prepare_target
+
+log = logging.getLogger("guardian.jobs")
 
 JOB_GOAL = GOAL_ASSESS
 GOALS = {"assess": GOAL_ASSESS, "remediate": GOAL_REMEDIATE}
@@ -26,6 +29,7 @@ def _error_text(exc: BaseException) -> str:
 
 def run_repo_job(job: dict, repo: str, db: str) -> None:
     """Run one repository end to end. Updates ``job`` in place for the polling endpoint."""
+    log.info("job %s start repo=%s branch=%s", job["id"][:8], repo, job.get("branch"))
     try:
         if job.get("demo"):
             job.update(status="cloning", step="Preparing the bundled demo app")
@@ -86,7 +90,10 @@ def run_repo_job(job: dict, repo: str, db: str) -> None:
             error=None if doc["status"] == "completed" else doc.get("stop_reason"),
             finished=_now(),
         )
+        log.info("job %s %s: %s", job["id"][:8], job["status"], job["step"])
     except DynamicTargetError as exc:
+        log.warning("job %s repository error: %s", job["id"][:8], exc)
         job.update(status="error", step="Repository error", error=_error_text(exc), finished=_now())
     except Exception as exc:
+        log.exception("job %s failed", job["id"][:8])
         job.update(status="error", step="Failed", error=_error_text(exc), finished=_now())

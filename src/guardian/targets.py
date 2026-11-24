@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import contextlib
 import json
+import logging
 import os
 import re
 import shutil
@@ -26,6 +27,7 @@ from guardian.remediation.lockfile import RegistryAccessError, regenerate
 from guardian.sbom.npm_lock import LockfileError, parse_lockfile
 from guardian.tools.runner import WORKSPACE, workspace_relative
 
+log = logging.getLogger("guardian.targets")
 DYNAMIC_DIR = WORKSPACE / "targets" / "dynamic"
 DYNAMIC_TARGETS_FILE = WORKSPACE / "targets" / "dynamic.json"
 GIT_HOME = WORKSPACE / "cache" / "git-home"
@@ -39,6 +41,7 @@ class DynamicTargetError(ValueError):
     pass
 
 
+# Accept only https://github.com/<owner>/<repo>; reject anything else.
 def parse_repo(url: str) -> tuple[str, str]:
     """Validate ``https://github.com/<owner>/<repo>`` and return (owner, repo)."""
     if not isinstance(url, str):
@@ -64,6 +67,7 @@ def parse_repo(url: str) -> tuple[str, str]:
     return owner, repo
 
 
+# Run git with a clean environment: no config, hooks, prompts or LFS downloads.
 def _git(args: list[str], *, timeout: int = CLONE_TIMEOUT_S) -> subprocess.CompletedProcess:
     GIT_HOME.mkdir(parents=True, exist_ok=True)
     env = {
@@ -82,6 +86,7 @@ def _git(args: list[str], *, timeout: int = CLONE_TIMEOUT_S) -> subprocess.Compl
     )  # fmt: skip
 
 
+# Make the clone read-only so nothing can modify it afterwards.
 def _lock_tree(root: Path) -> None:
     """Make the clone read-only without following symlinks (which git did not create)."""
     for directory, dirs, files in os.walk(root, followlinks=False):
@@ -95,6 +100,7 @@ def _lock_tree(root: Path) -> None:
         root.chmod(root.stat().st_mode & ~0o222)
 
 
+# Record the target in targets/dynamic.json so the pipeline can load it.
 def _register(target: dict) -> None:
     data: dict = {"targets": []}
     if DYNAMIC_TARGETS_FILE.exists():
@@ -114,6 +120,7 @@ def _register(target: dict) -> None:
 BRANCH_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/-]{0,99}$")
 
 
+# Clone, pin the commit, fix the lockfile if needed, and register the target.
 def prepare_target(
     repo_url: str, *, progress: Callable[[str], None] | None = None, branch: str | None = None
 ) -> dict:
@@ -129,6 +136,7 @@ def prepare_target(
         raise DynamicTargetError(f"target directory already exists: {name}")
     url = f"https://github.com/{owner}/{repo}"
 
+    log.info("cloning %s%s", url, f" branch {branch}" if branch else "")
     if progress:
         progress(f"Cloning {url}")
     try:
@@ -214,6 +222,7 @@ def prepare_target(
     }
     _register(target)
     _lock_tree(dest)
+    log.info("target %s ready (lockfile %s)", name, lock_origin)
     if progress:
         progress(f"Pinned {owner}/{repo} at {commit[:12]}")
     return target
